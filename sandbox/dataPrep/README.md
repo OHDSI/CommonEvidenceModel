@@ -41,5 +41,14 @@ medications. Pharmacoepidemiol Drug Saf. 2013 Mar;22(3):294-301. doi:
 euProductLabel_LOCKDATE.xlsx (e.g. euProducLabels_20150530.xlsx).  The lock
 date will be within the Excel download.  Save as XLSX.
 
+3) Additionally, once the raw data is loaded the substances need to be translated 
+into CONCEPT_IDs.  There is a step to export the information needed from the 
+data into Excel to then be used with Usagi.  
+
+4) Leverage USAGI (https://github.com/OHDSI/Usagi) to map the substances to 
+concepts.  Instructions on how to use the tool can be found on GitHub as well.
+
+
+
 
 

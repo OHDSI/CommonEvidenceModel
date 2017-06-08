@@ -1,4 +1,4 @@
-loadEuProducLabels <- function(schema,xlsName,startRow, colNames) {
+loadEuProductLabels <- function(schema,xlsName,startRow, colNames) {
   tableName <- "EU_PRODUCT_LABELS"
 
   connectionDetails <- DatabaseConnector::createConnectionDetails(
@@ -37,7 +37,7 @@ loadEuProducLabels <- function(schema,xlsName,startRow, colNames) {
   #create table
   sql <- paste0("IF OBJECT_ID('",tableName,"', 'U') IS NOT NULL DROP TABLE ",tableName,";")
   renderedSql <- SqlRender::renderSql(sql=sql)
-  translatedSql <- SqlRender::translateSql(renderedSql$sql,sourceDialect="sql server",
+  translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                targetDialect=Sys.getenv("dbms"))
   DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
 
@@ -63,7 +63,7 @@ loadEuProducLabels <- function(schema,xlsName,startRow, colNames) {
           comment	        VARCHAR(2000)
         )"),"[\r\n]",""),"[\r\t]","")
   renderedSql <- SqlRender::renderSql(sql=sql)
-  translatedSql <- SqlRender::translateSql(renderedSql$sql,sourceDialect="sql server",
+  translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                            targetDialect=Sys.getenv("dbms"))
   DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
 
@@ -72,5 +72,37 @@ loadEuProducLabels <- function(schema,xlsName,startRow, colNames) {
                                  dropTableIfExists = FALSE, createTable = FALSE)
 }
 
+exportEUProductLabelsSubstances <- function(sourceSchema){
+  #Function to pull substances to be used in Usagi to map via SOURCE_TO_CONCEPT_MAP
 
+  #connect
+  connectionDetails <- DatabaseConnector::createConnectionDetails(
+    dbms = Sys.getenv("dbms"),
+    server = Sys.getenv("server"),
+    port = as.numeric(Sys.getenv("port")),
+    user = Sys.getenv("user"),
+    password = Sys.getenv("pw"),
+    schema = sourceSchema)
+
+  conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
+
+  #Query and Pull back Substances
+  sql <- SqlRender::readSql("./sql/EuProductLabels_Substance_Pull.sql")
+  renderedSql <- SqlRender::renderSql(sql=sql)
+  translatedSql <- SqlRender::translateSql(renderedSql$sql,
+                                           targetDialect=Sys.getenv("dbms"))
+  df <- DatabaseConnector::querySql(conn=conn,translatedSql$sql)
+
+  #Export Results
+  fileName <-paste0("docs/euProductLabels/EU_PRODUCT_LABELS_SUBSTANCES_FOR_USAGI_",Sys.Date(),".xlsx")
+
+  if(file.exists(fileName)){
+    file.remove(fileName)
+  }
+
+  xlsx::write.xlsx(df,fileName,sheetName="Substances", append=TRUE)
+
+  #clean up
+  RJDBC::dbDisconnect(conn)
+}
 

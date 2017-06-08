@@ -5,18 +5,19 @@ CREATE TABLE @tableName (
   ID INT IDENTITY(1,1) PRIMARY KEY,
 	SOURCE_ID	VARCHAR(20),
 	SOURCE_CODE_1	VARCHAR(50),
-	SOURCE_CODE_TYPE_1	VARCHAR(20),
+	SOURCE_CODE_TYPE_1	VARCHAR(55),
 	SOURCE_CODE_NAME_1	VARCHAR(255),
 	CONCEPT_ID_1	INT,
 	RELATIONSHIP_ID	VARCHAR(20),
 	SOURCE_CODE_2	VARCHAR(50),
-	SOURCE_CODE_TYPE_2	VARCHAR(20),
+	SOURCE_CODE_TYPE_2	VARCHAR(55),
 	SOURCE_CODE_NAME_2	VARCHAR(255),
 	CONCEPT_ID_2	INT,
 	UNIQUE_IDENTIFIER	VARCHAR(50),
 	UNIQUE_IDENTIFIER_TYPE	VARCHAR(50),
   ARTICLE_TITLE VARCHAR(MAX),
   ABSTRACT VARCHAR(MAX),
+  ABSTRACT_ORDER INT,
   JOURNAL VARCHAR(255),
   ISSN VARCHAR(255),
   PUBLICATION_YEAR INT,
@@ -93,12 +94,8 @@ CTE_RELEVANT_PMIDS AS (
 	inner join
 	(
 	  select pmid,
-			CASE
-			WHEN value IN ('Clinical Trial', 'Controlled Clinical Trial', 'Clinical Trial, Phase I', 'Clinical Trial, Phase II', 'Clinical Trial, Phase III','Clinical Trial, Phase IV', 'Randomized Controlled Trial','Multicenter Study') THEN 'Clinical Trial'
-			WHEN value IN ('Observational Study') THEN 'Comparative Study'
-			ELSE value
-		END AS pub_type_value, /*This case statement is to allow us to add in new types without needing to update downstream processes*/
-		ui pub_type_ui
+			value AS pub_type_value,
+			ui pub_type_ui
 	  from @sourceSchema.dbo.medcit_art_publicationtypelist_publicationtype
 	  where value in ('Case Reports','Clinical Trial','Meta-Analysis','Comparative Study','Multicenter Study','Journal Article','Controlled Clinical Trial',
 		'Clinical Trial, Phase I','Clinical Trial, Phase II','Clinical Trial, Phase III','Clinical Trial, Phase IV', 'Randomized Controlled Trial','Observational Study')
@@ -122,6 +119,7 @@ CTE_MESH_TO_STANDARD_MAPPING AS (
 ),
 CTE_PMID_INFO_LU AS (
 	SELECT m.PMID, ART_ARTTITLE AS ARTICLE_TITLE, a.VALUE AS ABSTRACT,
+	  a.medcit_art_abstract_abstracttext_order AS ABSTRACT_ORDER,
 		m.art_journal_title AS JOURNAL, m.ART_JOURNAL_ISSN AS ISSN,
 		m.art_journal_journalissue_pubdate_year AS PUBLICATION_YEAR
 	FROM @sourceSchema.dbo.MEDCIT m
@@ -131,9 +129,10 @@ CTE_PMID_INFO_LU AS (
 INSERT INTO @tableName (SOURCE_ID, SOURCE_CODE_1,
 	SOURCE_CODE_TYPE_1, SOURCE_CODE_NAME_1, CONCEPT_ID_1, RELATIONSHIP_ID,
 	SOURCE_CODE_2, SOURCE_CODE_TYPE_2,	SOURCE_CODE_NAME_2, CONCEPT_ID_2,
-	UNIQUE_IDENTIFIER, UNIQUE_IDENTIFIER_TYPE, ARTICLE_TITLE, ABSTRACT, JOURNAL,
-	ISSN, PUBLICATION_YEAR,PUBLICATION_TYPE)
-SELECT 'MEDLINE_AVILLACH' AS SOURCE_ID,
+	UNIQUE_IDENTIFIER, UNIQUE_IDENTIFIER_TYPE, ARTICLE_TITLE, ABSTRACT,
+	ABSTRACT_ORDER, JOURNAL, ISSN, PUBLICATION_YEAR,PUBLICATION_TYPE)
+SELECT DISTINCT
+  'MEDLINE_AVILLACH' AS SOURCE_ID,
 	rp.DRUG_UI AS SOURCE_CODE_1,
 	'MeSH' AS SOURCE_CODE_TYPE_1,
 	rp.DRUG AS SOURCE_CODE_NAME_1,
@@ -145,7 +144,8 @@ SELECT 'MEDLINE_AVILLACH' AS SOURCE_ID,
 	CASE WHEN m2.STANDARD_CONCEPT_ID IS NULL THEN 0 ELSE m2.STANDARD_CONCEPT_ID END AS CONCEPT_ID_2,
 	rp.PMID AS UNIQUE_IDENTIFIER,
 	'PMID' AS UNIQUE_IDENTIFIER_TYPE,
-	i.ARTICLE_TITLE, i.ABSTRACT, i.JOURNAL, i.ISSN, i.PUBLICATION_YEAR,
+	i.ARTICLE_TITLE, i.ABSTRACT, i.ABSTRACT_ORDER,
+	i.JOURNAL, i.ISSN, i.PUBLICATION_YEAR,
 	rp.pub_type_value AS PUBLICATION_TYPE
 FROM CTE_RELEVANT_PMIDS rp
 	LEFT OUTER JOIN CTE_MESH_TO_STANDARD_MAPPING m1

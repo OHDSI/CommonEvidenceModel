@@ -30,8 +30,18 @@ translateSPLICER(schema="CEM",sourceSchema="SPLICER")
 evidenceSPLICER(schema="CEM")
 
 #SEMMEDDB
+translateSemMedDB(schema="CEM",sourceSchema="SEMMEDDB")
+evidenceSemMedDB(schema="CEM")
+
+#euPLADR
+translateEUPLADR(schema="CEM",sourceSchema="EU_ADR")
+evidenceEUPLADR(schema="CEM")
+
+################################################################################
+# NEGATIVE CONTROLS
+################################################################################
+
+#UNIFY
+ncUnify(schema="CEM")
 
 
-#euPL
-
-#Summarize
