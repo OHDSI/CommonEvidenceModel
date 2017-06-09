@@ -33,5 +33,5 @@ vignettes/*.pdf
 *.knit.md
 
 # Configuration
-#config.csv
+config.csv
 README.md
