@@ -1,13 +1,20 @@
 source("R/main.R")
+config <- read.csv("config.csv",as.is=TRUE)[1,]
 
 ################################################################################
 # PARAMETERS
 ################################################################################
-Sys.setenv(dbms = "sql server")
-Sys.setenv(user = "user")
-Sys.setenv(pw = "password")
-Sys.setenv(server = "server")
-Sys.setenv(port = 1433)
+Sys.setenv(dbms = config$dbms)
+Sys.setenv(user = config$user)
+Sys.setenv(pw = config$pw)
+Sys.setenv(server = config$server)
+Sys.setenv(port = config$port)
+
+################################################################################
+# VOCAB
+################################################################################
+
+cdmSTCM(schema="CEM", sourceSchema="VOCABULARY")
 
 ################################################################################
 # LOAD CEM EVIDENCE
@@ -34,7 +41,7 @@ translateSemMedDB(schema="CEM",sourceSchema="SEMMEDDB")
 evidenceSemMedDB(schema="CEM")
 
 #euPLADR
-translateEUPLADR(schema="CEM",sourceSchema="EU_ADR")
+translateEUPLADR(schema="CEM",sourceSchema="EU_PL_ADR")
 evidenceEUPLADR(schema="CEM")
 
 ################################################################################

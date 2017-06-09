@@ -10,7 +10,9 @@ Sys.setenv(pw = config$pw)
 Sys.setenv(server = config$server)
 Sys.setenv(port = config$port)
 
-loadEuProductLabels(schema="EU_PL_ADR",xlsName="euProductLabels_20150530.xlsx",
-                         startRow=14, colNames = TRUE)
+################################################################################
+# NEGATIVE CONTROLS
+################################################################################
 
-exportEUProductLabelsSubstances(sourceSchema="EU_PL_ADR")
+#UNIFY
+evidenceUnify(schema="CEM")
