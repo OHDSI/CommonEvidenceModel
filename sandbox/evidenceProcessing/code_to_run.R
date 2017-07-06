@@ -1,20 +1,31 @@
+################################################################################
+# CONFIG
+################################################################################
 source("R/main.R")
-config <- read.csv("config.csv",as.is=TRUE)[1,]
 
-################################################################################
-# PARAMETERS
-################################################################################
+config <- read.csv("docs/config.csv",as.is=TRUE)[1,]
 Sys.setenv(dbms = config$dbms)
 Sys.setenv(user = config$user)
 Sys.setenv(pw = config$pw)
 Sys.setenv(server = config$server)
 Sys.setenv(port = config$port)
 
+#Used when connecting to patient data to inform raw data pull
+patient_config <- read.csv("docs/config_patient_data.csv",as.is=TRUE)[1,]
+Sys.setenv(patient_dbms = patient_config$dbms)
+Sys.setenv(patient_user = patient_config$user)
+Sys.setenv(patient_pw = patient_config$pw)
+Sys.setenv(patient_server = patient_config$server)
+Sys.setenv(patient_port = patient_config$port)
+Sys.setenv(patient_schema = patient_config$schema)
+
+#VocabMappings
+fqSTCM <- "TRANSLATED.CEM_SOURCE_TO_CONCEPT_MAP"
+
 ################################################################################
 # VOCAB
 ################################################################################
-
-cdmSTCM(schema="CEM", sourceSchema="VOCABULARY")
+cdmSTCM(fqTableName=fqSTCM,vocabulary="vocabulary",umls="staging_umls")
 
 ################################################################################
 # LOAD CEM EVIDENCE
@@ -23,32 +34,34 @@ cdmSTCM(schema="CEM", sourceSchema="VOCABULARY")
 loadSouceDefinitions(schema="CEM",fileName="SOURCE.txt")
 
 #AEOLUS
-translateAEOLUS(schema="CEM", sourceSchema="AEOLUS")
-evidenceAEOLUS(schema="CEM")
+aeolusClean(schema="CEM", sourceSchema="AEOLUS")
+aeolusTranslate(schema="CEM")
 
-#MEDLINE
-translateMedlineAvillach(schema="CEM", sourceSchema="MEDLINE",
-                         drugQualifier="where qualifier.value = 'adverse effects'",
-                         conditionQualifier="where qualifier.value = 'chemically induced'")
-evidenceMedlineAvillach(schema="CEM")
+#MEDLINE WITH QUALIFIERS
+medlineAvillachClean(schema="CEM", sourceSchema="MEDLINE",pullName = "MEDLINE_AVILLACH",
+                         drugQualifier="AND qualifier.value = 'adverse effects'",
+                         conditionQualifier="AND qualifier.value = 'chemically induced'")
+medlineAvillachTranslated(schema="CEM",pullName = "MEDLINE_AVILLACH")
+
+#MEDLINE WITHOUT QUALIFIERS
+medlineAvillachClean(schema="CEM", sourceSchema="MEDLINE",
+                     pullName = "MEDLINE_AVILLACH_NO_QUALIFIER",
+                     drugQualifier="",
+                     conditionQualifier="")
+medlineAvillachTranslated(pullName = "CEM.dbo.MEDLINE_AVILLACH_NO_QUALIFIER",
+                          sourceToConceptMap = "CEM.dbo.CEM_SOURCE_TO_CONCEPT_MAP")
+
+#MEDLINE PUBMED
+medlinePubmedClean(schema="CEM", sourceSchema="MEDLINE")
 
 #SPLICER
-translateSPLICER(schema="CEM",sourceSchema="SPLICER")
-evidenceSPLICER(schema="CEM")
+splicerClean(schema="CEM",sourceSchema="SPLICER")
+splicerTranlate(schema="CEM")
 
 #SEMMEDDB
-translateSemMedDB(schema="CEM",sourceSchema="SEMMEDDB")
-evidenceSemMedDB(schema="CEM")
+semMedDbClean(schema="CEM",sourceSchema="SEMMEDDB")
+semMedDbTranslate(schema="CEM")
 
 #euPLADR
-translateEUPLADR(schema="CEM",sourceSchema="EU_PL_ADR")
-evidenceEUPLADR(schema="CEM")
-
-################################################################################
-# NEGATIVE CONTROLS
-################################################################################
-
-#UNIFY
-ncUnify(schema="CEM")
-
-
+euSplAdrClean(schema="CEM",sourceSchema="EU_PL_ADR")
+euSplAdrTranslate(schema="CEM")

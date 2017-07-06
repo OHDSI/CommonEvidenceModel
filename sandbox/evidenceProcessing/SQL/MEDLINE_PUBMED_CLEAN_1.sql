@@ -1,0 +1,9 @@
+IF OBJECT_ID('@tableName', 'U') IS NOT NULL
+DROP TABLE @tableName;
+
+CREATE TABLE @tableName (
+    MESH_CODE VARCHAR(50),
+    MESH_NAME VARCHAR(500),
+    MESH_TYPE VARCHAR(50),
+    PMID      INT
+);
