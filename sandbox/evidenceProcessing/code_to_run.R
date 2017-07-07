@@ -35,33 +35,44 @@ loadSouceDefinitions(schema="CEM",fileName="SOURCE.txt")
 
 #AEOLUS
 aeolusClean(schema="CEM", sourceSchema="AEOLUS")
-aeolusTranslate(schema="CEM")
+aeolusTranslate(fqSourceTableName="CEM.dbo.AEOLUS_CLEAN",
+                fqTableName="CEM_TRANLATED.dbo.AEOLUS")
 
 #MEDLINE WITH QUALIFIERS
 medlineAvillachClean(schema="CEM", sourceSchema="MEDLINE",pullName = "MEDLINE_AVILLACH",
                          drugQualifier="AND qualifier.value = 'adverse effects'",
                          conditionQualifier="AND qualifier.value = 'chemically induced'")
-medlineAvillachTranslated(schema="CEM",pullName = "MEDLINE_AVILLACH")
+medlineAvillachTranslated(fqSourceTableName="CEM.dbo.MEDLINE_AVILLACH_CLEAN",
+                          fqTableName="CEM_TRANLATED.dbo.MEDLINE_AVILLACH")
 
 #MEDLINE WITHOUT QUALIFIERS
 medlineAvillachClean(schema="CEM", sourceSchema="MEDLINE",
                      pullName = "MEDLINE_AVILLACH_NO_QUALIFIER",
                      drugQualifier="",
                      conditionQualifier="")
-medlineAvillachTranslated(pullName = "CEM.dbo.MEDLINE_AVILLACH_NO_QUALIFIER",
-                          sourceToConceptMap = "CEM.dbo.CEM_SOURCE_TO_CONCEPT_MAP")
+medlineAvillachTranslated(fqSourceTableName="CEM.dbo.MEDLINE_AVILLACH_NO_QUALIFIER_CLEAN",
+                          fqTableName="CEM_TRANLATED.dbo.MEDLINE_AVILLACH_NO_QUALIFIER")
 
 #MEDLINE PUBMED
-medlinePubmedClean(schema="CEM", sourceSchema="MEDLINE")
+medlinePubmedClean(schema="CEM", sourceSchema="MEDLINE",
+                   pullMesh=0,
+                   pullPubMed=0,
+                   pubMedPullStart=1,
+                   summarize=1,
+                   summarizeStart=81)
+#!!!STILL NEED A TRANSLATE!!!
 
 #SPLICER
 splicerClean(schema="CEM",sourceSchema="SPLICER")
-splicerTranlate(schema="CEM")
+splicerTranlate(fqSourceTableName="CEM.dbo.SPLICER_CLEAN",
+                fqTableName="CEM_TRANLATED.dbo.SPLICER")
 
 #SEMMEDDB
 semMedDbClean(schema="CEM",sourceSchema="SEMMEDDB")
-semMedDbTranslate(schema="CEM")
+semMedDbTranslate(fqSourceTableName="CEM.dbo.SEMMEDDB_CLEAN",
+                  fqTableName="CEM_TRANLATED.dbo.SEMMEDDB")
 
 #euPLADR
-euSplAdrClean(schema="CEM",sourceSchema="EU_PL_ADR")
-euSplAdrTranslate(schema="CEM")
+euSplAdrClean(schema="CEM",sourceSchema="EU_SPL_ADR")
+euSplAdrTranslate(fqSourceTableName="CEM.dbo.EU_SPL_ADR_CLEAN",
+                  fqTableName="CEM_TRANLATED.dbo.EU_SPL_ADR")

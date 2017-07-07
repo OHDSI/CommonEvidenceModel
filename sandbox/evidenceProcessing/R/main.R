@@ -39,13 +39,17 @@ loadSouceDefinitions <- function(schema,fileName) {
   RJDBC::dbDisconnect(conn)
 }
 
-medlinePubmedFindMeshTags <- function(schema,sourceSchema,filter){
+medlinePubmedFindMeshTags <- function(schema,sourceSchema,filter,justTableName=0){
   #use patient data to inform which drug Mesh tags would be valuable to review
   #looking for exposures to drugs to be considered interesting
   #using conditions associated to "chemically induced" to learn which Mesh
   #terms are conditions
 
   tableName <- "LU_PUBMED_MESH_TAGS"
+
+  if(justTableName==1){
+    return(tableName)
+  }
 
   #connect
   connectionDetails <- DatabaseConnector::createConnectionDetails(
@@ -120,7 +124,7 @@ medlinePubmedFindMeshTags <- function(schema,sourceSchema,filter){
 
 cdmSTCM <- function(fqTableName,vocabulary,umls) {
 
-    #connect
+  #connect
   connectionDetails <- DatabaseConnector::createConnectionDetails(
     dbms = Sys.getenv("dbms"),
     server = Sys.getenv("server"),
@@ -188,24 +192,22 @@ aeolusClean <- function(schema,sourceSchema) {
   RJDBC::dbDisconnect(conn)
 }
 
-aeolusTranslate <- function(schema) {
-  tableName <- "AEOLUS"
-  sourceTableName <- "AEOLUS_CLEAN"
-
+aeolusTranslate <- function(fqSourceTableName,fqTableName) {
   #connect
   connectionDetails <- DatabaseConnector::createConnectionDetails(
     dbms = Sys.getenv("dbms"),
     server = Sys.getenv("server"),
     port = as.numeric(Sys.getenv("port")),
     user = Sys.getenv("user"),
-    password = Sys.getenv("pw"),
-    schema = schema)
+    password = Sys.getenv("pw"))
 
   conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
   #Create Table & Load Data
   sql <- SqlRender::readSql("./sql/AEOLUS_TRANSLATE.sql")
-  renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName,sourceTableName=sourceTableName)
+  renderedSql <- SqlRender::renderSql(sql=sql,
+                                      tableName=fqTableName,
+                                      sourceTableName=fqSourceTableName)
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                            targetDialect=Sys.getenv("dbms"))
   DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
@@ -300,10 +302,7 @@ medlineAvillachClean <-function(schema,sourceSchema,pullName,drugQualifier,
   RJDBC::dbDisconnect(conn)
 }
 
-medlineAvillachTranslated <- function(pullName,sourceToConceptMap) {
-  tableName <- pullName
-  sourceTableName <- paste0(pullName,"_CLEAN")
-
+medlineAvillachTranslated <- function(fqSourceTableName,fqTableName) {
   #connect
   connectionDetails <- DatabaseConnector::createConnectionDetails(
     dbms = Sys.getenv("dbms"),
@@ -316,9 +315,9 @@ medlineAvillachTranslated <- function(pullName,sourceToConceptMap) {
 
   #Create Table & Load Data
   sql <- SqlRender::readSql("./sql/MEDLINE_AVILLACH_TRANSLATE.sql")
-  renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName,
-                                      sourceTableName=sourceTableName,
-                                      sourceToConceptMap=sourceToConceptMap)
+  renderedSql <- SqlRender::renderSql(sql=sql,
+                                      tableName=fqTableName,
+                                      sourceTableName=fqSourceTableName)
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                            targetDialect=Sys.getenv("dbms"))
   DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
@@ -329,18 +328,21 @@ medlineAvillachTranslated <- function(pullName,sourceToConceptMap) {
 
 ####################
 
-medlinePubmedClean <-function(schema,sourceSchema){
+medlinePubmedClean <-function(schema,sourceSchema,
+                              #Do you want to find the mesh tag universe
+                              pullMesh=1,
+                              #do you want to pull from pubmed and where to start
+                              pullPubMed=1,
+                              pubMedPullStart=1,
+                              #do you want to summarize pubmed and where to start
+                              summarize=1,
+                              summarizeStart=1){
   tableName <- "MEDLINE_PUBMED_CLEAN"
   tableNameForPrep <- paste0(tableName,"_PREP")
   tableNameForPrepTemp <- paste0(tableNameForPrep,"TEMP")
 
   queryFilter <- "hasabstract[text] AND English[lang] AND humans[MeSH Terms]"
 
-  #learning what MeSH tags to pull in PubMed
-  print("Finding MeSH Tags")
-  meshTagsTableName <- medlinePubmedFindMeshTags(schema="CEM",
-                                                 sourceSchema = "MEDLINE",
-                                                 filter = 100)
   #connect
   connectionDetails <- DatabaseConnector::createConnectionDetails(
     dbms = Sys.getenv("dbms"),
@@ -352,90 +354,101 @@ medlinePubmedClean <-function(schema,sourceSchema){
 
   conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
+  if(pullMesh == 1) {
+    #learning what MeSH tags to pull in PubMed
+    print("Finding MeSH Tags")
+    meshTagsTableName <- medlinePubmedFindMeshTags(schema="CEM",
+                                                   sourceSchema = "MEDLINE",
+                                                   filter = 100,
+                                                   justTableName=0)
+  }
+  else {
+    meshTagsTableName <- medlinePubmedFindMeshTags(schema="",
+                                                   sourceSchema= "",
+                                                   filter = 1,
+                                                   justTableName=1)
+  }
+
   #grab the MeSH tags just pulled
   meshTags <- as.data.frame(DatabaseConnector::querySql(conn=conn,
                                     paste0("SELECT * FROM ",meshTagsTableName)))
-
   meshTagNum <- nrow(meshTags)
+  drugsOnly <- meshTags[which(meshTags$MESH_TYPE=="DRUG"),]
+  numDrugsOnly <- nrow(drugsOnly)
 
-  #prep for pull
-  print("Pulling Information from Medline")
-  sql <- SqlRender::readSql("./sql/MEDLINE_PUBMED_CLEAN_1.sql")
-  renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableNameForPrep)
-  translatedSql <- SqlRender::translateSql(renderedSql$sql,
-                                           targetDialect=Sys.getenv("dbms"))
-  DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
+  if(pullPubMed==1){
+    #prep for pull
+    print("Pulling Information from Medline")
+    sql <- SqlRender::readSql("./sql/MEDLINE_PUBMED_CLEAN_1.sql")
+    renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableNameForPrep)
+    translatedSql <- SqlRender::translateSql(renderedSql$sql,
+                                             targetDialect=Sys.getenv("dbms"))
+    DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
 
-  #pubmed pull
-  for(i in 1:meshTagNum){
-    print(paste0('PUBMED PULL: ',i,":",meshTagNum," - ", meshTags$MESH_SOURCE_NAME[i]))
+    #pubmed pull
+    for(i in pubMedPullStart:meshTagNum){
+      print(paste0('PUBMED PULL: ',i,":",meshTagNum," - ", meshTags$MESH_SOURCE_NAME[i]))
 
-    query <- paste(shQuote(URLencode(meshTags$MESH_SOURCE_NAME[i],reserved = TRUE)),
-                   queryFilter,sep=" AND ")
+      query <- paste(shQuote(URLencode(meshTags$MESH_SOURCE_NAME[i],reserved = TRUE)),
+                     queryFilter,sep=" AND ")
 
-    res <- RISmed::EUtilsSummary(query, type="esearch", db="pubmed", datetype='pdat',
-                                 retmax=99999999)
+      res <- RISmed::EUtilsSummary(query, type="esearch", db="pubmed", datetype='pdat',
+                                   retmax=99999999)
 
-    df <- data.frame(rep(meshTags$MESH_SOURCE_CODE[i],res@count),
+      df <- data.frame(rep(meshTags$MESH_SOURCE_CODE[i],res@count),
                        rep(meshTags$MESH_SOURCE_NAME[i],res@count),
                        rep(meshTags$MESH_TYPE[i],res@count),
                        as.numeric(RISmed::QueryId(res)))
 
-    colnames(df) <-c("MESH_CODE","MESH_NAME","MESH_TYPE","PMID")
+      colnames(df) <-c("MESH_CODE","MESH_NAME","MESH_TYPE","PMID")
 
-    DatabaseConnector::insertTable(conn,tableNameForPrepTemp,df,
-                                   dropTableIfExists = TRUE,
-                                   createTable = TRUE,
-                                   tempTable = FALSE)
+      DatabaseConnector::insertTable(conn,tableNameForPrepTemp,df,
+                                     dropTableIfExists = TRUE,
+                                     createTable = TRUE,
+                                     tempTable = FALSE)
 
-    rm(df)
+      rm(df)
 
-    DatabaseConnector::executeSql(conn, paste0("INSERT INTO ",tableNameForPrep,
-                                               "(MESH_CODE, MESH_NAME, MESH_TYPE, PMID) SELECT * FROM ",
-                                               tableNameForPrepTemp))
+      DatabaseConnector::executeSql(conn, paste0("INSERT INTO ",tableNameForPrep,
+                                                 "(MESH_CODE, MESH_NAME, MESH_TYPE, PMID) SELECT * FROM ",
+                                                 tableNameForPrepTemp))
 
-    DatabaseConnector::executeSql(conn, paste0("DROP TABLE ",tableNameForPrepTemp))
+      DatabaseConnector::executeSql(conn, paste0("DROP TABLE ",tableNameForPrepTemp))
+    }
   }
 
-  #Find distinct MeSH drug/condition pairs
-  print("Find Distinct MeSH Drug/Condition Pairs")
-  meshPairs <- as.data.frame(DatabaseConnector::querySql(conn=conn,
-              paste0("	SELECT *
-                        	FROM (
-                        		SELECT DISTINCT MESH_CODE AS DRUG_MESH_CODE, MESH_NAME AS DRUG_MESH_NAME
-                        		FROM ",tableNameForPrep,"
-                        		WHERE MESH_TYPE = 'DRUG'
-                        	) z
-                        	CROSS JOIN (
-                        		SELECT DISTINCT MESH_CODE AS CONDITION_MESH_CODE, MESH_NAME AS CONDITION_MESH_NAME
-                        		FROM ",tableNameForPrep,"
-                        		WHERE MESH_TYPE = 'CONDITION'
-                        	) x")))
+  if(summarize==1){
+    #The data explode in size if we listed every drug/condition pairs's PMIDs
+    #so we will summarize how many at each
 
-  meshPairsNum <- nrow(meshPairs)
+    if(summarizeStart==1){
+      #create table
+      sql <- SqlRender::readSql("./sql/MEDLINE_PUBMED_CLEAN_2.sql")
+      renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName)
+      translatedSql <- SqlRender::translateSql(renderedSql$sql,
+                                               targetDialect=Sys.getenv("dbms"))
+      DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
+    }
+    else{
+      DatabaseConnector::executeSql(conn=conn,
+                                    paste0("DELETE FROM ",tableName,
+                                           " WHERE SOURCE_CODE_1 = '",
+                                           drugsOnly$MESH_SOURCE_CODE[summarizeStart],
+                                           "'"))
+    }
 
-  #The data explode in size if we listed every drug/condition pairs's PMIDs
-  #so we will summarize how many at each
+    #run query for each pair
+    for(i in summarizeStart:numDrugsOnly){
+      print(paste0("SUMMARIZE PAIRS: ",i,":",numDrugsOnly," - ",drugsOnly$MESH_SOURCE_CODE[i]))
 
-  #create table
-  sql <- SqlRender::readSql("./sql/MEDLINE_PUBMED_CLEAN_2.sql")
-  renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName)
-  translatedSql <- SqlRender::translateSql(renderedSql$sql,
-                                           targetDialect=Sys.getenv("dbms"))
-  DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
-
-  #run query for each pair
-  for(i in 1:meshPairsNum){
-    print(paste0("SUMMARIZE PAIRS: ",i,":",meshPairsNum," - ",meshPairs$DRUG_MESH_NAME[i]," : ",meshPairs$CONDITION_MESH_NAME[i]))
-
-    sql <- SqlRender::readSql("./sql/MEDLINE_PUBMED_CLEAN_3.sql")
-    renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName,
-                                        tableNameForPrep=tableNameForPrep,
-                                        drug = meshPairs$DRUG_MESH_CODE[i],
-                                        condition = meshPairs$CONDITION_MESH_CODE[i])
-    translatedSql <- SqlRender::translateSql(renderedSql$sql,
-                                             targetDialect=Sys.getenv("dbms"))
-    DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
+      sql <- SqlRender::readSql("./sql/MEDLINE_PUBMED_CLEAN_3.sql")
+      renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName,
+                                          tableNameForPrep=tableNameForPrep,
+                                          drug = drugsOnly$MESH_SOURCE_CODE[i])
+      translatedSql <- SqlRender::translateSql(renderedSql$sql,
+                                               targetDialect=Sys.getenv("dbms"))
+      DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
+    }
   }
 
   #clean up
@@ -478,24 +491,22 @@ splicerClean <- function(schema,sourceSchema){
   RJDBC::dbDisconnect(conn)
 }
 
-splicerTranlate <- function(schema){
-  tableName <- "SPLICER"
-  sourceTableName <- "SPLICER_CLEAN"
-
+splicerTranlate <- function(fqSourceTableName,fqTableName){
   #connect
   connectionDetails <- DatabaseConnector::createConnectionDetails(
     dbms = Sys.getenv("dbms"),
     server = Sys.getenv("server"),
     port = as.numeric(Sys.getenv("port")),
     user = Sys.getenv("user"),
-    password = Sys.getenv("pw"),
-    schema = schema)
+    password = Sys.getenv("pw"))
 
   conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
   #Create Table & Load Data
   sql <- SqlRender::readSql("./sql/SPLICER_TRANSLATE.sql")
-  renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName,sourceTableName=sourceTableName)
+  renderedSql <- SqlRender::renderSql(sql=sql,
+                                      tableName=fqTableName,
+                                      sourceTableName=fqSourceTableName)
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                            targetDialect=Sys.getenv("dbms"))
   DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
@@ -541,24 +552,22 @@ semMedDbClean <- function(schema,sourceSchema){
   RJDBC::dbDisconnect(conn)
 }
 
-semMedDbTranslate  <- function(schema){
-  tableName <- "SEMMEDDB"
-  sourceTableName <- "SEMMEDDB_CLEAN"
-
+semMedDbTranslate  <- function(fqSourceTableName,fqTableName){
   #connect
   connectionDetails <- DatabaseConnector::createConnectionDetails(
     dbms = Sys.getenv("dbms"),
     server = Sys.getenv("server"),
     port = as.numeric(Sys.getenv("port")),
     user = Sys.getenv("user"),
-    password = Sys.getenv("pw"),
-    schema = schema)
+    password = Sys.getenv("pw"))
 
   conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
   #Create Table & Load Data
   sql <- SqlRender::readSql("./sql/SEMMEDDB_TRANSLATE.sql")
-  renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName,sourceTableName=sourceTableName)
+  renderedSql <- SqlRender::renderSql(sql=sql,
+                                      tableName=fqTableName,
+                                      sourceTableName=fqSourceTableName)
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                            targetDialect=Sys.getenv("dbms"))
   DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
@@ -603,24 +612,22 @@ euSplAdrClean<- function(schema,sourceSchema){
   RJDBC::dbDisconnect(conn)
 }
 
-euSplAdrTranslate  <- function(schema){
-  tableName <- "EU_SPL_ADR"
-  sourceTableName <- "EU_SPL_ADR_CLEAN"
-
+euSplAdrTranslate  <- function(fqSourceTableName,fqTableName){
   #connect
   connectionDetails <- DatabaseConnector::createConnectionDetails(
     dbms = Sys.getenv("dbms"),
     server = Sys.getenv("server"),
     port = as.numeric(Sys.getenv("port")),
     user = Sys.getenv("user"),
-    password = Sys.getenv("pw"),
-    schema = schema)
+    password = Sys.getenv("pw"))
 
   conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
   #Create Table & Load Data
   sql <- SqlRender::readSql("./sql/EU_SPL_ADR_TRANSLATE.sql")
-  renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName,sourceTableName=sourceTableName)
+  renderedSql <- SqlRender::renderSql(sql=sql,
+                                      tableName=fqTableName,
+                                      sourceTableName=fqSourceTableName)
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                            targetDialect=Sys.getenv("dbms"))
   DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
