@@ -196,8 +196,9 @@ cdmSTCM <- function(schema, fqTableName,vocabulary,umls) {
 ##     ## ########  #######  ########  #######   ######
 ################################################################################
 
-aeolusClean <- function(schema,sourceSchema) {
+aeolusClean <- function(schema,sourceSchema, vocabulary) {
   tableName <- "AEOLUS_CLEAN"
+  fqntableName <- paste0(schema,".AEOLUS_CLEAN")
 
   #connect
   connectionDetails <- DatabaseConnector::createConnectionDetails(
@@ -212,7 +213,11 @@ aeolusClean <- function(schema,sourceSchema) {
 
   #Create Table & Load Data
   sql <- SqlRender::readSql("./SQL/AEOLUS_CLEAN.sql")
-  renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName,sourceSchema=sourceSchema)
+  renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName,
+                                      fqntableName=fqntableName,
+                                      sourceSchema=sourceSchema,
+                                      vocabulary=vocabulary,
+                                      targetDialect=Sys.getenv("dbms"))
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                            targetDialect=Sys.getenv("dbms"))
   DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
@@ -235,6 +240,7 @@ aeolusTranslate <- function(fqSourceTableName,fqTableName) {
   #Create Table & Load Data
   sql <- SqlRender::readSql("./SQL/AEOLUS_TRANSLATE.sql")
   renderedSql <- SqlRender::renderSql(sql=sql,
+                                      translatedSchema="CEM_TRANSLATED.dbo",
                                       tableName=fqTableName,
                                       sourceTableName=fqSourceTableName)
   translatedSql <- SqlRender::translateSql(renderedSql$sql,

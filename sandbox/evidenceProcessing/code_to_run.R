@@ -34,7 +34,7 @@ cdmSTCM(schema="CEM_TRANSLATED.dbo",fqTableName=fqSTCM,vocabulary="vocabulary.db
 loadSourceDefinitions(schema="CEM",fileName="SOURCE.txt")
 
 #AEOLUS
-aeolusClean(schema="CEM", sourceSchema="AEOLUS")
+aeolusClean(schema="CEM.dbo", sourceSchema="AEOLUS.dbo", vocabulary="vocabulary.dbo")
 aeolusTranslate(fqSourceTableName="CEM.dbo.AEOLUS_CLEAN",
                 fqTableName="CEM_TRANSLATED.dbo.AEOLUS")
 
