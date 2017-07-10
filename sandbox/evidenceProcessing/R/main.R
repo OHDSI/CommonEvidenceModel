@@ -8,7 +8,7 @@
 ##     ## ########  ##     ## #### ##    ##
 ################################################################################
 
-loadSouceDefinitions <- function(schema,fileName) {
+loadSourceDefinitions <- function(schema,fileName) {
   tableName <- "SOURCE"
 
   #connect
@@ -22,8 +22,8 @@ loadSouceDefinitions <- function(schema,fileName) {
 
   conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
-  #Create Table
-  sql <- SqlRender::readSql("./sql/SOURCE_createTable.sql")
+  #Create Source table
+  sql <- SqlRender::readSql("./SQL/SOURCE_createTable.sql")
   renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName)
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                          targetDialect=Sys.getenv("dbms"))
@@ -85,7 +85,7 @@ medlinePubmedFindMeshTags <- function(schema,sourceSchema,filter,justTableName=0
   patient_conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
   #Grab Patient Data for Drugs
-  sql <- SqlRender::readSql("./sql/MEDLINE_PUBMED_FIND_DRUG_UNIVERSE.sql")
+  sql <- SqlRender::readSql("./SQL/MEDLINE_PUBMED_FIND_DRUG_UNIVERSE.sql")
   renderedSql <- SqlRender::renderSql(sql=sql,filter=filter)
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                            targetDialect=Sys.getenv("dbms"))
@@ -96,7 +96,7 @@ medlinePubmedFindMeshTags <- function(schema,sourceSchema,filter,justTableName=0
               createTable = TRUE, tempTable = FALSE, oracleTempSchema = NULL)
 
   #Pull Conditions and put in CEM
-  sql <- SqlRender::readSql("./sql/MEDLINE_PUBMED_FIND_CONDITION_UNIVERSE.sql")
+  sql <- SqlRender::readSql("./SQL/MEDLINE_PUBMED_FIND_CONDITION_UNIVERSE.sql")
   renderedSql <- SqlRender::renderSql(sql=sql,filter=filter, sourceSchema= sourceSchema)
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                            targetDialect=Sys.getenv("dbms"))
@@ -122,7 +122,7 @@ medlinePubmedFindMeshTags <- function(schema,sourceSchema,filter,justTableName=0
    ###     #######   ######  ##     ## ########
 ################################################################################
 
-cdmSTCM <- function(fqTableName,vocabulary,umls) {
+cdmSTCM <- function(schema, fqTableName,vocabulary,umls) {
 
   #connect
   connectionDetails <- DatabaseConnector::createConnectionDetails(
@@ -130,16 +130,45 @@ cdmSTCM <- function(fqTableName,vocabulary,umls) {
     server = Sys.getenv("server"),
     port = as.numeric(Sys.getenv("port")),
     user = Sys.getenv("user"),
-    password = Sys.getenv("pw"))
+    password = Sys.getenv("pw"),
+    schema = schema)
 
   conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
-  #Create Table & Load Data
-  sql <- SqlRender::readSql("./sql/CEM_SOURCE_TO_CONCEPT_MAP.sql")
+  #Create Table
+  sql <- SqlRender::readSql("./SQL/CEM_SOURCE_TO_CONCEPT_MAP_createTable.sql")
+  renderedSql <- SqlRender::renderSql(sql=sql,
+                                      fqTableName=fqTableName)
+  translatedSql <- SqlRender::translateSql(renderedSql$sql,
+                                           targetDialect=Sys.getenv("dbms"))
+  DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
+
+  #Load UMLS CUI_TO_STANDARD code mappings
+  sql <- SqlRender::readSql("./SQL/CEM_SOURCE_TO_CONCEPT_MAP_CUI_TO_STANDARD.sql")
   renderedSql <- SqlRender::renderSql(sql=sql,
                                       fqTableName=fqTableName,
                                       vocabulary=vocabulary,
-                                      umls=umls)
+                                      umls=umls,
+                                      targetDialect=Sys.getenv("dbms"))
+  translatedSql <- SqlRender::translateSql(renderedSql$sql,
+                                           targetDialect=Sys.getenv("dbms"))
+  DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
+
+  #Load MEDDRA_TO_STANDARD code mappings
+  sql <- SqlRender::readSql("./SQL/CEM_SOURCE_TO_CONCEPT_MAP_MEDDRA_TO_STANDARD.sql")
+  renderedSql <- SqlRender::renderSql(sql=sql,
+                                      fqTableName=fqTableName,
+                                      targetDialect=Sys.getenv("dbms"))
+  translatedSql <- SqlRender::translateSql(renderedSql$sql,
+                                           targetDialect=Sys.getenv("dbms"))
+  DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
+
+  #Load MESH_TO_STANDARD code mappings
+  sql <- SqlRender::readSql("./SQL/CEM_SOURCE_TO_CONCEPT_MAP_MESH_TO_STANDARD.sql")
+  renderedSql <- SqlRender::renderSql(sql=sql,
+                                      fqTableName=fqTableName,
+                                      vocabulary=vocabulary,
+                                      targetDialect=Sys.getenv("dbms"))
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                            targetDialect=Sys.getenv("dbms"))
   DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
@@ -153,7 +182,7 @@ cdmSTCM <- function(fqTableName,vocabulary,umls) {
 
   #clean up
   rm(df)
-  RJDBC::dbDisconnect(conn)
+  DatabaseConnector::disconnect(conn)
 }
 
 
@@ -182,7 +211,7 @@ aeolusClean <- function(schema,sourceSchema) {
   conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
   #Create Table & Load Data
-  sql <- SqlRender::readSql("./sql/AEOLUS_CLEAN.sql")
+  sql <- SqlRender::readSql("./SQL/AEOLUS_CLEAN.sql")
   renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName,sourceSchema=sourceSchema)
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                            targetDialect=Sys.getenv("dbms"))
@@ -204,7 +233,7 @@ aeolusTranslate <- function(fqSourceTableName,fqTableName) {
   conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
   #Create Table & Load Data
-  sql <- SqlRender::readSql("./sql/AEOLUS_TRANSLATE.sql")
+  sql <- SqlRender::readSql("./SQL/AEOLUS_TRANSLATE.sql")
   renderedSql <- SqlRender::renderSql(sql=sql,
                                       tableName=fqTableName,
                                       sourceTableName=fqSourceTableName)
@@ -244,7 +273,7 @@ medlineAvillachClean <-function(schema,sourceSchema,pullName,drugQualifier,
   conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
   #Create Table
-  sql <- SqlRender::readSql("./sql/MEDLINE_AVILLACH_CLEAN_1.sql")
+  sql <- SqlRender::readSql("./SQL/MEDLINE_AVILLACH_CLEAN_1.sql")
   renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName,
                                       sourceSchema=sourceSchema,
                                       drugQualifier=drugQualifier,
@@ -277,7 +306,7 @@ medlineAvillachClean <-function(schema,sourceSchema,pullName,drugQualifier,
   for(i in 1:iteraterNum){
     print(paste0(i,":",iteraterNum,"- Start: ",iterater$start[i]," End: ",iterater$end[i]," of ",iterateToPMID," (",maxPMID,")"))
 
-    sql <- SqlRender::readSql("./sql/MEDLINE_AVILLACH_CLEAN_2.sql")
+    sql <- SqlRender::readSql("./SQL/MEDLINE_AVILLACH_CLEAN_2.sql")
     renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName,
                                         sourceSchema=sourceSchema,
                                         drugQualifier=drugQualifier,
@@ -314,7 +343,7 @@ medlineAvillachTranslated <- function(fqSourceTableName,fqTableName) {
   conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
   #Create Table & Load Data
-  sql <- SqlRender::readSql("./sql/MEDLINE_AVILLACH_TRANSLATE.sql")
+  sql <- SqlRender::readSql("./SQL/MEDLINE_AVILLACH_TRANSLATE.sql")
   renderedSql <- SqlRender::renderSql(sql=sql,
                                       tableName=fqTableName,
                                       sourceTableName=fqSourceTableName)
@@ -379,7 +408,7 @@ medlinePubmedClean <-function(schema,sourceSchema,
   if(pullPubMed==1){
     #prep for pull
     print("Pulling Information from Medline")
-    sql <- SqlRender::readSql("./sql/MEDLINE_PUBMED_CLEAN_1.sql")
+    sql <- SqlRender::readSql("./SQL/MEDLINE_PUBMED_CLEAN_1.sql")
     renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableNameForPrep)
     translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                              targetDialect=Sys.getenv("dbms"))
@@ -423,7 +452,7 @@ medlinePubmedClean <-function(schema,sourceSchema,
 
     if(summarizeStart==1){
       #create table
-      sql <- SqlRender::readSql("./sql/MEDLINE_PUBMED_CLEAN_2.sql")
+      sql <- SqlRender::readSql("./SQL/MEDLINE_PUBMED_CLEAN_2.sql")
       renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName)
       translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                                targetDialect=Sys.getenv("dbms"))
@@ -441,7 +470,7 @@ medlinePubmedClean <-function(schema,sourceSchema,
     for(i in summarizeStart:numDrugsOnly){
       print(paste0("SUMMARIZE PAIRS: ",i,":",numDrugsOnly," - ",drugsOnly$MESH_SOURCE_CODE[i]))
 
-      sql <- SqlRender::readSql("./sql/MEDLINE_PUBMED_CLEAN_3.sql")
+      sql <- SqlRender::readSql("./SQL/MEDLINE_PUBMED_CLEAN_3.sql")
       renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName,
                                           tableNameForPrep=tableNameForPrep,
                                           drug = drugsOnly$MESH_SOURCE_CODE[i])
@@ -480,7 +509,7 @@ splicerClean <- function(schema,sourceSchema){
   conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
   #Create Table & Load Data
-  sql <- SqlRender::readSql("./sql/SPLICER_CLEAN.sql")
+  sql <- SqlRender::readSql("./SQL/SPLICER_CLEAN.sql")
   renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName,
                                       sourceSchema=sourceSchema)
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
@@ -503,7 +532,7 @@ splicerTranlate <- function(fqSourceTableName,fqTableName){
   conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
   #Create Table & Load Data
-  sql <- SqlRender::readSql("./sql/SPLICER_TRANSLATE.sql")
+  sql <- SqlRender::readSql("./SQL/SPLICER_TRANSLATE.sql")
   renderedSql <- SqlRender::renderSql(sql=sql,
                                       tableName=fqTableName,
                                       sourceTableName=fqSourceTableName)
@@ -541,7 +570,7 @@ semMedDbClean <- function(schema,sourceSchema){
   conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
   #Create Table & Load Data
-  sql <- SqlRender::readSql("./sql/SEMMEDDB_CLEAN.sql")
+  sql <- SqlRender::readSql("./SQL/SEMMEDDB_CLEAN.sql")
   renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName,
                                       sourceSchema=sourceSchema)
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
@@ -564,7 +593,7 @@ semMedDbTranslate  <- function(fqSourceTableName,fqTableName){
   conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
   #Create Table & Load Data
-  sql <- SqlRender::readSql("./sql/SEMMEDDB_TRANSLATE.sql")
+  sql <- SqlRender::readSql("./SQL/SEMMEDDB_TRANSLATE.sql")
   renderedSql <- SqlRender::renderSql(sql=sql,
                                       tableName=fqTableName,
                                       sourceTableName=fqSourceTableName)
@@ -587,7 +616,8 @@ semMedDbTranslate  <- function(fqSourceTableName,fqTableName){
 ################################################################################
 
 euSplAdrClean<- function(schema,sourceSchema){
-  tableName <- "EU_SPL_ADR_CLEAN"
+  tableName <- "EU_PL_ADR_CLEAN"
+  fqntableName <- paste0(schema,".EU_PL_ADR_CLEAN")
 
   #connect
   connectionDetails <- DatabaseConnector::createConnectionDetails(
@@ -601,9 +631,11 @@ euSplAdrClean<- function(schema,sourceSchema){
   conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
   #Create Table & Load Data
-  sql <- SqlRender::readSql("./sql/EU_SPL_ADR_CLEAN.sql")
+  sql <- SqlRender::readSql("./SQL/EU_SPL_ADR_CLEAN.sql")
   renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName,
-                                      sourceSchema=sourceSchema)
+                                      fqntableName=fqntableName,
+                                      sourceSchema=sourceSchema,
+                                      targetDialect=Sys.getenv("dbms"))
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                            targetDialect=Sys.getenv("dbms"))
   DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
@@ -624,8 +656,9 @@ euSplAdrTranslate  <- function(fqSourceTableName,fqTableName){
   conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
   #Create Table & Load Data
-  sql <- SqlRender::readSql("./sql/EU_SPL_ADR_TRANSLATE.sql")
+  sql <- SqlRender::readSql("./SQL/EU_SPL_ADR_TRANSLATE.sql")
   renderedSql <- SqlRender::renderSql(sql=sql,
+                                      translatedSchema="CEM_TRANSLATED.dbo",
                                       tableName=fqTableName,
                                       sourceTableName=fqSourceTableName)
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
