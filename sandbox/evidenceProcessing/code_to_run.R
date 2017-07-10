@@ -63,7 +63,7 @@ medlinePubmedClean(schema="CEM", sourceSchema="MEDLINE",
 #!!!STILL NEED A TRANSLATE!!!
 
 #SPLICER
-splicerClean(schema="CEM",sourceSchema="SPLICER")
+splicerClean(schema="CEM.dbo",sourceSchema="SPLICER.dbo")
 splicerTranlate(fqSourceTableName="CEM.dbo.SPLICER_CLEAN",
                 fqTableName="CEM_TRANSLATED.dbo.SPLICER")
 

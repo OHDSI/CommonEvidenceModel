@@ -173,6 +173,16 @@ cdmSTCM <- function(schema, fqTableName,vocabulary,umls) {
                                            targetDialect=Sys.getenv("dbms"))
   DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
 
+  #Load SPL_TO_STANDARD_DRUG code mappings
+  sql <- SqlRender::readSql("./SQL/CEM_SOURCE_TO_CONCEPT_MAP_SPL_TO_STANDARD_DRUG.sql")
+  renderedSql <- SqlRender::renderSql(sql=sql,
+                                      fqTableName=fqTableName,
+                                      vocabulary=vocabulary,
+                                      targetDialect=Sys.getenv("dbms"))
+  translatedSql <- SqlRender::translateSql(renderedSql$sql,
+                                           targetDialect=Sys.getenv("dbms"))
+  DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
+
   #Load Manual Maps
   df <- read.csv(file="./docs/EU_PL_ADR_SUBSTANCES_TO_STANDARD.csv",
                  sep=",",header=TRUE)
@@ -502,6 +512,7 @@ medlinePubmedClean <-function(schema,sourceSchema,
 
 splicerClean <- function(schema,sourceSchema){
   tableName <- "SPLICER_CLEAN"
+  fqntableName <- paste0(schema,".SPLICER_CLEAN")
 
   #connect
   connectionDetails <- DatabaseConnector::createConnectionDetails(
@@ -517,7 +528,9 @@ splicerClean <- function(schema,sourceSchema){
   #Create Table & Load Data
   sql <- SqlRender::readSql("./SQL/SPLICER_CLEAN.sql")
   renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName,
-                                      sourceSchema=sourceSchema)
+                                      fqntableName=fqntableName,
+                                      sourceSchema=sourceSchema,
+                                      targetDialect=Sys.getenv("dbms"))
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                            targetDialect=Sys.getenv("dbms"))
   DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
@@ -540,6 +553,7 @@ splicerTranlate <- function(fqSourceTableName,fqTableName){
   #Create Table & Load Data
   sql <- SqlRender::readSql("./SQL/SPLICER_TRANSLATE.sql")
   renderedSql <- SqlRender::renderSql(sql=sql,
+                                      translatedSchema="CEM_TRANSLATED.dbo",
                                       tableName=fqTableName,
                                       sourceTableName=fqSourceTableName)
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
