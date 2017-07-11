@@ -577,6 +577,7 @@ splicerTranlate <- function(fqSourceTableName,fqTableName){
 
 semMedDbClean <- function(schema,sourceSchema){
   tableName <- "SEMMEDDB_CLEAN"
+  fqntableName <- paste0(schema,".SEMMEDDB_CLEAN")
 
   #connect
   connectionDetails <- DatabaseConnector::createConnectionDetails(
@@ -592,7 +593,9 @@ semMedDbClean <- function(schema,sourceSchema){
   #Create Table & Load Data
   sql <- SqlRender::readSql("./SQL/SEMMEDDB_CLEAN.sql")
   renderedSql <- SqlRender::renderSql(sql=sql,tableName=tableName,
-                                      sourceSchema=sourceSchema)
+                                      fqntableName=fqntableName,
+                                      sourceSchema=sourceSchema,
+                                      targetDialect=Sys.getenv("dbms"))
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                            targetDialect=Sys.getenv("dbms"))
   DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
@@ -615,6 +618,7 @@ semMedDbTranslate  <- function(fqSourceTableName,fqTableName){
   #Create Table & Load Data
   sql <- SqlRender::readSql("./SQL/SEMMEDDB_TRANSLATE.sql")
   renderedSql <- SqlRender::renderSql(sql=sql,
+                                      translatedSchema="CEM_TRANSLATED.dbo",
                                       tableName=fqTableName,
                                       sourceTableName=fqSourceTableName)
   translatedSql <- SqlRender::translateSql(renderedSql$sql,

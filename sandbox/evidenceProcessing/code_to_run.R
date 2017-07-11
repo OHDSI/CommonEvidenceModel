@@ -68,7 +68,7 @@ splicerTranlate(fqSourceTableName="CEM.dbo.SPLICER_CLEAN",
                 fqTableName="CEM_TRANSLATED.dbo.SPLICER")
 
 #SEMMEDDB
-semMedDbClean(schema="CEM",sourceSchema="SEMMEDDB")
+semMedDbClean(schema="CEM.dbo",sourceSchema="SEMMEDDB.dbo")
 semMedDbTranslate(fqSourceTableName="CEM.dbo.SEMMEDDB_CLEAN",
                   fqTableName="CEM_TRANSLATED.dbo.SEMMEDDB")
 
