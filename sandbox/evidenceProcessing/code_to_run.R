@@ -20,30 +20,30 @@ Sys.setenv(patient_port = patient_config$port)
 Sys.setenv(patient_schema = patient_config$schema)
 
 #VocabMappings
-fqSTCM <- "TRANSLATED.CEM_SOURCE_TO_CONCEPT_MAP"
+fqSTCM <- "CEM_TRANSLATED.dbo.CEM_SOURCE_TO_CONCEPT_MAP"
 
 ################################################################################
 # VOCAB
 ################################################################################
-cdmSTCM(fqTableName=fqSTCM,vocabulary="vocabulary",umls="staging_umls")
+cdmSTCM(schema="CEM_TRANSLATED.dbo",fqTableName=fqSTCM,vocabulary="vocabulary.dbo",umls="staging_umls.dbo")
 
 ################################################################################
 # LOAD CEM EVIDENCE
 ################################################################################
 #SOURCE
-loadSouceDefinitions(schema="CEM",fileName="SOURCE.txt")
+loadSourceDefinitions(schema="CEM",fileName="SOURCE.txt")
 
 #AEOLUS
-aeolusClean(schema="CEM", sourceSchema="AEOLUS")
+aeolusClean(schema="CEM.dbo", sourceSchema="AEOLUS.dbo", vocabulary="vocabulary.dbo")
 aeolusTranslate(fqSourceTableName="CEM.dbo.AEOLUS_CLEAN",
-                fqTableName="CEM_TRANLATED.dbo.AEOLUS")
+                fqTableName="CEM_TRANSLATED.dbo.AEOLUS")
 
 #MEDLINE WITH QUALIFIERS
 medlineAvillachClean(schema="CEM", sourceSchema="MEDLINE",pullName = "MEDLINE_AVILLACH",
                          drugQualifier="AND qualifier.value = 'adverse effects'",
                          conditionQualifier="AND qualifier.value = 'chemically induced'")
 medlineAvillachTranslated(fqSourceTableName="CEM.dbo.MEDLINE_AVILLACH_CLEAN",
-                          fqTableName="CEM_TRANLATED.dbo.MEDLINE_AVILLACH")
+                          fqTableName="CEM_TRANSLATED.dbo.MEDLINE_AVILLACH")
 
 #MEDLINE WITHOUT QUALIFIERS
 medlineAvillachClean(schema="CEM", sourceSchema="MEDLINE",
@@ -51,7 +51,7 @@ medlineAvillachClean(schema="CEM", sourceSchema="MEDLINE",
                      drugQualifier="",
                      conditionQualifier="")
 medlineAvillachTranslated(fqSourceTableName="CEM.dbo.MEDLINE_AVILLACH_NO_QUALIFIER_CLEAN",
-                          fqTableName="CEM_TRANLATED.dbo.MEDLINE_AVILLACH_NO_QUALIFIER")
+                          fqTableName="CEM_TRANSLATED.dbo.MEDLINE_AVILLACH_NO_QUALIFIER")
 
 #MEDLINE PUBMED
 medlinePubmedClean(schema="CEM", sourceSchema="MEDLINE",
@@ -63,16 +63,16 @@ medlinePubmedClean(schema="CEM", sourceSchema="MEDLINE",
 #!!!STILL NEED A TRANSLATE!!!
 
 #SPLICER
-splicerClean(schema="CEM",sourceSchema="SPLICER")
+splicerClean(schema="CEM.dbo",sourceSchema="SPLICER.dbo")
 splicerTranlate(fqSourceTableName="CEM.dbo.SPLICER_CLEAN",
-                fqTableName="CEM_TRANLATED.dbo.SPLICER")
+                fqTableName="CEM_TRANSLATED.dbo.SPLICER")
 
 #SEMMEDDB
-semMedDbClean(schema="CEM",sourceSchema="SEMMEDDB")
+semMedDbClean(schema="CEM.dbo",sourceSchema="SEMMEDDB.dbo")
 semMedDbTranslate(fqSourceTableName="CEM.dbo.SEMMEDDB_CLEAN",
-                  fqTableName="CEM_TRANLATED.dbo.SEMMEDDB")
+                  fqTableName="CEM_TRANSLATED.dbo.SEMMEDDB")
 
 #euPLADR
-euSplAdrClean(schema="CEM",sourceSchema="EU_SPL_ADR")
-euSplAdrTranslate(fqSourceTableName="CEM.dbo.EU_SPL_ADR_CLEAN",
-                  fqTableName="CEM_TRANLATED.dbo.EU_SPL_ADR")
+euSplAdrClean(schema="CEM.dbo",sourceSchema="EU_SPL_ADR.dbo")
+euSplAdrTranslate(fqSourceTableName="CEM.dbo.EU_PL_ADR_CLEAN",
+                  fqTableName="CEM_TRANSLATED.dbo.EU_PL_ADR")

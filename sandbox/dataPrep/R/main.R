@@ -17,7 +17,7 @@ loadEuProductLabels <- function(schema,xlsName,startRow, colNames) {
 
   #give reasonable column names
   colnames(df)<-(c("product","substance","most_recent_SPC_date","ADR_as_on_SPC",
-              "SOC","HLGT","HTL","LLT","meddra_PT","PT_code","SOC_code",
+              "SOC","HLGT","HLT","LLT","meddra_PT","PT_code","SOC_code",
               "age_group","gender","causality","frequency","class_warning",
               "clinical_trials","post_marketing","comment"))
 
@@ -48,7 +48,7 @@ loadEuProductLabels <- function(schema,xlsName,startRow, colNames) {
           ADR_as_on_SPC	  VARCHAR(500),
           SOC			        VARCHAR(500),
           HLGT		        VARCHAR(500),
-          HTL			        VARCHAR(500),
+          HLT			        VARCHAR(500),
           LLT			        VARCHAR(500),
           meddra_PT	      VARCHAR(500),
           PT_code		      VARCHAR(500),
