@@ -25,8 +25,8 @@ connectionDetails <- DatabaseConnector::createConnectionDetails(
 conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
 #variables
-stcmTable = paste0(Sys.getenv("clean"),".CEM_SOURCE_TO_CONCEPT_MAP")  #!!!THIS SHOULD GO INTO VOCABUALRY, BUT NEED PERMISSIONS
-medline_avillach = "new_medline_avillach"
+stcmTable = paste0(Sys.getenv("vocabulary"),".CEM_SOURCE_TO_CONCEPT_MAP")  #!!!THIS SHOULD GO INTO VOCABUALRY, BUT NEED PERMISSIONS
+medline_avillach = "demo_medline_avillach"
 source = "source"
 
 library(evidenceProcessingTranslated)

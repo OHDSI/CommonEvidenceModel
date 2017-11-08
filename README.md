@@ -1,8 +1,6 @@
 # CommonEvidenceModel
-===========
 
 ## Introduction
-===========
 The CommonEvidenceModel leverages work previously performed within LAERTES, also known as the OHDSI Knowledgebase.  However the focus here is building infrastructure to update the incoming raw sources as well as the post processing of finding Negative Controls.
 
  ![CEM Process Flow](src/img/CEM_PROCESS.png)
@@ -14,28 +12,21 @@ This project is an offshoot of the OHDSI Knowledgebase which more inforamtion ca
 * Knowledge Base workgroup of the Observational Health Data Sciences and Informatics (OHDSI) collaborative. Large-scale adverse effects related to treatment evidence standardization (LAERTES): an open scalable system for linking pharmacovigilance evidence sources with clinical data. J Biomed Semantics. 2017 Mar 7;8(1):11. doi: 10.1186/s13326-017-0115-3. PubMed PMID: 28270198; [PubMed Central PMCID: PMC5341176](https://www.ncbi.nlm.nih.gov/pubmed/28270198).
 
 ## Features
-===========
 
 ## Technology
-===========
 
 ## System Requirements
-===========
 
 ## Dependencies
-===========
+
 
 ## Getting Started
-===========
 
 ## Getting Involved
-===========
 * Join the [Working Group](http://www.ohdsi.org/web/wiki/doku.php?id=projects:workgroups:kb-wg) 
 * Developer questions/comments/feedback: <a href="http://forums.ohdsi.org/c/developers">OHDSI Forum</a>
 * We use the <a href="../../issues">GitHub issue tracker</a> for all bugs/issues/enhancements
 
 ## License
-===========
 
 ## Development
-===========

@@ -29,7 +29,8 @@ tableSource <- "source"
 fileSource <- "source.csv"
 createTableSource <-"source.sql"
 schemaMedline <- "staging_medline"
-tableAvillach <- "NEW_medline_avillach"
+tableAvillach <- "medline_avillach"
+tableCoOccurrence <- "medline_cooccurrence"
 
 library(evidenceProcessingClean)
 
@@ -54,7 +55,13 @@ loadTable(conn=conn,
 ################################################################################
 
 #COOCCURRENCE
-#tbd
+medlineCoOccurrence(conn=conn,
+                    targetDbSchema=Sys.getenv("clean"),
+                    targetTable=tableCoOccurrence,
+                    sourceSchema=schemaMedline,
+                    sourceID=tableCoOccurrence,
+                    drugQualifier="",
+                    conditionQualifier="")
 
 #AVILLACH
 medlineCoOccurrence(conn=conn,
