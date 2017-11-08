@@ -27,6 +27,7 @@ conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 #variables
 stcmTable = paste0(Sys.getenv("clean"),".CEM_SOURCE_TO_CONCEPT_MAP")  #!!!THIS SHOULD GO INTO VOCABUALRY, BUT NEED PERMISSIONS
 medline_avillach = "new_medline_avillach"
+source = "source"
 
 library(evidenceProcessingTranslated)
 
@@ -37,6 +38,17 @@ buildStcm(conn=conn,
      vocabulary=vocabulary,
      stcmTable=stcmTable,
      umlsSchema="staging_umls")
+
+################################################################################
+# SOURCE
+################################################################################
+sql <- "IF OBJECT_ID('@targetTable', 'U') IS NOT NULL DROP TABLE @targetTable; SELECT * INTO @targetTable FROM @sourceTable;"
+renderedSql <- SqlRender::renderSql(sql=sql,
+                                    sourceTable = paste0(Sys.getenv("clean"),'.',source),
+                                    targetTable = paste0(Sys.getenv("translated"),'.',source))
+translatedSql <- SqlRender::translateSql(renderedSql$sql,
+                                         targetDialect=Sys.getenv("dbms"))
+DatabaseConnector::executeSql(conn, translatedSql$sql)
 
 ################################################################################
 # MEDLINE
