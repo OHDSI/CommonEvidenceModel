@@ -35,3 +35,5 @@ vignettes/*.pdf
 
 evidenceProcessingClean/errorReport.txt
 evidenceProcessingClean/extras/config.csv
+evidenceProcessingTranslated/errorReport.txt
+postProcessingNegativeControls/errorReport.txt
