@@ -33,7 +33,8 @@
 #' @export
 medlineCoOccurrence <- function(conn,targetDbSchema,targetTable,
                                 sourceSchema,sourceID,
-                                drugQualifier,conditionQualifier){
+                                drugQualifier=0,
+                                conditionQualifier=0){
 
   #Find Max PMID and how to iterate to it
   options(scipen=999)

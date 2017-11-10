@@ -1,10 +1,13 @@
+IF OBJECT_ID('tempdb..#TEMP_DRUG', 'U') IS NOT NULL DROP TABLE #TEMP_DRUG;
+IF OBJECT_ID('tempdb..#TEMP_CONDITION', 'U') IS NOT NULL DROP TABLE #TEMP_CONDITION;
+
 {@i == 1}?{
   /*RUN THE FIRST ITERATION*/
   IF OBJECT_ID('@targetTable','U') IS NOT NULL
   DROP TABLE @targetTable;
 
   CREATE TABLE @targetTable (
-    --ID INT IDENTITY(1,1) PRIMARY KEY,
+    ID SERIAL,
   	SOURCE_ID	VARCHAR(30),
   	SOURCE_CODE_1	VARCHAR(50),
   	SOURCE_CODE_TYPE_1	VARCHAR(55),
@@ -23,16 +26,56 @@
     PUBLICATION_YEAR INT,
     PUBLICATION_TYPE VARCHAR(255)
   );
+
+  IF OBJECT_ID('tempdb..#TEMP_PUB_TYPE', 'U') IS NOT NULL DROP TABLE #TEMP_PUB_TYPE;
+  select pmid,
+			value AS pub_type_value,
+			ui pub_type_ui
+	INTO #TEMP_PUB_TYPE
+	  from @sourceSchema.medcit_art_publicationtypelist_publicationtype
+	  where lower(value) in ('case reports','clinical trial','meta-analysis','comparative study','multicenter study','journal article','controlled clinical trial',
+  		'clinical trial, phase i','clinical trial, phase ii','clinical trial, phase iii','clinical trial, phase iv', 'randomized controlled trial','observational study');
+  CREATE INDEX IDX_TEMP_ACCEPTABLE_PUB_TYPES ON #TEMP_PUB_TYPE (PMID);
+
+  IF OBJECT_ID('tempdb..#TEMP_ENGLISH_PMID', 'U') IS NOT NULL DROP TABLE #TEMP_ENGLISH_PMID;
+  SELECT PMID
+  INTO #TEMP_ENGLISH_PMID
+  FROM @sourceSchema.medcit_art_language WHERE upper(VALUE) = 'ENG';
+  CREATE INDEX IDX_TEMP_ENGLISH_PMID ON #TEMP_ENGLISH_PMID (PMID);
+
+  IF OBJECT_ID('tempdb..#TEMP_HUMAN_MESH_PMID', 'U') IS NOT NULL DROP TABLE #TEMP_HUMAN_MESH_PMID;
+  SELECT PMID
+  INTO #TEMP_HUMAN_MESH_PMID
+  FROM @sourceSchema.medcit_meshheadinglist_meshheading WHERE descriptorname_ui = 'D006801';
+  CREATE INDEX IDX_TEMP_HUMAN_MESH_PMID ON #TEMP_HUMAN_MESH_PMID (PMID);
+
 }
 
+select meshheading.pmid, meshheading.descriptorname, meshheading.descriptorname_ui
+INTO #TEMP_DRUG
+from @sourceSchema.medcit_meshheadinglist_meshheading meshheading
+join @sourceSchema.medcit_meshheadinglist_meshheading_qualifiername qualifier
+	on meshheading.pmid = qualifier.pmid
+	and meshheading.medcit_meshheadinglist_meshheading_order = qualifier.medcit_meshheadinglist_meshheading_order
+WHERE meshheading.pmid BETWEEN @start AND @end
+{@drugQualifier}?{AND lower(qualifier.value) = 'adverse effects'};
+
+CREATE INDEX IDX_TEMP_DRUG ON #TEMP_DRUG (PMID);
+
+select meshheading.pmid, meshheading.descriptorname, meshheading.descriptorname_ui
+INTO #TEMP_CONDITION
+from @sourceSchema.medcit_meshheadinglist_meshheading meshheading
+	join @sourceSchema.medcit_meshheadinglist_meshheading_qualifiername qualifier
+		on meshheading.pmid = qualifier.pmid
+		and meshheading.medcit_meshheadinglist_meshheading_order = qualifier.medcit_meshheadinglist_meshheading_order
+WHERE meshheading.pmid BETWEEN @start AND @end
+{@conditionQualifier}?{AND lower(qualifier.value) = 'chemically induced'};
+
+CREATE INDEX IDX_TEMP_CONDITION ON #TEMP_CONDITION (PMID);
+
 with drug_of_ade_step1 as (
-  select meshheading.pmid, meshheading.descriptorname, meshheading.descriptorname_ui
-  from @sourceSchema.medcit_meshheadinglist_meshheading meshheading
-  join @sourceSchema.medcit_meshheadinglist_meshheading_qualifiername qualifier
-  	on meshheading.pmid = qualifier.pmid
-  	and meshheading.medcit_meshheadinglist_meshheading_order = qualifier.medcit_meshheadinglist_meshheading_order
-  WHERE meshheading.pmid BETWEEN @start AND @end
-  @drugQualifier
+  SELECT *
+  FROM #TEMP_DRUG
 ),
 drug_of_ade AS (
 	/*Search for substances*/
@@ -63,13 +106,8 @@ drug_of_ade AS (
 	WHERE doa.PMID BETWEEN @start AND @end
 ),
 effect_of_ade as (
-  select meshheading.pmid, meshheading.descriptorname, meshheading.descriptorname_ui
-  from @sourceSchema.medcit_meshheadinglist_meshheading meshheading
-  	join @sourceSchema.medcit_meshheadinglist_meshheading_qualifiername qualifier
-  		on meshheading.pmid = qualifier.pmid
-  		and meshheading.medcit_meshheadinglist_meshheading_order = qualifier.medcit_meshheadinglist_meshheading_order
-  WHERE meshheading.pmid BETWEEN @start AND @end
-  @conditionQualifier
+  SELECT *
+  FROM #TEMP_CONDITION
 ),
 CTE_RELEVANT_PMIDS AS (
 	select ade.pmid, drug, drug_ui, effect, effect_ui, pub_type_value, pub_type_ui
@@ -90,23 +128,16 @@ CTE_RELEVANT_PMIDS AS (
 		SELECT pmid FROM @sourceSchema.medcit_otherabstract_abstracttext WHERE PMID BETWEEN @start AND @end
 	 )*/
 	 AND drug_of_ade.pmid IN (
-		--PUBMED FILTER:  English[lang]
-		SELECT PMID FROM @sourceSchema.medcit_art_language WHERE upper(VALUE) = 'ENG' AND PMID BETWEEN @start AND @end
+		SELECT PMID FROM #TEMP_ENGLISH_PMID
 	 )
 	 AND drug_of_ade.pmid IN (
-		--PUBMED FILTER:  humans[MeSH Terms]
-		SELECT PMID FROM @sourceSchema.medcit_meshheadinglist_meshheading WHERE descriptorname_ui = 'D006801' AND PMID BETWEEN @start AND @end
+    SELECT PMID FROM #TEMP_HUMAN_MESH_PMID
 	 )
 	) as ade
 	inner join
 	(
-	  select pmid,
-			value AS pub_type_value,
-			ui pub_type_ui
-	  from @sourceSchema.medcit_art_publicationtypelist_publicationtype
-	  where lower(value) in ('case reports','clinical trial','meta-analysis','comparative study','multicenter study','journal article','controlled clinical trial',
-  		'clinical trial, phase i','clinical trial, phase ii','clinical trial, phase iii','clinical trial, phase iv', 'randomized controlled trial','observational study')
-  	AND PMID BETWEEN @start AND @end
+	  SELECT *
+	  FROM #TEMP_PUB_TYPE
   ) as publicationtype
 	on ade.pmid = publicationtype.pmid
 ),

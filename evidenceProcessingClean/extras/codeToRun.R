@@ -28,9 +28,18 @@ conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 tableSource <- "source"
 fileSource <- "source.csv"
 createTableSource <-"source.sql"
+schemaVocab <- "vocabulary"
+schemaAeolus <- "staging_aeolus"
 schemaMedline <- "staging_medline"
+schemaSplicer <- "staging_splicer"
+schemaEUPLADR <- "staging_eu_pl_adr"
+schemaSemMedDb <- "staging_semmeddb"
+tableAeolus <- "aeolus"
 tableAvillach <- "medline_avillach"
+tableEUPLADR <- "eu_pl_adr"
 tableCoOccurrence <- "medline_cooccurrence"
+tableSplicer <- "splicer"
+tableSemMedDb <- "semmeddb"
 
 library(evidenceProcessingClean)
 
@@ -48,7 +57,12 @@ loadTable(conn=conn,
 ################################################################################
 
 #AEOLUS
-#tbd
+genericLoad(conn=conn,
+            targetDbSchema=Sys.getenv("clean"),
+            targetTable=tableAeolus,
+            sourceSchema=schemaAeolus,
+            sqlFile="aeolus.sql",
+            vocabSchema=schemaVocab)
 
 ################################################################################
 # MEDLINE
@@ -59,9 +73,7 @@ medlineCoOccurrence(conn=conn,
                     targetDbSchema=Sys.getenv("clean"),
                     targetTable=tableCoOccurrence,
                     sourceSchema=schemaMedline,
-                    sourceID=tableCoOccurrence,
-                    drugQualifier="",
-                    conditionQualifier="")
+                    sourceID=tableCoOccurrence)
 
 #AVILLACH
 medlineCoOccurrence(conn=conn,
@@ -69,8 +81,8 @@ medlineCoOccurrence(conn=conn,
                     targetTable=tableAvillach,
                     sourceSchema=schemaMedline,
                     sourceID=tableAvillach,
-                    drugQualifier="AND lower(qualifier.value) = 'adverse effects'",
-                    conditionQualifier="AND lower(qualifier.value) = 'chemically induced'")
+                    drugQualifier=1,
+                    conditionQualifier=1)
 
 #PUBMED PULL
 #tbd
@@ -79,14 +91,26 @@ medlineCoOccurrence(conn=conn,
 #tbd
 
 #SEMMEDDB
-#tbd
+genericLoad(conn=conn,
+            targetDbSchema=Sys.getenv("clean"),
+            targetTable=tableSemMedDb,
+            sourceSchema=schemaSemMedDb,
+            sqlFile="semmeddb.sql")
 
 ################################################################################
 # PRODUCT LABELS
 ################################################################################
 
 #SPLICER
-#tbd
+genericLoad(conn=conn,
+            targetDbSchema=Sys.getenv("clean"),
+            targetTable=tableSplicer,
+            sourceSchema=schemaSplicer,
+            sqlFile="splicer.sql")
 
 #EUPLADR
-#tbd
+genericLoad(conn=conn,
+            targetDbSchema=Sys.getenv("clean"),
+            targetTable=tableEUPLADR,
+            sourceSchema=schemaEUPLADR,
+            sqlFile="eu_pl_adr.sql")
