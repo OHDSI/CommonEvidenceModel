@@ -33,6 +33,9 @@ vignettes/*.pdf
 *.knit.md
 .Rproj.user
 
+meshTags/extras/config_patient_data.csv
+meshTags/extras/config.csv
+meshTags/errorReport.txt
 evidenceProcessingClean/errorReport.txt
 evidenceProcessingClean/extras/config.csv
 evidenceProcessingTranslated/extras/config.csv

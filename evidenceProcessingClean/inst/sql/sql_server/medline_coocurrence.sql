@@ -3,8 +3,7 @@ IF OBJECT_ID('tempdb..#TEMP_CONDITION', 'U') IS NOT NULL DROP TABLE #TEMP_CONDIT
 
 {@i == 1}?{
   /*RUN THE FIRST ITERATION*/
-  IF OBJECT_ID('@targetTable','U') IS NOT NULL
-  DROP TABLE @targetTable;
+  IF OBJECT_ID('@targetTable','U') IS NOT NULL DROP TABLE @targetTable;
 
   CREATE TABLE @targetTable (
     ID SERIAL,
