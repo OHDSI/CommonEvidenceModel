@@ -70,9 +70,12 @@ conditionMeshMedline <- medlineMeshTagPull(conn=conn,
                                             sourceSchema=schemaMedline,
                                             sqlFile="find_medline_condition_mesh_tags.sql")
 
+
+conditionMeshMedlineDeDuped <- conditionMeshMedline[!conditionMeshMedline$MESH_SOURCE_CODE %in% conditionMesh$MESH_SOURCE_CODE,]
+
 ################################################################################
 # COMBO
 ################################################################################
-df <- unique(rbind(conditionMesh,drugMesh,conditionMeshMedline))
-write.table(df,file="MeshTags.txt",sep="\t",row.names=FALSE)
+df <- unique(rbind(conditionMesh,drugMesh,conditionMeshMedlineDeDuped))
+write.table(df,file="MeshTags.csv",sep="\t",row.names=FALSE)
 

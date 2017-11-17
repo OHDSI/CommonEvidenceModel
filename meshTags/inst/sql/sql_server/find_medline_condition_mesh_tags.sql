@@ -15,30 +15,28 @@ WITH CTE_BAD_MESH AS (
 		)
 	)
 ),
+CTE_PULL_RECORDS AS (
+	SELECT mh.DESCRIPTORNAME_UI AS MESH_SOURCE_CODE, mh.descriptorname AS MESH_SOURCE_NAME,
+		mh.PMID
+	FROM @sourceSchema.medcit_meshheadinglist_meshheading mh
+		JOIN @sourceSchema.medcit_meshheadinglist_meshheading_qualifiername q
+			ON q.pmid = mh.pmid
+			AND q.medcit_meshheadinglist_meshheading_order = mh.medcit_meshheadinglist_meshheading_order
+			AND q."value" = 'chemically induced'
+
+),
 CTE_BAD_PMID AS (
-	SELECT DISTINCT mh.PMID
+	SELECT mh.PMID
 	FROM @sourceSchema.medcit_meshheadinglist_meshheading mh
 	WHERE mh.descriptorname_ui IN (
-		SELECT DISTINCT DESCENDANT_UI FROM CTE_BAD_MESH
+		SELECT DESCENDANT_UI FROM CTE_BAD_MESH
 	)
-),
-CTE_PULL_RECORDS AS (
-	SELECT *
-	FROM (
-		SELECT mh.DESCRIPTORNAME_UI AS MESH_SOURCE_CODE, mh.descriptorname AS MESH_SOURCE_NAME,
-			mh.PMID
-		FROM @sourceSchema.medcit_meshheadinglist_meshheading mh
-			JOIN @sourceSchema.medcit_meshheadinglist_meshheading_qualifiername q
-				ON q.pmid = mh.pmid
-				AND q.medcit_meshheadinglist_meshheading_order = mh.medcit_meshheadinglist_meshheading_order
-				AND q."value" = 'chemically induced'
-	) z
-	WHERE PMID NOT IN (SELECT PMID FROM CTE_BAD_PMID)
 )
 SELECT 'CONDITION' AS MESH_TYPE, MESH_SOURCE_CODE, MESH_SOURCE_NAME,
-  COUNT(DISTINCT PMID) AS RECORD_COUNT, 'DISTINCT PMID' AS RECORD_TYPE
-FROM CTE_PULL_RECORDS
-WHERE MESH_SOURCE_CODE NOT IN (SELECT DISTINCT DESCENDANT_UI FROM CTE_BAD_MESH)
+  COUNT(DISTINCT pr.PMID) AS RECORD_COUNT, 'DISTINCT PMID' AS RECORD_TYPE
+FROM CTE_PULL_RECORDS pr
+	LEFT OUTER JOIN CTE_BAD_PMID b
+		ON b.PMID = pr.PMID
+		AND b.PMID IS NULL
 GROUP BY MESH_SOURCE_CODE, MESH_SOURCE_NAME
-HAVING COUNT(DISTINCT PMID) >= 10
-ORDER BY MESH_SOURCE_CODE, MESH_SOURCE_NAME;
+HAVING COUNT(DISTINCT pr.PMID) >= 10;

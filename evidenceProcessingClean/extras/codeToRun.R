@@ -40,6 +40,8 @@ tableEUPLADR <- "eu_pl_adr"
 tableCoOccurrence <- "medline_cooccurrence"
 tableSplicer <- "splicer"
 tableSemMedDb <- "semmeddb"
+tableMeshTags <- paste0(Sys.getenv("clean"),".lu_pubmed_mesh_tags")
+tablePubmed <- "pubmed"
 
 library(evidenceProcessingClean)
 
@@ -85,7 +87,28 @@ medlineCoOccurrence(conn=conn,
                     conditionQualifier=1)
 
 #PUBMED PULL
-#tbd
+#requires loading of Pubmed MeSH tags from the MeshTags Package
+df <- read.table("inst/csv/MeshTags.csv", header = TRUE)
+DatabaseConnector::insertTable(conn=conn,
+                               tableName=tableMeshTags,
+                               data=df,
+                               dropTableIfExists=TRUE,
+                               createTable=TRUE,
+                               tempTable=FALSE,
+                               oracleTempSchema=NULL)
+rm(df)
+
+pubmed(conn,
+       targetDbSchema=Sys.getenv("clean"),
+       targetTable=tablePubmed,
+       sourceId=tablePubmed,
+       meshTags=tableMeshTags,
+       sqlFile="pubmed.sql",
+       pullPubMed = 1,
+       pubMedPullStart = 1,
+       summarize = 1,
+       summarizeStart = 1)
+
 
 #WINNENBURG
 #tbd
