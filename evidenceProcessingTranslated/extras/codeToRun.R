@@ -33,6 +33,7 @@ stcmTable = paste0(Sys.getenv("vocabulary"),".CEM_SOURCE_TO_CONCEPT_MAP")  #!!!T
 aeolus = "aeolus"
 medline_avillach = "medline_avillach"
 medline_cooccurrence = "medline_cooccurrence"
+pubmed = "pubmed"
 semmeddb = "semmeddb"
 splicer = "splicer"
 euPlAdr = "eu_pl_adr"
@@ -88,7 +89,11 @@ translate(conn=conn,
 
 
 #PUBMED PULL
-#TBD
+translate(conn=conn,
+          sourceTable=paste0(Sys.getenv("clean"),'.',pubmed),
+          targetTable=paste0(Sys.getenv("translated"),'.',pubmed),
+          stcmTable=stcmTable,
+          translationSql="pubmed.sql")
 
 #WINNENBURG
 #tbd

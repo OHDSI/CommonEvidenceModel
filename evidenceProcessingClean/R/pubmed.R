@@ -57,15 +57,18 @@ pubmed <- function(conn,targetDbSchema,targetTable,sourceId,meshTags,sqlFile,
   numDrugsOnly <- nrow(drugsOnly)
 
   if(pullPubMed==1){
-    #prep for pull
-    print("Pulling Information from Medline")
-    sql <- SqlRender::loadRenderTranslateSql(sqlFilename = sqlFile,
-                                             packageName = "evidenceProcessingClean",
-                                             dbms = attr(conn, "dbms"),
-                                             oracleTempSchema = NULL,
-                                             pullPubMed=pullPubMed,
-                                             tableName=tableNameForPrep)
-    DatabaseConnector::executeSql(conn=conn,sql)
+
+    if(pubMedPullStart==1){
+      #create a table to pull into
+      print("Pulling Information from Medline")
+      sql <- SqlRender::loadRenderTranslateSql(sqlFilename = sqlFile,
+                                               packageName = "evidenceProcessingClean",
+                                               dbms = attr(conn, "dbms"),
+                                               oracleTempSchema = NULL,
+                                               pullPubMed=pullPubMed,
+                                               tableName=tableNameForPrep)
+      DatabaseConnector::executeSql(conn=conn,sql)
+    }
 
     #pubmed pull
     for(i in pubMedPullStart:meshTagNum){
