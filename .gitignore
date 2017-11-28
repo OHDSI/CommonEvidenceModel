@@ -40,4 +40,6 @@ evidenceProcessingClean/errorReport.txt
 evidenceProcessingClean/extras/config.csv
 evidenceProcessingTranslated/extras/config.csv
 evidenceProcessingTranslated/errorReport.txt
+postProcessingEvidenceUnify/extras/config.csv
+postProcessingEvidenceUnify/errorReport.txt
 postProcessingNegativeControls/errorReport.txt

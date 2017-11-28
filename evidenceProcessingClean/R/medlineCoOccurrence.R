@@ -26,15 +26,12 @@
 #'
 #' @param sourceID the name of the type of cooccurrence run you are performing (e.g. Avillach)
 #'
-#' @param drugQualifier define the drug qualifiers to be used (e.g. adverse effects)
-#'
-#' @param conditionQualifier define the condition qualifiers to be used (e.g. chemically induced)
+#' @param qualifier define the drug qualifiers/condition qualifiers to be used (e.g. adverse effects, chemically induced)
 #'
 #' @export
 medlineCoOccurrence <- function(conn,targetDbSchema,targetTable,
                                 sourceSchema,sourceID,
-                                drugQualifier=0,
-                                conditionQualifier=0){
+                                qualifier=0){
 
   #Find Max PMID and how to iterate to it
   options(scipen=999)
@@ -63,8 +60,7 @@ medlineCoOccurrence <- function(conn,targetDbSchema,targetTable,
                                         i=i,
                                         iteraterNum=iteraterNum,
                                         sourceSchema=sourceSchema,
-                                        drugQualifier=drugQualifier,
-                                        conditionQualifier=conditionQualifier,
+                                        qualifier=qualifier,
                                         start=iterater$start[i],
                                         end=iterater$end[i],
                                         sourceID = sourceID)

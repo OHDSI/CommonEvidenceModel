@@ -83,8 +83,7 @@ medlineCoOccurrence(conn=conn,
                     targetTable=tableAvillach,
                     sourceSchema=schemaMedline,
                     sourceID=tableAvillach,
-                    drugQualifier=1,
-                    conditionQualifier=1)
+                    qualifier=1)
 
 #PUBMED PULL
 #requires loading of Pubmed MeSH tags from the MeshTags Package
@@ -105,10 +104,12 @@ pubmed(conn,
        meshTags=tableMeshTags,
        sqlFile="pubmed.sql",
        pullPubMed = 1,
-       pubMedPullStart = 1,
+       pubMedPullStart = 3532,
        summarize = 1,
        summarizeStart = 1)
 
+#[1] "PUBMED PULL: 2735:4046 - thonzylamine"
+#"PUBMED PULL: 3531:4046 - Pneumonia, Atypical Interstitial, of Cattle"
 
 #WINNENBURG
 #tbd
