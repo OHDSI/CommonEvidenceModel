@@ -34,7 +34,7 @@
 findConcepts <- function(conn,storeData,
                          conceptUniverseData='',
                          sqlFile='',
-                         vocabulary='',
+                         vocabulary,
                          concepts='',
                          expandConcepts=0){
   if(sqlFile!=''){
@@ -43,7 +43,7 @@ findConcepts <- function(conn,storeData,
                                              dbms = attr(conn, "dbms"),
                                              oracleTempSchema = NULL,
                                              storeData=storeData,
-                                             storeData=storeData,
+                                             vocabulary=vocabulary,
                                              conceptUniverseData=conceptUniverseData)
     DatabaseConnector::executeSql(conn=conn,sql)
   }

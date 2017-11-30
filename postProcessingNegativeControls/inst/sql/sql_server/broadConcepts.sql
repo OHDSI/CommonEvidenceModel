@@ -16,6 +16,16 @@ OR UPPER(c1.CONCEPT_NAME) LIKE '%BY MECHANISM'
 OR UPPER(c1.CONCEPT_NAME) LIKE '%OF BODY REGION%'
 OR UPPER(c1.CONCEPT_NAME) LIKE '%OF SPECIFIC BODY STRUCTURE%'
 OR c1.CONCEPT_ID IN (
+  select ancestor_concept_id
+  from @vocabulary.concept_ancestor ca
+  	JOIN @vocabulary.concept c
+  		on ca.ancestor_concept_id = c.concept_id
+  		AND UPPER(c.STANDARD_CONCEPT) = 'S'
+  WHERE UPPER(c.domain_id) = 'CONDITION'
+  group  by concept_name, ancestor_concept_id
+  having count(*) > 45
+)
+OR c1.CONCEPT_ID IN (
   	313878, /*Respiratory symptom*/
   	198194, /*Female genital organ symptoms*/
   	135033, /*Hair and hair follicle diseases*/

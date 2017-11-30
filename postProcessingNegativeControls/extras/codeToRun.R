@@ -106,6 +106,7 @@ conceptUniverse <- findConceptUniverse(connPatientData=connPatientData,
 #BROAD CONDITIONS
 findConcepts(conn = conn,
              storeData = broadConceptsData,
+             vocabulary=vocabulary,
              conceptUniverseData=conceptUniverseData,
              sqlFile="broadConcepts.sql")
 
