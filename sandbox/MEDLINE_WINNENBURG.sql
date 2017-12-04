@@ -39,5 +39,11 @@ LIMIT 10
 /*2.6 Rule of 3 - a group of three or more specific descriptors must be replaced by one more general descriptor*/
 --Maybe this could be where we text string search the title for the description.  If we have a descriptor but no other drugs specific tags look for text in title.
 
+/*IMPROVEMENT*/
+--Storing "JOURNAL ARTICLE" is probably not informative from PUBLICATION_TYPES.
 
+/*DIFFERENCE*/
+--Looks like animal studies are included, we would like to exclude this.
 
+/*QUESTIONS*/
+--1) In DRUGS.DRUG_ROLE what is i and c?

@@ -34,13 +34,16 @@
 findConceptUniverse <- function(conn,connPatientData,schemaRaw,filter=10,
                                 storeData,outcomeOfInterest,conceptsOfInterest){
 
+  old<-Sys.time()
+  print(paste0("Current Time: ",Sys.time()))
+
   #pull data
   sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "findConceptUniverse.sql",
                                            packageName = "postProcessingNegativeControls",
                                            dbms = attr(connPatientData, "dbms"),
                                            oracleTempSchema = NULL,
                                            schemaRaw=schemaRaw,
-                                           filter=filter,
+                                           filte=filter,
                                            outcomeOfInterest=outcomeOfInterest,
                                            conceptsOfInterest=conceptsOfInterest)
   df <- DatabaseConnector::querySql(conn=connPatientData,sql)
@@ -62,6 +65,7 @@ findConceptUniverse <- function(conn,connPatientData,schemaRaw,filter=10,
                                            targetDialect=Sys.getenv("dbms"))
   DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
 
+  print(paste0("Time Duration: ",Sys.time()-old))
   #Clean Up
   return(df)
 }

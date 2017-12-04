@@ -110,6 +110,33 @@ findConcepts(conn = conn,
              conceptUniverseData=conceptUniverseData,
              sqlFile="broadConcepts.sql")
 
+#DRUG RELATED
+findConcepts(conn = conn,
+             storeData = drugInducedConditionsData,
+             conceptUniverseData=conceptUniverseData,
+             sqlFile="drugRelatedConditions.sql")
+
+#PREGNANCY
+findConcepts(conn = conn,
+             storeData = pregnancyConditionData,
+             conceptUniverseData=conceptUniverseData,
+             sqlFile="pregnancyConditions.sql")
+
+#SPLICER
+findSplicerConditions(conn=conn,
+                    storeData=splicerConditionData,
+                    splicerData=splicer,
+                    sqlFile="splicerConditions.sql",
+                    conceptsOfInterest=conceptsOfInterest,
+                    vocabulary=vocabulary)
+
+#FIND INDICATIONS
+findDrugIndications(conn=conn,
+                    storeData=indicationData,
+                    vocabulary=vocabulary,
+                    conceptsOfInterest=conceptsOfInterest,
+                    outcomeOfInterest=outcomeOfInterest)
+
 #USER IDENTIFIED CONCEPTS TO EXCLUDE
 findConcepts(conn = conn,
              storeData = conceptsToExcludeData,

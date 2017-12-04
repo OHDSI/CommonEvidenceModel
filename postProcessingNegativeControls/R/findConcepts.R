@@ -34,7 +34,7 @@
 findConcepts <- function(conn,storeData,
                          conceptUniverseData='',
                          sqlFile='',
-                         vocabulary,
+                         vocabulary='',
                          concepts='',
                          expandConcepts=0){
   if(sqlFile!=''){
