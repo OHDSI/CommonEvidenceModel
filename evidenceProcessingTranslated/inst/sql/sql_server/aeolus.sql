@@ -28,7 +28,8 @@ SELECT ID,
       COUNT_A,
       COUNT_B,
       COUNT_C,
-      COUNT_D
+      COUNT_D,
+      CHI_SQUARE
 INTO @targetTable
 FROM @sourceTable a
 	LEFT OUTER JOIN CTE_VOCAB stcm
