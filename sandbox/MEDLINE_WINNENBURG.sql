@@ -47,3 +47,7 @@ LIMIT 10
 
 /*QUESTIONS*/
 --1) In DRUGS.DRUG_ROLE what is i and c?
+
+
+/*NOTES*/
+--i/c = involved/concomitant -- involved drugs have some sort of AE qualifier, while concomitant drugs do not (concomitant drugs should not be considered linked to ADEs).
