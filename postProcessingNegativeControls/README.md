@@ -1,6 +1,6 @@
 Post Processing - Negative Controls
 ====================
-Negative controls are designed to detect both suspected and unsuspected sources of spurious causal inference.  For example, biologists employ "negative controls" as a means of ruling out possible noncausal interpretations of their results.  The essential purpose of a negative control is to reproduce a condition that cannot involve the hypothesized causal mechanism but is very likely to invole the same sources of bias that may have been present in the original association [<a href="#1">1</a>].  Martijn et al. have set the motivation for negative controls in the OHDSI community within the paper "Interpreting observational studies: why empirical calibration is needed to correct p-values" [<a href"#2">2</a>].
+Negative controls are designed to detect both suspected and unsuspected sources of spurious causal inference.  For example, biologists employ "negative controls" as a means of ruling out possible noncausal interpretations of their results.  The essential purpose of a negative control is to reproduce a condition that cannot involve the hypothesized causal mechanism but is very likely to invole the same sources of bias that may have been present in the original association [<a href="#1">1</a>].  Martijn et al. have set the motivation for negative controls in the OHDSI community within the paper "Interpreting observational studies: why empirical calibration is needed to correct p-values" [<a href="#2">2</a>].
 
 Once the CommonEvidenceModel is processed by the OHDSI team, one could use this Post Processing Package to find Negative Controls.  The entire program must be run on a case by case basis, i.e. for every negative control set you want to run the entire process needs to be run.  One must provide OMOP Concept IDs to identify the item you trying to study, these are the "concepts of interest".  The program will export an Excel document that reports:
 1. What were the users settings were for the run (like the concepts of interest)
@@ -53,12 +53,12 @@ Dependencies
 
 Getting Started
 ====================
-1. Under extras/ set up your config.csv.  There is an example found <a href="/extras/config.example.csv">here</a>.  
+1. Under extras/ set up your config.csv.  There is an example found <a href="extras/config.example.csv">here</a>.  
  - evidenceProcessingClean = "clean"
  - evidenceProcessingTranslated = "translated"
  - postProcessing = "evidence"
  
-2. Under extras/ set up your config_patient_data.csv.  There is an exmample found <a href="extras/config_patient_data.example.csv">here</a>.  It is best to select a database that you are using for your study or a database that is fairly representative of the databases being used.  
+2. Under extras/ set up your config_patient_data.csv.  There is an example found <a href="extras/config_patient_data.example.csv">here</a>.  It is best to select a database that you are using for your study or a database that is fairly representative of the databases being used.  
 
 3. Under extras/ open the codeToRun.R file.  The parameters that need to be set to run under <a href="extras/codeToRun.R#L87">Config</a>:
  - outcomeOfInterest - are you looking for "condition" or "drug" negative controls
@@ -77,7 +77,7 @@ Getting Started
 
 Getting Involved
 ====================
-Refer <a href="../CommonEvidenceModel#getting-involved">here</a>.
+Refer <a href="../CommonEvidenceModel/#getting-involved">here</a>.
 
 Contact Erica Voss and Lee Evans for access to the CommonEvidenceModel.
 
