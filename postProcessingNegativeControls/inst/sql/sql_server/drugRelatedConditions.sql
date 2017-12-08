@@ -21,4 +21,4 @@ OR c1.CONCEPT_ID IN (
   438661,	/*Complication of infusion*/
   4168644	/*Propensity to adverse reactions to substance*/
 )
-ORDER BY PERSON_COUNT DESC
+ORDER BY PERSON_COUNT_DC DESC
