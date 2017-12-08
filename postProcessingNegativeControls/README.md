@@ -29,7 +29,7 @@ OHDSI's first attempt at producing negative controls can be found in the paper "
  - Not associated with "drug induced" concepts
  - Not a pregnancy related concept
  - The US drug label does not suggest the concept is in an adverse event relationship
- - No spontaneous reports found (Currently Under Construction - <a href="../issues/3">Issue #3</a>)
+ - No spontaneous reports found (Currently Under Construction - <a href="../../../issues/3">Issue #3</a>)
  - The user has not suggested to exclude this concept
  - Finally, all remaining concepts are then "optimized", meaning parent concepts remove children concepts as defined by the OMOP Vocabulary
 
@@ -77,7 +77,7 @@ Getting Started
 
 Getting Involved
 ====================
-Refer <a href="../CommonEvidenceModel/#getting-involved">here</a>.
+Refer <a href="../../../#getting-involved">here</a>.
 
 Contact Erica Voss and Lee Evans for access to the CommonEvidenceModel.
 
