@@ -35,19 +35,26 @@ LIMIT 10
 /*Already doing in our Avillach*/
 --https://github.com/OHDSI/CommonEvidenceModel/tree/master/evidenceProcessingClean/inst/sql/sql_server#L80
 
-/*IMPROVEMENT #???*/
-/*2.6 Rule of 3 - a group of three or more specific descriptors must be replaced by one more general descriptor*/
---Maybe this could be where we text string search the title for the description.  If we have a descriptor but no other drugs specific tags look for text in title.
-
-/*IMPROVEMENT*/
+/*IMPROVEMENT #4*/
 --Storing "JOURNAL ARTICLE" is probably not informative from PUBLICATION_TYPES.
 
-/*DIFFERENCE*/
---Looks like animal studies are included, we would like to exclude this.
+/*IMPROVEMENT #???*/
+/*Some MeSH tags are used for more than one drug, however I'm not sure how we can handle this wholistically*/
 
-/*QUESTIONS*/
---1) In DRUGS.DRUG_ROLE what is i and c?
+/*IMPROVEMENT #???*/
+/*2.7 Rule of 3 - a group of three or more specific descriptors must be replaced by one more general descriptor*/
+--Maybe this could be where we text string search the title for the description.  If we have a descriptor but no other drugs specific tags look for text in title.
+--However the Improvment #3 might help here
 
+/*IMPROVEMENT #???*/
+/*Leverage the RxNorm API to map the MeSH terms to RxNorm*/
+/*We currently do this with UMLS, which I think is good enough*/
+
+/*IMPROVEMENT #???*/
+/*Collect meta data like epi methods and gender*/
+/*We do some of this already just not as much as they do*/
 
 /*NOTES*/
+--Looks like animal studies are included on their side, we would like to exclude this.
+
 --i/c = involved/concomitant -- involved drugs have some sort of AE qualifier, while concomitant drugs do not (concomitant drugs should not be considered linked to ADEs).
