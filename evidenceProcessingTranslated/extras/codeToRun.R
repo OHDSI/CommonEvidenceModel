@@ -29,7 +29,7 @@ library(evidenceProcessingTranslated)
 ################################################################################
 # VARIABLES
 ################################################################################
-stcmTable = paste0(Sys.getenv("vocabulary"),".CEM_SOURCE_TO_CONCEPT_MAP")  #!!!THIS SHOULD GO INTO VOCABUALRY, BUT NEED PERMISSIONS
+stcmTable = paste0(Sys.getenv("vocabulary"),".SOURCE_TO_CONCEPT_MAP")  #!!!THIS SHOULD GO INTO VOCABUALRY, BUT NEED PERMISSIONS
 aeolus = "aeolus"
 medline_avillach = "medline_avillach"
 medline_cooccurrence = "medline_cooccurrence"
@@ -45,7 +45,8 @@ source = "source"
 buildStcm(conn=conn,
      vocabulary=vocabulary,
      stcmTable=stcmTable,
-     umlsSchema="staging_umls")
+     umlsSchema="staging_umls",
+     faers=paste0(Sys.getenv("clean"),'.',aeolus))
 
 ################################################################################
 # SOURCE

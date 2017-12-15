@@ -32,7 +32,7 @@ LIMIT 10
 
 /*IMPROVEMENT #3*/
 /*2.3 the ADE context is sometimes borne by a broader term rather than the drug of interest*/
-/*Already doing in our Avillach*/
+/*Already doing in our Avillach, however we can probably do a better job of describing when this happens and when it doesn't*/
 --https://github.com/OHDSI/CommonEvidenceModel/tree/master/evidenceProcessingClean/inst/sql/sql_server#L80
 
 /*IMPROVEMENT #4*/

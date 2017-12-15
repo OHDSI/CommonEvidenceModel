@@ -24,14 +24,17 @@
 #'
 #' @param umlsSchema where to pick up UMLS mappings
 #'
+#' @param faers where can we find the FAERS data
+#'
 #' @export
-buildStcm <- function(conn,vocabulary,stcmTable,umlsSchema){
+buildStcm <- function(conn,vocabulary,stcmTable,umlsSchema,faers){
   #Create Table & Load Data
   sql <- SqlRender::readSql("./inst/sql/sql_server/CEM_SOURCE_TO_CONCEPT_MAP.sql")
   renderedSql <- SqlRender::renderSql(sql=sql,
                                       stcmTable=stcmTable,
                                       vocabulary=vocabulary,
-                                      umlsSchema=umlsSchema)
+                                      umlsSchema=umlsSchema,
+                                      faers=faers)
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                            targetDialect=Sys.getenv("dbms"))
   DatabaseConnector::executeSql(conn=conn,translatedSql$sql)

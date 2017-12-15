@@ -36,6 +36,7 @@ schemaEUPLADR <- "staging_eu_pl_adr"
 schemaSemMedDb <- "staging_semmeddb"
 tableAeolus <- "aeolus"
 tableAvillach <- "medline_avillach"
+tableWinnenburg <- "medline_winnenburg"
 tableEUPLADR <- "eu_pl_adr"
 tableCoOccurrence <- "medline_cooccurrence"
 tableSplicer <- "splicer"
@@ -84,6 +85,13 @@ medlineCoOccurrence(conn=conn,
                     sourceSchema=schemaMedline,
                     sourceID=tableAvillach,
                     qualifier=1)
+
+#WINNENBURG
+medlineCoOccurrenceWinnenburg(conn=conn,
+                              targetDbSchema=Sys.getenv("clean"),
+                              targetTable=tableWinnenburg,
+                              sourceSchema=schemaMedline,
+                              sourceID=tableWinnenburg)
 
 #PUBMED PULL
 #requires loading of Pubmed MeSH tags from the MeshTags Package
