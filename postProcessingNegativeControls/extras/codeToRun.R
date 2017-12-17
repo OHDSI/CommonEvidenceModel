@@ -66,7 +66,7 @@ fqSTCM <- paste0(vocabulary,".CEM_SOURCE_TO_CONCEPT_MAP")
 
 faers <- paste0(Sys.getenv("translated"),".AEOLUS")
 splicer <- paste0(Sys.getenv("translated"),".SPLICER")
-ade <- paste0(Sys.getenv("translated"),".MEDLINE_AVILLACH")
+ade <- paste0(Sys.getenv("translated"),".MEDLINE_WINNENBURG")
 
 conceptUniverseData <- paste0(Sys.getenv("evidence"),".NC_CONCEPT_UNIVERSE")
 conceptsToExcludeData <- paste0(Sys.getenv("evidence"),".NC_EXCLUDED_CONCEPTS")
