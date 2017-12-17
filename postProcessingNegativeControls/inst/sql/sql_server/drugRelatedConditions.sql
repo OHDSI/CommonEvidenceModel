@@ -21,4 +21,8 @@ OR c1.CONCEPT_ID IN (
   438661,	/*Complication of infusion*/
   4168644	/*Propensity to adverse reactions to substance*/
 )
-ORDER BY PERSON_COUNT_DC DESC
+ORDER BY PERSON_COUNT_DC DESC;
+
+CREATE INDEX IDX_DRUG_RELATED_CONCEPT_ID ON @storeData (CONCEPT_ID);
+
+ALTER TABLE @storeData OWNER TO RW_GRP;

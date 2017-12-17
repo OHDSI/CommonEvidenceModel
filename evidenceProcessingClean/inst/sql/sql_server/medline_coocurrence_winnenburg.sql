@@ -102,8 +102,6 @@ from @sourceSchema.medcit_meshheadinglist_meshheading meshheading
 	join @sourceSchema.medcit_meshheadinglist_meshheading_qualifiername qualifier
 		on qualifier.pmid=  rp.pmid
 		and meshheading.medcit_meshheadinglist_meshheading_order = qualifier.medcit_meshheadinglist_meshheading_order
-	JOIN @sourceSchema.mesh_term mt
-	  ON mt.PMID = rp.PMID
 WHERE (
   qualifier.UI = 'Q000139' /*chemically induced*/
   OR

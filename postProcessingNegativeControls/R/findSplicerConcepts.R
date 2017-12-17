@@ -28,8 +28,10 @@
 #'
 #' @param vocabulary where can the Vocab be found
 #'
+#' @param outcomeOfInterest tells the query what type of outcomes we are looking for
+#'
 #' @export
-findSplicerConditions <- function(conn,storeData,splicerData,sqlFile,conceptsOfInterest,vocabulary){
+findSplicerConcepts <- function(conn,storeData,splicerData,sqlFile,conceptsOfInterest,vocabulary,outcomeOfInterest){
   sql <- SqlRender::loadRenderTranslateSql(sqlFilename = sqlFile,
                                            packageName = "postProcessingNegativeControls",
                                            dbms = attr(conn, "dbms"),
@@ -37,6 +39,7 @@ findSplicerConditions <- function(conn,storeData,splicerData,sqlFile,conceptsOfI
                                            storeData=storeData,
                                            vocabulary=vocabulary,
                                            conceptsOfInterest=conceptsOfInterest,
-                                           splicerData=splicerData)
+                                           splicerData=splicerData,
+                                           outcomeOfInterest=outcomeOfInterest)
   DatabaseConnector::executeSql(conn=conn,sql)
 }

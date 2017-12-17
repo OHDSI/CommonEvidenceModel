@@ -26,15 +26,18 @@
 #'
 #' @param translationSql sql to do the translation
 #'
+#' @param id name of the pull
+#'
 #' @export
 translate <- function(conn,sourceTable,targetTable,stcmTable,
-                      translationSql){
+                      translationSql,id){
 
   sql <- SqlRender::readSql(paste0("./inst/sql/sql_server/",translationSql))
   renderedSql <- SqlRender::renderSql(sql=sql,
                                       targetTable=targetTable,
                                       sourceTable=sourceTable,
-                                      stcmTable=stcmTable)
+                                      stcmTable=stcmTable,
+                                      id=id)
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                            targetDialect=Sys.getenv("dbms"))
   DatabaseConnector::executeSql(conn=conn,translatedSql$sql)

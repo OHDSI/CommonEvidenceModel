@@ -29,9 +29,10 @@ library(evidenceProcessingTranslated)
 ################################################################################
 # VARIABLES
 ################################################################################
-stcmTable = paste0(Sys.getenv("vocabulary"),".SOURCE_TO_CONCEPT_MAP")  #!!!THIS SHOULD GO INTO VOCABUALRY, BUT NEED PERMISSIONS
+stcmTable = paste0(Sys.getenv("vocabulary"),".SOURCE_TO_CONCEPT_MAP")
 aeolus = "aeolus"
 medline_avillach = "medline_avillach"
+medline_winnenburg = "medline_winnenburg"
 medline_cooccurrence = "medline_cooccurrence"
 pubmed = "pubmed"
 semmeddb = "semmeddb"
@@ -78,6 +79,7 @@ translate(conn=conn,
 translate(conn=conn,
           sourceTable=paste0(Sys.getenv("clean"),'.',medline_cooccurrence),
           targetTable=paste0(Sys.getenv("translated"),'.',medline_cooccurrence),
+          id=medline_cooccurrence,
           stcmTable=stcmTable,
           translationSql="medline.sql")
 
@@ -85,24 +87,31 @@ translate(conn=conn,
 translate(conn=conn,
           sourceTable=paste0(Sys.getenv("clean"),'.',medline_avillach),
           targetTable=paste0(Sys.getenv("translated"),'.',medline_avillach),
+          id=medline_avillach,
           stcmTable=stcmTable,
           translationSql="medline.sql")
 
+#WINNENBURG
+translate(conn=conn,
+          sourceTable=paste0(Sys.getenv("clean"),'.',medline_winnenburg),
+          targetTable=paste0(Sys.getenv("translated"),'.',medline_winnenburg),
+          id=medline_winnenburg,
+          stcmTable=stcmTable,
+          translationSql="medline.sql")
 
 #PUBMED PULL
 translate(conn=conn,
           sourceTable=paste0(Sys.getenv("clean"),'.',pubmed),
           targetTable=paste0(Sys.getenv("translated"),'.',pubmed),
+          id=pubmed,
           stcmTable=stcmTable,
           translationSql="pubmed.sql")
-
-#WINNENBURG
-#tbd
 
 #SEMMEDDB
 translate(conn=conn,
           sourceTable=paste0(Sys.getenv("clean"),'.',semmeddb),
           targetTable=paste0(Sys.getenv("translated"),'.',semmeddb),
+          id=semmeddb,
           stcmTable=stcmTable,
           translationSql="semmeddb.sql")
 
@@ -114,6 +123,7 @@ translate(conn=conn,
 translate(conn=conn,
           sourceTable=paste0(Sys.getenv("clean"),'.',splicer),
           targetTable=paste0(Sys.getenv("translated"),'.',splicer),
+          id=splicer,
           stcmTable=stcmTable,
           translationSql="splicer.sql")
 
@@ -121,6 +131,7 @@ translate(conn=conn,
 translate(conn=conn,
           sourceTable=paste0(Sys.getenv("clean"),'.',euPlAdr),
           targetTable=paste0(Sys.getenv("translated"),'.',euPlAdr),
+          id=euPlAdr,
           stcmTable=stcmTable,
           translationSql="euPlAdr.sql")
 
