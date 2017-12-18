@@ -73,15 +73,5 @@ export <- function(conn,file,vocabulary,conceptsOfInterest,conceptsToExcludeData
   openxlsx::writeDataTable(wb1,sheet="Negative Controls",x=df,colNames = TRUE,rowNames = FALSE)
   rm(df)
 
-  sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "exportPMIDs.sql",
-                                           packageName = "postProcessingNegativeControls",
-                                           dbms = attr(conn, "dbms"),
-                                           oracleTempSchema = NULL,
-                                           adeSummaryData=adeSummaryData)
-  df <- DatabaseConnector::querySql(conn=conn,sql)
-  openxlsx::addWorksheet(wb1,sheetName="PubMed Articles")
-  openxlsx::writeDataTable(wb1,sheet="PubMed Articles",x=df,colNames = TRUE,rowNames = FALSE)
-  rm(df)
-
   openxlsx::saveWorkbook(wb1, file, overwrite = TRUE)
 }
