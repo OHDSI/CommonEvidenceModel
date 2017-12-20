@@ -105,3 +105,6 @@ OR c1.CONCEPT_ID IN (
 	  4181217,	/*Sequelae of disorders classified by disorder-system*/
 	  4206460	/*Problem*/
 );
+
+
+ALTER TABLE @storeData OWNER TO RW_GRP;

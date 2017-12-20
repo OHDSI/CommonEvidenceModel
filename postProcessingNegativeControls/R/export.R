@@ -18,6 +18,8 @@
 #'
 #' @param vocabulary location of the Vocabualry
 #'
+#' @param outcomeOfInterest what type of outcomes are you looking for
+#'
 #' @param conceptsOfInterest what are the concepts that we want to build negative controls for
 #'
 #' @param conceptsToExclude what concepts were in the exclude list
@@ -30,9 +32,11 @@
 #'
 #' @param adeSummaryData where the ADEs and PMIDs are stored
 #'
+#' @param vocabulary location of Vocabulary
+#'
 #' @export
 export <- function(conn,file,vocabulary,conceptsOfInterest,conceptsToExcludeData,
-                   conceptsToIncludeData,summaryData,summaryOptimizedData,adeSummaryData){
+                   conceptsToIncludeData,summaryData,summaryOptimizedData,adeSummaryData,outcomeOfInterest){
 
   if(file.exists(file)){
     file.remove(file)
@@ -45,6 +49,7 @@ export <- function(conn,file,vocabulary,conceptsOfInterest,conceptsToExcludeData
                                            dbms = attr(conn, "dbms"),
                                            oracleTempSchema = NULL,
                                            vocabulary=vocabulary,
+                                           outcomeOfInterest = outcomeOfInterest,
                                            conceptsOfInterest = conceptsOfInterest,
                                            conceptsToExclude = conceptsToExclude,
                                            conceptsToInclude = conceptsToInclude)
@@ -57,20 +62,13 @@ export <- function(conn,file,vocabulary,conceptsOfInterest,conceptsToExcludeData
                                            packageName = "postProcessingNegativeControls",
                                            dbms = attr(conn, "dbms"),
                                            oracleTempSchema = NULL,
-                                           summaryData = summaryData)
+                                           outcomeOfInterest = outcomeOfInterest,
+                                           vocabulary = vocabulary,
+                                           summaryData = summaryData,
+                                           summaryOptimizedData = summaryOptimizedData)
   df <- DatabaseConnector::querySql(conn=conn,sql)
   openxlsx::addWorksheet(wb1,sheetName="All Potential Controls")
   openxlsx::writeDataTable(wb1,sheet="All Potential Controls",x=df,colNames = TRUE,rowNames = FALSE)
-  rm(df)
-
-  sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "exportNegativeControls.sql",
-                                           packageName = "postProcessingNegativeControls",
-                                           dbms = attr(conn, "dbms"),
-                                           oracleTempSchema = NULL,
-                                           summaryData = summaryOptimizedData)
-  df <- DatabaseConnector::querySql(conn=conn,sql)
-  openxlsx::addWorksheet(wb1,sheetName="Negative Controls")
-  openxlsx::writeDataTable(wb1,sheet="Negative Controls",x=df,colNames = TRUE,rowNames = FALSE)
   rm(df)
 
   openxlsx::saveWorkbook(wb1, file, overwrite = TRUE)

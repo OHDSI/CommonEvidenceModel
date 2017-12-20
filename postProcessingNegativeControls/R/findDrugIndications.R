@@ -27,7 +27,7 @@
 #' @param outcomeOfInterest Either "condition" or "drug" to denote what type of outcome you are looking for
 #'
 #' @export
-findDrugIndications <- function(conn,storeData,conceptsOfInterest,vocabulary, outcomeOfInterest){
+findDrugIndications <- function(conn,storeData,conceptsOfInterest,vocabulary,outcomeOfInterest){
   sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "findDrugIndications.sql",
                                            packageName = "postProcessingNegativeControls",
                                            dbms = attr(conn, "dbms"),

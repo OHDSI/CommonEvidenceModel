@@ -40,7 +40,7 @@
 #'
 #' @param faers where is the faers data located
 #'
-#' @param splicerConditionData where is the splicerADRs data located
+#' @param splicerConceptData where is the splicerADRs data located
 #'
 #' @param conceptsToExclude look up tabel with concepts to exclude
 #'
@@ -53,7 +53,7 @@ summarizeEvidence <- function(conn,outcomeOfInterest,conceptUniverseData,
                               broadConceptsData,drugInducedConditionsData,
                               pregnancyConditionData,
                               faersConceptsData,
-                              splicerConditionData,conceptsToExclude,conceptsToInclude){
+                              splicerConceptData,conceptsToExclude,conceptsToInclude){
   sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "summarizeEvidence.sql",
                                            packageName = "postProcessingNegativeControls",
                                            dbms = attr(conn, "dbms"),
@@ -66,7 +66,7 @@ summarizeEvidence <- function(conn,outcomeOfInterest,conceptUniverseData,
                                            broadConceptsData=broadConceptsData,
                                            drugInducedConditionsData=drugInducedConditionsData,
                                            pregnancyConditionData=pregnancyConditionData,
-                                           splicerConditionData=splicerConditionData,
+                                           splicerConceptData=splicerConceptData,
                                            faersConceptsData=faersConceptsData,
                                            conceptsToExclude=conceptsToExclude,
                                            conceptsToInclude=conceptsToInclude)

@@ -20,4 +20,7 @@ WHERE c.CONCEPT_ID IN (
   438480,	/*Abnormal glucose tolerance in mother complicating pregnancy, childbirth AND/OR puerperium*/
   4062790,	/*Disease of the digestive system complicating pregnancy, childbirth and/or the puerperium*/
   314099	/*Abnormal fetal heart rate*/
-)
+);
+
+
+ALTER TABLE @storeData OWNER TO RW_GRP;

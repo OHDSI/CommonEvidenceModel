@@ -24,13 +24,16 @@
 #'
 #' @param vocabulary Schema where Vocabulary can be found
 #'
+#' @param outcomeOfInterest what type of outcomes are you looking for
+#'
 #' @export
-optimizeEvidence <-function(conn,storeData,summaryData,vocabulary){
+optimizeEvidence <-function(conn,storeData,summaryData,vocabulary,outcomeOfInterest){
   sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "optimizeEvidence.sql",
                                            packageName = "postProcessingNegativeControls",
                                            dbms = attr(conn, "dbms"),
                                            oracleTempSchema = NULL,
                                            storeData=storeData,
+                                           outcomeOfInterest=outcomeOfInterest,
                                            vocabulary=vocabulary,
                                            summaryData=summaryData)
   DatabaseConnector::executeSql(conn=conn,sql)

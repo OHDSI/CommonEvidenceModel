@@ -57,13 +57,14 @@ findConceptUniverse <- function(conn,connPatientData,schemaRaw,filter=10,
                                  tempTable = FALSE,
                                  oracleTempSchema = NULL)
 
-  #index
+  #index & ownership
   sql <- paste0("CREATE INDEX IDX_CONCEPT_UNIVERSE_CONCEPT_ID ON ",
-                storeData," (CONCEPT_ID)")
+                storeData," (CONCEPT_ID); ALTER TABLE ", storeData, " OWNER TO RW_GRP;")
   renderedSql <- SqlRender::renderSql(sql=sql)
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                            targetDialect=Sys.getenv("dbms"))
   DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
+
 
   print(paste0("Time Duration: ",Sys.time()-old))
   #Clean Up

@@ -21,3 +21,5 @@ FROM (
     WHERE CONCEPT_ID IN (	{@concepts!=''}?{@concepts}:{0} )
   }
 ) z;
+
+ALTER TABLE @storeData OWNER TO RW_GRP;
