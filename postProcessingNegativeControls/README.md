@@ -33,7 +33,7 @@ OHDSI's first attempt at producing negative controls can be found in the paper "
  - The user has not suggested to exclude this concept
  - Finally, all remaining concepts are then "optimized", meaning parent concepts remove children concepts as defined by the OMOP Vocabulary
 
-# Broad Concepts
+## Broad Concepts
 We use patient level data and the OMOP Vocabulary to help us find "Too Broad" concepts to eliminate from our Negative Controls map.  Something "Too Broad" does not describe something in enough detail to be useful for a negative control.  For example, "clinical finding" is too vague and would be impossible to understand the relationship between a drug and that condition concept.  Our method for finding broad concepts is as follows:
 1) Concepts together with their descendant concepts that have more than 1,000,000 people with it in a large claims database.
 2) Concepts that contain certain word patterns (e.g. "FINDING", "DISORDER OF", "DISEASE OF", etc.).
@@ -105,4 +105,4 @@ Refereces
 
 [4](#4) Evans SJ, Waller PC, Davis S. Use of proportional reporting ratios (PRRs) for signal generation from spontaneous adverse drug reaction reports. Pharmacoepidemiol Drug Saf. 2001 Oct-Nov;10(6):483-6. PubMed PMID: 11828828.
 
-[5](#5) Avillach P, Dufour JC, Diallo G, Salvo F, Joubert M, Thiessard F, Mougin F, Trifirò G, Fourrier-Réglat A, Pariente A, Fieschi M. Design and validation of an automated method to detect known adverse drug reactions in MEDLINE: a contribution from the EU-ADR project. J Am Med Inform Assoc. 2013 May 1;20(3):446-52. doi: 10.1136/amiajnl-2012-001083. Epub 2012 Nov 29. PubMed PMID: 23195749; PubMed Central PMCID: PMC3628051.
+[5](#5) Winnenburg R, Sorbello A, Ripple A, Harpaz R, Tonning J, Szarfman A, Francis H, Bodenreider O. Leveraging MEDLINE indexing for pharmacovigilance - Inherent limitations and mitigation strategies. J Biomed Inform. 2015 Oct;57:425-35. doi: 10.1016/j.jbi.2015.08.022. Epub 2015 Sep 2. PubMed PMID: 26342964; PubMed Central PMCID: PMC4775467.
