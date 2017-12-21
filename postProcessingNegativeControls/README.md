@@ -33,6 +33,14 @@ OHDSI's first attempt at producing negative controls can be found in the paper "
  - The user has not suggested to exclude this concept
  - Finally, all remaining concepts are then "optimized", meaning parent concepts remove children concepts as defined by the OMOP Vocabulary
 
+# Broad Concepts
+We use patient level data and the OMOP Vocabulary to help us find "Too Broad" concepts to eliminate from our Negative Controls map.  Something "Too Broad" does not describe something in enough detail to be useful for a negative control.  For example, "clinical finding" is too vague and would be impossible to understand the relationship between a drug and that condition concept.  Our method for finding broad concepts is as follows:
+1) Concepts together with their descendant concepts that have more than 1,000,000 people with it in a large claims database.
+2) Concepts that contain certain word patterns (e.g. "FINDING", "DISORDER OF", "DISEASE OF", etc.).
+3) Condition concepts that have more than 45 relationships to other condition concepts.
+4) Concepts that are directly below the most top SNOMED concept 4008453-SNOMED CT Concept
+5) Any concepts that were found outside the above, that are still deemed too broad are cherry-picked and added to the list (e.g. "ILLNESS") 
+ 
 Features
 ====================
 

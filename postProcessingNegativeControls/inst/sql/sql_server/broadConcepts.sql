@@ -3,7 +3,9 @@ IF OBJECT_ID('@storeData', 'U') IS NOT NULL DROP TABLE @storeData;
 SELECT *
 INTO @storeData
 FROM @conceptUniverseData c1
+/*Eliminate Concepts with Too Many People*/
 WHERE PERSON_COUNT_DC >= 1000000
+/*Eliminate Concepts with Certain Word Patterns*/
 OR UPPER(c1.CONCEPT_NAME) LIKE '%FINDING%'
 OR UPPER(c1.CONCEPT_NAME) LIKE '%DISORDER OF%'
 OR UPPER(c1.CONCEPT_NAME) LIKE '%INJURY%'
@@ -16,7 +18,8 @@ OR UPPER(c1.CONCEPT_NAME) LIKE '%BY MECHANISM'
 OR UPPER(c1.CONCEPT_NAME) LIKE '%OF BODY REGION%'
 OR UPPER(c1.CONCEPT_NAME) LIKE '%OF SPECIFIC BODY STRUCTURE%'
 OR c1.CONCEPT_ID IN (
-  select ancestor_concept_id
+  /*Eliminate Conceps with Many Relationships*/
+  select ancestor_concept_id AS CONCEPT_ID
   from @vocabulary.concept_ancestor ca
   	JOIN @vocabulary.concept c
   		on ca.ancestor_concept_id = c.concept_id
@@ -24,8 +27,16 @@ OR c1.CONCEPT_ID IN (
   WHERE UPPER(c.domain_id) = 'CONDITION'
   group  by concept_name, ancestor_concept_id
   having count(*) > 45
+  UNION ALL
+  /*Eliminate Top Level Concepts*/
+  SELECT c.CONCEPT_ID AS CONCEPT_ID
+  FROM @vocabulary.CONCEPT_RELATIONSHIP cr
+  	JOIN @vocabulary.CONCEPT c
+  		ON c.CONCEPT_ID = cr.CONCEPT_ID_2
+  WHERE cr.CONCEPT_ID_1 = 4008453 /*TOP LEVEL CONCEPT*/
 )
 OR c1.CONCEPT_ID IN (
+    /*Cherry Picking Concepts to Eliminate*/
   	313878, /*Respiratory symptom*/
   	198194, /*Female genital organ symptoms*/
   	135033, /*Hair and hair follicle diseases*/
