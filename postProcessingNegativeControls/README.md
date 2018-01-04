@@ -11,9 +11,6 @@ Once the CommonEvidenceModel is processed by the OHDSI team, one could use this 
 OHDSI's first attempt at producing negative controls can be found in the paper "Accuracy of an automated knowledge base for identifying drug adverse reactions" [<a name="3">3</a>] however the process currently here is slightly different.  The Negative Controls tab selects negative controls by the following process:
 1. Finds all potential concepts that are even possible for consideration.  This is done by finding the "concepts of interest" within patient data and finding "outcomes of interest" that occur after the "concepts of interest".  This is our "concept universe".  Using patient level data helps the program know if the concepts will even be viable for use as negative controls (i.e. a concepts may be a good negative control, however if it never occurs in data it will not be much use in quantifying bias).  While finding these concepts the program will additionally find patient counts as row counts (RC) which means how many persons had this exact concept and descendant counts (DC) which means how many persons had this exact cocnept and one of its descendants.
 2. Find all concept that are known not to be good choices.
- - Broad Concepts - there are some concepts that are considered too broad for use.  For example "441840-clinical finding" is too broad to be meaningful as a negative control.
- - Drug Related - concepts that are related to a drug adverse reaction do not make for good negative controls.
- - Pregnancy - exclude pregnancy related concepts.
  - Splicer - the US product labels are parsed via the tool SPLICER and reviews the "Adverse Drug Reactions" and "Postmarketing" section to find associated concepts.  Finding concepts on the label in this manner suggests there is already an association between the concepts and therefore are not good negative controls.
  - Drug Indication - the OMOP Vocabulary suggests concepts that are the indications for drugs, which means there is an association between the concepts.
  - FAERS - exclude concepts that US spontaneous reports suggest are in an adverse drug reaction relationship [<a name="4">4</a>].
@@ -33,14 +30,6 @@ OHDSI's first attempt at producing negative controls can be found in the paper "
  - The user has not suggested to exclude this concept
  - Finally, all remaining concepts are then "optimized", meaning parent concepts remove children concepts as defined by the OMOP Vocabulary
 
-## Broad Concepts
-We use patient level data and the OMOP Vocabulary to help us find "Too Broad" concepts to eliminate from our Negative Controls map.  Something "Too Broad" does not describe something in enough detail to be useful for a negative control.  For example, "clinical finding" is too vague and would be impossible to understand the relationship between a drug and that condition concept.  Our method for finding broad concepts is as follows:
-1) Concepts together with their descendant concepts that have more than 1,000,000 people with it in a large claims database.
-2) Concepts that contain certain word patterns (e.g. "FINDING", "DISORDER OF", "DISEASE OF", etc.).
-3) Condition concepts that have more than 45 relationships to other condition concepts.
-4) Concepts that are directly below the most top SNOMED concept 4008453-SNOMED CT Concept
-5) Any concepts that were found outside the above, that are still deemed too broad are cherry-picked and added to the list (e.g. "ILLNESS") 
- 
 Features
 ====================
 

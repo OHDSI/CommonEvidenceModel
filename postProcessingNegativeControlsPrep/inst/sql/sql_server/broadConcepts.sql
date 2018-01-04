@@ -1,8 +1,14 @@
+/*@conceptUniverseData*/
+
 IF OBJECT_ID('@storeData', 'U') IS NOT NULL DROP TABLE @storeData;
 
-SELECT *
+SELECT c1.CONCEPT_ID,
+  CASE WHEN c2.PERSON_COUNT_RC IS NULL THEN 0 ELSE c2.PERSON_COUNT_RC END PERSON_COUNT_RC,
+  CASE WHEN c2.PERSON_COUNT_DC IS NULL THEN 0 ELSE c2.PERSON_COUNT_DC END PERSON_COUNT_DC
 INTO @storeData
-FROM @conceptUniverseData c1
+FROM @vocabulary.concept c1
+  JOIN @conceptUniverseData c2
+    ON c2.CONCEPT_ID = c1.CONCEPT_ID
 /*Eliminate Concepts with Too Many People*/
 WHERE PERSON_COUNT_DC >= 1000000
 /*Eliminate Concepts with Certain Word Patterns*/

@@ -1,6 +1,6 @@
-# Copyright 2017 Observational Health Data Sciences and Informatics
+# Copyright 2018 Observational Health Data Sciences and Informatics
 #
-# This file is part of postProcessingNegativeControls
+# This file is part of postProcessingNegativeControlsPrep
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ findConcepts <- function(conn,storeData,
                          expandConcepts=0){
   if(sqlFile!=''){
     sql <- SqlRender::loadRenderTranslateSql(sqlFilename = sqlFile,
-                                             packageName = "postProcessingNegativeControls",
+                                             packageName = "postProcessingNegativeControlsPrep",
                                              dbms = attr(conn, "dbms"),
                                              oracleTempSchema = NULL,
                                              storeData=storeData,
@@ -50,7 +50,7 @@ findConcepts <- function(conn,storeData,
 
   if(sqlFile==''){
     sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "findConcepts.sql",
-                                             packageName = "postProcessingNegativeControls",
+                                             packageName = "postProcessingNegativeControlsPrep",
                                              dbms = attr(conn, "dbms"),
                                              oracleTempSchema = NULL,
                                              storeData=storeData,
@@ -61,5 +61,3 @@ findConcepts <- function(conn,storeData,
   }
 
 }
-
-

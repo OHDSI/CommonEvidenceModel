@@ -60,6 +60,12 @@ library(postProcessingNegativeControls)
 ################################################################################
 # VARIABLES
 ################################################################################
+#PREPROCESSED
+conceptUniverseData <- paste0(Sys.getenv("evidence"),".NC_LU_CONCEPT_UNIVERSE")
+broadConceptsData <- paste0(Sys.getenv("evidence"),".NC_LU_BROAD_CONDITIONS")
+drugInducedConditionsData <- paste0(Sys.getenv("evidence"),".NC_LU_DRUG_INDUCED_CONDITIONS")
+pregnancyConditionData <- paste0(Sys.getenv("evidence"),".NC_LU_PREGNANCY_CONDITIONS")
+
 sourceData <- paste0(Sys.getenv("patient_schema"),".dbo")
 vocabulary <-"VOCABULARY.dbo"
 fqSTCM <- paste0(vocabulary,".CEM_SOURCE_TO_CONCEPT_MAP")
@@ -68,14 +74,11 @@ faers <- paste0(Sys.getenv("translated"),".AEOLUS")
 splicer <- paste0(Sys.getenv("translated"),".SPLICER")
 ade <- paste0(Sys.getenv("translated"),".MEDLINE_WINNENBURG")
 
-conceptUniverseData <- paste0(Sys.getenv("evidence"),".NC_CONCEPT_UNIVERSE")
+#conceptUniverseData <- paste0(Sys.getenv("evidence"),".NC_CONCEPT_UNIVERSE") #Don't use if using preprocessed
 conceptsToExcludeData <- paste0(Sys.getenv("evidence"),".NC_EXCLUDED_CONCEPTS")
 conceptsToIncludeData <- paste0(Sys.getenv("evidence"),".NC_INCLUDED_CONCEPTS")
 indicationData <- paste0(Sys.getenv("evidence"),".NC_INDICATIONS")
 evidenceData <- paste0(Sys.getenv("evidence"),".NC_EVIDENCE")
-broadConceptsData <- paste0(Sys.getenv("evidence"),".NC_BROAD_CONDITIONS")
-drugInducedConditionsData <- paste0(Sys.getenv("evidence"),".NC_DRUG_INDUCED_CONDITIONS")
-pregnancyConditionData <- paste0(Sys.getenv("evidence"),".NC_PREGNANCY_CONDITIONS")
 safeConceptData <- paste0(Sys.getenv("evidence"),".NC_SAFE_CONCEPTS")
 splicerConceptData <- paste0(Sys.getenv("evidence"),".NC_SPLICER_CONCEPTS")
 faersConceptsData <- paste0(Sys.getenv("evidence"),".NC_FAERS_CONCEPTS")
@@ -107,25 +110,6 @@ conceptUniverse <- findConceptUniverse(connPatientData=connPatientData,
 ################################################################################
 # FIND CONDITIONS OF INTEREST
 ################################################################################
-
-#BROAD CONDITIONS
-findConcepts(conn = conn,
-             storeData = broadConceptsData,
-             vocabulary=vocabulary,
-             conceptUniverseData=conceptUniverseData,
-             sqlFile="broadConcepts.sql")
-
-#DRUG RELATED
-findConcepts(conn = conn,
-             storeData = drugInducedConditionsData,
-             conceptUniverseData=conceptUniverseData,
-             sqlFile="drugRelatedConditions.sql")
-
-#PREGNANCY
-findConcepts(conn = conn,
-             storeData = pregnancyConditionData,
-             conceptUniverseData=conceptUniverseData,
-             sqlFile="pregnancyConditions.sql")
 
 #SPLICER
 findSplicerConcepts(conn=conn,
