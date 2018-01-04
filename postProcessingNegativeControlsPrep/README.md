@@ -14,6 +14,7 @@ We use patient level data and the OMOP Vocabulary to help us find "Too Broad" co
 5) Any concepts that were found outside the above, that are still deemed too broad are cherry-picked and added to the list (e.g. "ILLNESS") 
 
 ## Drug Related
-
+Concepts that are related to a drug adverse reaction do not make for good negative controls.
 
 ## Pregnancy Conditions
+Pregnancy related concepts.
