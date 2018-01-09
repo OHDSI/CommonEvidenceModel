@@ -20,7 +20,7 @@ OHDSI's first attempt at producing negative controls can be found in the paper "
 4. The evidence is then summarized, which pulls together information from Step 2 and Step 3.
 5. Given the summarized data, the following is used to select the negative controls for the "Negative Controls" tab in the export:
  - Patient level data of a person row count >= 1000
- - No published literature evidence found as defined by the co-occurrence of MeSH terms with drug adverse event qualifiers [<a href="">4</a>]
+ - No published literature evidence found as defined by the co-occurrence of MeSH terms with drug adverse event qualifiers [<a href="">5</a>]
  - Not associated via drug indication
  - Not considered too broad
  - Not associated with "drug induced" concepts
