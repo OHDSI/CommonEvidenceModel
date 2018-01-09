@@ -1,6 +1,6 @@
 SELECT '01) Outcome of Interest' AS CONCEPT_TYP,
   0 AS CONCEPT_ID,
-  '@outComeOfInterest' AS CONCEPT_NAME
+  '@outcomeOfInterest' AS CONCEPT_NAME
 UNION ALL
 SELECT '02) Concepts of Interest' AS CONCEPT_TYPE,
   CONCEPT_ID,

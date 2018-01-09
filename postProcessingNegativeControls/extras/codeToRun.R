@@ -61,7 +61,7 @@ library(postProcessingNegativeControls)
 # VARIABLES
 ################################################################################
 #PREPROCESSED
-conceptUniverseData <- paste0(Sys.getenv("evidence"),".NC_LU_CONCEPT_UNIVERSE")
+#conceptUniverseData <- paste0(Sys.getenv("evidence"),".NC_LU_CONCEPT_UNIVERSE")
 broadConceptsData <- paste0(Sys.getenv("evidence"),".NC_LU_BROAD_CONDITIONS")
 drugInducedConditionsData <- paste0(Sys.getenv("evidence"),".NC_LU_DRUG_INDUCED_CONDITIONS")
 pregnancyConditionData <- paste0(Sys.getenv("evidence"),".NC_LU_PREGNANCY_CONDITIONS")
@@ -74,25 +74,25 @@ faers <- paste0(Sys.getenv("translated"),".AEOLUS")
 splicer <- paste0(Sys.getenv("translated"),".SPLICER")
 ade <- paste0(Sys.getenv("translated"),".MEDLINE_WINNENBURG")
 
-#conceptUniverseData <- paste0(Sys.getenv("evidence"),".NC_CONCEPT_UNIVERSE") #Don't use if using preprocessed
-conceptsToExcludeData <- paste0(Sys.getenv("evidence"),".NC_EXCLUDED_CONCEPTS")
-conceptsToIncludeData <- paste0(Sys.getenv("evidence"),".NC_INCLUDED_CONCEPTS")
-indicationData <- paste0(Sys.getenv("evidence"),".NC_INDICATIONS")
-evidenceData <- paste0(Sys.getenv("evidence"),".NC_EVIDENCE")
-safeConceptData <- paste0(Sys.getenv("evidence"),".NC_SAFE_CONCEPTS")
-splicerConceptData <- paste0(Sys.getenv("evidence"),".NC_SPLICER_CONCEPTS")
-faersConceptsData <- paste0(Sys.getenv("evidence"),".NC_FAERS_CONCEPTS")
-adeSummaryData <- paste0(Sys.getenv("evidence"),".NC_ADE_SUMMARY")
-summaryData <- paste0(Sys.getenv("evidence"),".NC_SUMMARY")
-summaryOptimizedData <- paste0(Sys.getenv("evidence"),".NC_SUMMARY_OPTIMIZED")
+conceptUniverseData <- paste0(Sys.getenv("evidence"),".NC_CONCEPT_UNIVERSE") #Don't use if using preprocessed
+conceptsToExcludeData <- paste0(Sys.getenv("evidence"),".NC_EV_EXCLUDED_CONCEPTS")
+conceptsToIncludeData <- paste0(Sys.getenv("evidence"),".NC_EV_INCLUDED_CONCEPTS")
+indicationData <- paste0(Sys.getenv("evidence"),".NC_EV_INDICATIONS")
+evidenceData <- paste0(Sys.getenv("evidence"),".NC_EV_EVIDENCE")
+safeConceptData <- paste0(Sys.getenv("evidence"),".NC_EV_SAFE_CONCEPTS")
+splicerConceptData <- paste0(Sys.getenv("evidence"),".NC_EV_SPLICER_CONCEPTS")
+faersConceptsData <- paste0(Sys.getenv("evidence"),".NC_EV_FAERS_CONCEPTS")
+adeSummaryData <- paste0(Sys.getenv("evidence"),".NC_EV_ADE_SUMMARY")
+summaryData <- paste0(Sys.getenv("evidence"),".NC_EV_SUMMARY")
+summaryOptimizedData <- paste0(Sys.getenv("evidence"),".NC_EV_SUMMARY_OPTIMIZED")
 
 ################################################################################
 # CONFIG
 ################################################################################
-outcomeOfInterest <- 'drug'
-conceptsOfInterest <- '4344040'
+outcomeOfInterest <- 'condition'
+conceptsOfInterest <- '1125315,1177480'
 conceptsToExclude <- '0'
-conceptsToInclude <- '1186087,19015230,1381504,757688,1314865,715233,950933,1563600,980311,1541079,19008009,19010482,1311078,1304643,1338512,1301125,1151789,1352213,1304850,1542948,1597235,19048493,19097463,1536743,751889,19041065,787787,1512480,19117912,40238188,1112921,1351541,1192218,19024227,1305058,909841,708298,1114220,1522957,785788,1378382,19071160,19049105,753626,42903728,19090761,1584910,836208,1236744,40171288'
+conceptsToInclude <- '0'
 fileName <-paste0("NEGATIVE_CONTROLS_",Sys.Date(),".xlsx")
 
 ################################################################################
