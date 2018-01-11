@@ -1,6 +1,7 @@
+/*
 {@outcomeOfInterest == 'condition'}?{
   /*Find conditions after exposure to drug*/
-  /*Drug is first exposure*/
+  /*Drug is first exposure
   WITH CTE_DC AS (
   	SELECT c.CONCEPT_ID, c.CONCEPT_NAME,
   		COUNT_BIG(DISTINCT co.PERSON_ID) AS PERSON_COUNT_DC
@@ -63,7 +64,7 @@
 {@outcomeOfInterest == 'drug'}?{
   /*Find drugs after condition*/
   /*Condition is first exposure*/
-  /*Don't really need the RC vs DC work here, so RC = DC*/
+  /*Don't really need the RC vs DC work here, so RC = DC
   WITH CTE_RC AS (
   	SELECT c.CONCEPT_ID, c.CONCEPT_NAME,
   		COUNT_BIG(DISTINCT co.PERSON_ID) AS PERSON_COUNT_RC
@@ -92,6 +93,31 @@
   SELECT rc.CONCEPT_ID, rc.CONCEPT_NAME, rc.PERSON_COUNT_RC, rc.PERSON_COUNT_RC AS PERSON_COUNT_DC
   FROM CTE_RC rc
   ORDER BY rc.PERSON_COUNT_RC DESC, rc.CONCEPT_NAME;
+}
+*/
+{@outcomeOfInterest == 'condition'}?{
+  SELECT c.CONCEPT_ID, c.CONCEPT_NAME,
+  	SUM(u.PERSON_COUNT_ESTIMATE_RC) AS PERSON_COUNT_RC,
+  	SUM(u.PERSON_COUNT_ESTIMATE_DC) AS PERSON_COUNT_DC
+  FROM SCRATCH.dbo.EV_NC_LU_CONCEPT_UNIVERSE u
+  	JOIN VOCABULARY_20170503.dbo.CONCEPT c
+  		ON c.CONCEPT_ID = u.CONDITION_CONCEPT_ID
+  WHERE DRUG_CONCEPT_ID IN (
+  	@conceptsOfInterest
+  )
+  GROUP BY c.CONCEPT_ID, c.CONCEPT_NAME
+}
+{@outcomeOfInterest == 'drug'}?{
+  SELECT c.CONCEPT_ID, c.CONCEPT_NAME,
+  	SUM(u.PERSON_COUNT_ESTIMATE_RC) AS PERSON_COUNT_RC,
+  	SUM(u.PERSON_COUNT_ESTIMATE_DC) AS PERSON_COUNT_DC
+  FROM SCRATCH.dbo.EV_NC_LU_CONCEPT_UNIVERSE u
+  	JOIN VOCABULARY_20170503.dbo.CONCEPT c
+  		ON c.CONCEPT_ID = u.DRUG_CONCEPT_ID
+  WHERE CONDITION_CONCEPT_ID IN (
+  	@conceptsOfInterest
+  )
+  GROUP BY c.CONCEPT_ID, c.CONCEPT_NAME
 }
 
 

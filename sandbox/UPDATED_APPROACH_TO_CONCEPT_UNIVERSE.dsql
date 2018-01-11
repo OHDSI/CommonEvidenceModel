@@ -1,5 +1,4 @@
-﻿--create table #drug_condition_counts with (location=user_db, distribution=replicate) as
-WITH CTE_DC AS (
+﻿WITH CTE_DC AS (
 	select t1.drug_concept_id, ca1.ancestor_concept_id as condition_concept_id, sum(t1.num_persons) as PERSON_COUNT_ESTIMATE_DC
 	from (
 		select de1.drug_concept_id, ce1.condition_concept_id, count(de1.person_id) as num_persons
@@ -20,6 +19,7 @@ WITH CTE_DC AS (
 		inner join concept_ancestor ca1
 			on t1.condition_concept_id = ca1.descendant_concept_id
 	group by t1.drug_concept_id, ca1.ancestor_concept_id
+	HAVING sum(t1.num_persons) > 100
 ), 
 CTE_RC AS (
 	select t1.drug_concept_id, t1.condition_concept_id as condition_concept_id, sum(t1.num_persons) as PERSON_COUNT_ESTIMATE_RC
