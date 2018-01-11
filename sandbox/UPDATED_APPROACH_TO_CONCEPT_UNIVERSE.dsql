@@ -1,0 +1,51 @@
+﻿--create table #drug_condition_counts with (location=user_db, distribution=replicate) as
+WITH CTE_DC AS (
+	select t1.drug_concept_id, ca1.ancestor_concept_id as condition_concept_id, sum(t1.num_persons) as PERSON_COUNT_ESTIMATE_DC
+	from (
+		select de1.drug_concept_id, ce1.condition_concept_id, count(de1.person_id) as num_persons
+		from (
+			select person_id, drug_concept_id, min(drug_era_start_date) as index_date 
+			from drug_era 
+			group by person_id, drug_concept_id
+		) de1
+			inner join (
+				select person_id, condition_concept_id, min(condition_era_start_date) as condition_date 
+				from condition_era 
+				group by person_id, condition_concept_id
+			) ce1
+				on de1.person_id = ce1.person_id
+				and de1.index_date < ce1.condition_date
+		group by de1.drug_concept_id, ce1.condition_concept_id
+	) t1
+		inner join concept_ancestor ca1
+			on t1.condition_concept_id = ca1.descendant_concept_id
+	group by t1.drug_concept_id, ca1.ancestor_concept_id
+), 
+CTE_RC AS (
+	select t1.drug_concept_id, t1.condition_concept_id as condition_concept_id, sum(t1.num_persons) as PERSON_COUNT_ESTIMATE_RC
+	from (
+		select de1.drug_concept_id, ce1.condition_concept_id, count(de1.person_id) as num_persons
+		from (
+			select person_id, drug_concept_id, min(drug_era_start_date) as index_date 
+			from drug_era 
+			group by person_id, drug_concept_id
+		) de1
+			inner join (
+				select person_id, condition_concept_id, min(condition_era_start_date) as condition_date 
+				from condition_era 
+				group by person_id, condition_concept_id
+			) ce1
+				on de1.person_id = ce1.person_id
+				and de1.index_date < ce1.condition_date
+		group by de1.drug_concept_id, ce1.condition_concept_id
+	) t1
+	group by t1.drug_concept_id, t1.condition_concept_id
+)
+SELECT DB_NAME() AS DB_NAME, d.DRUG_CONCEPT_ID, d.CONDITION_CONCEPT_ID, 
+	CASE WHEN r.PERSON_COUNT_ESTIMATE_RC IS NULL THEN 0 ELSE r.PERSON_COUNT_ESTIMATE_RC END AS PERSON_COUNT_ESTIMATE_RC,
+	d.PERSON_COUNT_ESTIMATE_DC
+INTO SCRATCH.dbo.EV_NC_LU_CONCEPT_UNIVERSE
+FROM CTE_DC d
+	LEFT OUTER JOIN CTE_RC r
+		ON r.DRUG_CONCEPT_ID = d.DRUG_CONCEPT_ID
+		AND r.CONDITION_CONCEPT_ID = d.CONDITION_CONCEPT_ID;

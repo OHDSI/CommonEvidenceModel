@@ -61,7 +61,7 @@ library(postProcessingNegativeControls)
 # VARIABLES
 ################################################################################
 #PREPROCESSED
-#conceptUniverseData <- paste0(Sys.getenv("evidence"),".NC_LU_CONCEPT_UNIVERSE")
+conceptUniverseData <- paste0(Sys.getenv("evidence"),".NC_LU_CONCEPT_UNIVERSE")
 broadConceptsData <- paste0(Sys.getenv("evidence"),".NC_LU_BROAD_CONDITIONS")
 drugInducedConditionsData <- paste0(Sys.getenv("evidence"),".NC_LU_DRUG_INDUCED_CONDITIONS")
 pregnancyConditionData <- paste0(Sys.getenv("evidence"),".NC_LU_PREGNANCY_CONDITIONS")
@@ -74,7 +74,7 @@ faers <- paste0(Sys.getenv("translated"),".AEOLUS")
 splicer <- paste0(Sys.getenv("translated"),".SPLICER")
 ade <- paste0(Sys.getenv("translated"),".MEDLINE_WINNENBURG")
 
-conceptUniverseData <- paste0(Sys.getenv("evidence"),".NC_CONCEPT_UNIVERSE") #Don't use if using preprocessed
+#conceptUniverseData <- paste0(Sys.getenv("evidence"),".NC_CONCEPT_UNIVERSE") #Don't use if using preprocessed
 conceptsToExcludeData <- paste0(Sys.getenv("evidence"),".NC_EV_EXCLUDED_CONCEPTS")
 conceptsToIncludeData <- paste0(Sys.getenv("evidence"),".NC_EV_INCLUDED_CONCEPTS")
 indicationData <- paste0(Sys.getenv("evidence"),".NC_EV_INDICATIONS")
