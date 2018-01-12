@@ -53,7 +53,7 @@ findConceptUniverse <- function(conn,connPatientData,schemaRaw,filter=1000,
 
   #index & ownership
   sql <- paste0("CREATE INDEX IDX_LU_CONCEPT_UNIVERSE_CONCEPT_ID ON ",
-                storeData," (CONCEPT_ID);
+                storeData," (DRUG_CONCEPT_ID,CONDITION_CONCEPT_ID);
                 ALTER TABLE ", storeData, " OWNER TO RW_GRP;")
   renderedSql <- SqlRender::renderSql(sql=sql)
   translatedSql <- SqlRender::translateSql(renderedSql$sql,

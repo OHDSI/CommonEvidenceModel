@@ -61,13 +61,13 @@ library(postProcessingNegativeControls)
 # VARIABLES
 ################################################################################
 #PREPROCESSED
-#conceptUniverseData <- paste0(Sys.getenv("evidence"),".NC_LU_CONCEPT_UNIVERSE")
+conceptUniverseLookupData <- paste0(Sys.getenv("evidence"),".NC_LU_CONCEPT_UNIVERSE")
 broadConceptsData <- paste0(Sys.getenv("evidence"),".NC_LU_BROAD_CONDITIONS")
 drugInducedConditionsData <- paste0(Sys.getenv("evidence"),".NC_LU_DRUG_INDUCED_CONDITIONS")
 pregnancyConditionData <- paste0(Sys.getenv("evidence"),".NC_LU_PREGNANCY_CONDITIONS")
 
 sourceData <- paste0(Sys.getenv("patient_schema"),".dbo")
-vocabulary <-"VOCABULARY.dbo"
+vocabulary <-"VOCABULARY"
 fqSTCM <- paste0(vocabulary,".CEM_SOURCE_TO_CONCEPT_MAP")
 
 faers <- paste0(Sys.getenv("translated"),".AEOLUS")
@@ -101,11 +101,12 @@ fileName <-paste0("NEGATIVE_CONTROLS_",Sys.Date(),".xlsx")
 #For a given concept of interest, find concepts after to be used for the
 #outcome of interest
 conceptUniverse <- findConceptUniverse(connPatientData=connPatientData,
-                                       schemaRaw=sourceData,
+                                       sourceData = conceptUniverseLookupData,
                                        conn=conn,
                                        storeData=conceptUniverseData,
                                        outcomeOfInterest=outcomeOfInterest,
-                                       conceptsOfInterest = conceptsOfInterest)
+                                       conceptsOfInterest = conceptsOfInterest,
+                                       vocabulary = vocabulary)
 
 ################################################################################
 # FIND CONDITIONS OF INTEREST

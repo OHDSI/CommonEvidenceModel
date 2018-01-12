@@ -30,9 +30,14 @@
 #'
 #' @param conceptsOfInterest See concepts, typically the opposite of the outcomeOfInterest (e.g. if you want condition outcomes the concepts will be a drug)
 #'
+#' @param vocabulary location of Vocabulary
+#'
+#' @param sourceData if concept universe pre-processed, where to find that
+#'
 #' @export
-findConceptUniverse <- function(conn,connPatientData,schemaRaw,filter=10,
-                                storeData,outcomeOfInterest,conceptsOfInterest){
+findConceptUniverse <- function(conn,connPatientData,schemaRaw='',filter=10,
+                                storeData,outcomeOfInterest,conceptsOfInterest,
+                                vocabulary,sourceData){
 
   old<-Sys.time()
   print(paste0("Current Time: ",Sys.time()))
@@ -44,9 +49,12 @@ findConceptUniverse <- function(conn,connPatientData,schemaRaw,filter=10,
                                            oracleTempSchema = NULL,
                                            schemaRaw=schemaRaw,
                                            filter=filter,
+                                           sourceData=sourceData,
                                            outcomeOfInterest=outcomeOfInterest,
-                                           conceptsOfInterest=conceptsOfInterest)
-  df <- DatabaseConnector::querySql(conn=connPatientData,sql)
+                                           conceptsOfInterest=conceptsOfInterest,
+                                           vocabulary=vocabulary)
+  #df <- DatabaseConnector::querySql(conn=connPatientData,sql)
+  df <- DatabaseConnector::querySql(conn=conn,sql)
 
   #store
   DatabaseConnector::insertTable(conn=conn,
