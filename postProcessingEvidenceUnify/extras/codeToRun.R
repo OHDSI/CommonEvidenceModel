@@ -30,12 +30,12 @@ library(postProcessingEvidenceUnify)
 # VARIABLES
 ################################################################################
 source = "source"
-evidenceUnify = "evidence_unified"
+evidenceUnify = "cem_unified"
 
 ################################################################################
 # SOURCE
 ################################################################################
-sql <- "IF OBJECT_ID('@targetTable', 'U') IS NOT NULL DROP TABLE @targetTable; SELECT * INTO @targetTable FROM @sourceTable;"
+sql <- "IF OBJECT_ID('@targetTable', 'U') IS NOT NULL DROP TABLE @targetTable; SELECT * INTO @targetTable FROM @sourceTable; ALTER TABLE @targetTable OWNER TO RW_GRP;"
 renderedSql <- SqlRender::renderSql(sql=sql,
                                     sourceTable = paste0(Sys.getenv("translated"),'.',source),
                                     targetTable = paste0(Sys.getenv("evidence"),'.',source))
