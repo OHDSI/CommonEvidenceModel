@@ -1,4 +1,4 @@
-SET search_path = vocabulary;
+SET search_path = staging_vocabulary;
 
 with new_rowcounts as (
 select 'concept'::varchar as table_name, count(*)  as new_rowcount from staging_vocabulary.concept
