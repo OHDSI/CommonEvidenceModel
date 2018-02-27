@@ -103,6 +103,12 @@ DatabaseConnector::insertTable(conn=conn,
                                createTable=TRUE,
                                tempTable=FALSE,
                                oracleTempSchema=NULL)
+sql <- "ALTER TABLE @tableName OWNER TO RW_GRP;"
+renderedSql <- SqlRender::renderSql(sql=sql,
+                                    tableName = paste0(Sys.getenv("evidence"),'.',source))
+translatedSql <- SqlRender::translateSql(renderedSql$sql,
+                                         targetDialect=Sys.getenv("dbms"))
+DatabaseConnector::executeSql(conn, translatedSql$sql)
 rm(df)
 
 pubmed(conn,
@@ -115,12 +121,6 @@ pubmed(conn,
        pubMedPullStart = 3532,
        summarize = 1,
        summarizeStart = 1)
-
-#[1] "PUBMED PULL: 2735:4046 - thonzylamine"
-#"PUBMED PULL: 3531:4046 - Pneumonia, Atypical Interstitial, of Cattle"
-
-#WINNENBURG
-#tbd
 
 #SEMMEDDB
 genericLoad(conn=conn,

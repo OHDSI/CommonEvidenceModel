@@ -8,6 +8,8 @@
       MESH_TYPE VARCHAR(50),
       PMID      INT
   );
+
+  ALTER TABLE @tableName OWNER TO RW_GRP;
 }
 
 {@summarizeStart==1}?{
@@ -28,6 +30,8 @@
   	UNIQUE_IDENTIFIER_TYPE	VARCHAR(50),
     DISTINCT_PMID_COUNT INT
   );
+
+  ALTER TABLE @tableName OWNER TO RW_GRP;
 }
 
 {@summarize==1}?{
