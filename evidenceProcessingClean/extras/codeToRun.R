@@ -105,7 +105,7 @@ DatabaseConnector::insertTable(conn=conn,
                                oracleTempSchema=NULL)
 sql <- "ALTER TABLE @tableName OWNER TO RW_GRP;"
 renderedSql <- SqlRender::renderSql(sql=sql,
-                                    tableName = paste0(Sys.getenv("evidence"),'.',source))
+                                    tableName = paste0(Sys.getenv("clean"),'.',source))
 translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                          targetDialect=Sys.getenv("dbms"))
 DatabaseConnector::executeSql(conn, translatedSql$sql)
