@@ -16,4 +16,4 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE STAGING_CTD.ctd_chemical_disease
-  OWNER TO dikb;
+  OWNER TO rw_grp;
