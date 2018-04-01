@@ -120,7 +120,9 @@ OR c1.CONCEPT_ID IN (
     4116208,	/*Choroidal and/or chorioretinal disorder*/
     444199,	/*Iatrogenic disorder*/
 	  4181217,	/*Sequelae of disorders classified by disorder-system*/
-	  4206460	/*Problem*/
+	  4206460,	/*Problem*/
+	  967823,	  /*Sodium Chloride*/
+    19049105	/*Potassium Chloride*/
 );
 
 

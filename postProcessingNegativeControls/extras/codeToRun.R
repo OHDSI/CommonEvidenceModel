@@ -90,7 +90,7 @@ summaryOptimizedData <- paste0(Sys.getenv("evidence"),".NC_SUMMARY_OPTIMIZED")
 # CONFIG
 ################################################################################
 outcomeOfInterest <- 'condition'
-conceptsOfInterest <- '1524674,40222444'
+conceptsOfInterest <- '1750500,1716721'
 conceptsToExclude <- '0'
 conceptsToInclude <- '0'
 fileName <-paste0("NEGATIVE_CONTROLS_",Sys.Date(),".xlsx")
