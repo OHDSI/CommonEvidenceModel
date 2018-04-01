@@ -18,8 +18,6 @@
 #'
 #' @param conn  Connection information where analysis performed
 #'
-#' @param adeData What translated data contains ADE information
-#'
 #' @param storeData  Where you want to store the data on the analysis connection
 #'
 #' @param vocabulary Schema where Vocabulary can be found
@@ -31,16 +29,64 @@
 #' @param conceptUniverse List of concepts we want to summarize data for
 #'
 #' @export
-pullEvidence <- function(conn,adeData,storeData,conceptsOfInterest,vocabulary,outcomeOfInterest,conceptUniverse){
+pullEvidence <- function(conn,storeData,conceptsOfInterest,vocabulary,outcomeOfInterest,conceptUniverse){
+  #create table
+  sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "pullEvidencePrep.sql",
+                                           packageName = "postProcessingNegativeControls",
+                                           dbms = attr(conn, "dbms"),
+                                           oracleTempSchema = NULL,
+                                           storeData=storeData)
+  DatabaseConnector::executeSql(conn=conn,sql)
+
+  #Winnenburg
   sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "pullEvidence.sql",
                                            packageName = "postProcessingNegativeControls",
                                            dbms = attr(conn, "dbms"),
                                            oracleTempSchema = NULL,
                                            storeData=storeData,
-                                           adeData=adeData,
+                                           adeType = "MEDLINE_WINNENBURG",
+                                           adeData="translated.MEDLINE_WINNENBURG",
                                            vocabulary=vocabulary,
                                            conceptsOfInterest=conceptsOfInterest,
                                            outcomeOfInterest=outcomeOfInterest,
+                                           conceptUniverseData=conceptUniverseData)
+  DatabaseConnector::executeSql(conn=conn,sql)
+
+  #product labels
+  sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "pullEvidence.sql",
+                                           packageName = "postProcessingNegativeControls",
+                                           dbms = attr(conn, "dbms"),
+                                           oracleTempSchema = NULL,
+                                           storeData=storeData,
+                                           adeType = "SPLICER",
+                                           adeData="translated.SPLICER",
+                                           vocabulary=vocabulary,
+                                           conceptsOfInterest=conceptsOfInterest,
+                                           outcomeOfInterest=outcomeOfInterest,
+                                           conceptUniverseData=conceptUniverseData)
+  DatabaseConnector::executeSql(conn=conn,sql)
+
+  #FAERS
+  sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "pullEvidence.sql",
+                                           packageName = "postProcessingNegativeControls",
+                                           dbms = attr(conn, "dbms"),
+                                           oracleTempSchema = NULL,
+                                           storeData=storeData,
+                                           adeType = "AEOLUS",
+                                           adeData="translated.AEOLUS",
+                                           vocabulary=vocabulary,
+                                           conceptsOfInterest=conceptsOfInterest,
+                                           outcomeOfInterest=outcomeOfInterest,
+                                           conceptUniverseData=conceptUniverseData)
+  DatabaseConnector::executeSql(conn=conn,sql)
+
+  #INDEX
+  sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "pullEvidencePost.sql",
+                                           packageName = "postProcessingNegativeControls",
+                                           dbms = attr(conn, "dbms"),
+                                           oracleTempSchema = NULL,
+                                           storeData=storeData,
+                                           vocabulary=vocabulary,
                                            conceptUniverseData=conceptUniverseData)
   DatabaseConnector::executeSql(conn=conn,sql)
 }

@@ -154,7 +154,6 @@ findFaersADRs(conn = conn,
 # PULL EVIDENCE
 ################################################################################
 pullEvidence(conn = conn,
-              adeData = ade,
               storeData = adeSummaryData,
               vocabulary=vocabulary,
               conceptsOfInterest=conceptsOfInterest,
@@ -173,8 +172,6 @@ summarizeEvidence(conn=conn,
                   broadConceptsData=broadConceptsData,
                   drugInducedConditionsData=drugInducedConditionsData,
                   pregnancyConditionData=pregnancyConditionData,
-                  splicerConceptData=splicerConceptData,
-                  faersConceptsData=faersConceptsData,
                   conceptsToExclude=conceptsToExcludeData,
                   conceptsToInclude=conceptsToIncludeData)
 
