@@ -113,13 +113,13 @@ conceptUniverse <- findConceptUniverse(connPatientData=connPatientData,
 ################################################################################
 
 #SPLICER
-findSplicerConcepts(conn=conn,
-                    storeData=splicerConceptData,
-                    splicerData=splicer,
-                    sqlFile="splicerConcepts.sql",
-                    conceptsOfInterest=conceptsOfInterest,
-                    vocabulary=vocabulary,
-                    outcomeOfInterest=outcomeOfInterest)
+# findSplicerConcepts(conn=conn,
+#                     storeData=splicerConceptData,
+#                     splicerData=splicer,
+#                     sqlFile="splicerConcepts.sql",
+#                     conceptsOfInterest=conceptsOfInterest,
+#                     vocabulary=vocabulary,
+#                     outcomeOfInterest=outcomeOfInterest)
 
 #FIND INDICATIONS
 findDrugIndications(conn=conn,
@@ -142,12 +142,12 @@ findConcepts(conn = conn,
              concepts=conceptsToInclude)
 
 #FAERS
-findFaersADRs(conn = conn,
-              faersData = faers,
-              storeData = faersConceptsData,
-              vocabulary=vocabulary,
-              conceptsOfInterest=conceptsOfInterest,
-              outcomeOfInterest = outcomeOfInterest)
+# findFaersADRs(conn = conn,
+#               faersData = faers,
+#               storeData = faersConceptsData,
+#               vocabulary=vocabulary,
+#               conceptsOfInterest=conceptsOfInterest,
+#               outcomeOfInterest = outcomeOfInterest)
 
 
 ################################################################################

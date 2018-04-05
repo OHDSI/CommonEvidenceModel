@@ -30,6 +30,11 @@ FROM (
 			  ON a.CONCEPT_ID_1 = ca.DESCENDANT_CONCEPT_ID
 			  AND a.CONCEPT_ID_1 != ca.ANCESTOR_CONCEPT_ID
 			}
+			{@adeType == "AEOLUS"}?{
+    	  AND PRR >= 2
+        AND CASE_COUNT >= 3
+        AND CHI_SQUARE >= 4
+	    }
 	WHERE
 	  {@outcomeOfInterest == 'condition'}?{CONCEPT_ID_1}
 	  {@outcomeOfInterest == 'drug'}?{CONCEPT_ID_2}
@@ -42,6 +47,7 @@ FROM (
 		FROM @vocabulary.CONCEPT_ANCESTOR
 		WHERE ANCESTOR_CONCEPT_ID IN (@conceptsOfInterest)
 	)
+
 
 	UNION ALL
 
@@ -69,6 +75,11 @@ FROM (
 			{@outcomeOfInterest == 'drug'}?{
 			  ON a.CONCEPT_ID_1 = u.CONCEPT_ID
 			}
+			{@adeType == "AEOLUS"}?{
+    	  AND PRR >= 2
+        AND CASE_COUNT >= 3
+        AND CHI_SQUARE >= 4
+	    }
 	WHERE
 	  {@outcomeOfInterest == 'condition'}?{CONCEPT_ID_1}
 	  {@outcomeOfInterest == 'drug'}?{CONCEPT_ID_2}
@@ -113,6 +124,11 @@ FROM (
   		  ON a.CONCEPT_ID_1 = cr.CONCEPT_ID_2
 			  AND a.CONCEPT_ID_1 != cr.CONCEPT_ID_1
   		}
+  		{@adeType == "AEOLUS"}?{
+    	  AND PRR >= 2
+        AND CASE_COUNT >= 3
+        AND CHI_SQUARE >= 4
+	    }
 	WHERE
 	  {@outcomeOfInterest == 'condition'}?{a.CONCEPT_ID_1}
 	  {@outcomeOfInterest == 'drug'}?{a.CONCEPT_ID_2}
@@ -156,6 +172,11 @@ FROM (
 			  ON a.CONCEPT_ID_1 = ca.ANCESTOR_CONCEPT_ID
 		  	AND a.CONCEPT_ID_1 != ca.DESCENDANT_CONCEPT_ID
 			}
+			{@adeType == "AEOLUS"}?{
+    	  AND PRR >= 2
+        AND CASE_COUNT >= 3
+        AND CHI_SQUARE >= 4
+	    }
 	WHERE
 	  {@outcomeOfInterest == 'condition'}?{CONCEPT_ID_1}
 	  {@outcomeOfInterest == 'drug'}?{CONCEPT_ID_2}
