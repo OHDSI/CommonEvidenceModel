@@ -1,7 +1,7 @@
 # CommonEvidenceModel
 
 ## Introduction
-The CommonEvidenceModel leverages work previously performed within LAERTES, also known as the OHDSI Knowledgebase.  However the focus here is building infrastructure to update the incoming raw sources as well as the post processing of finding Negative Controls.
+The CommonEvidenceModel (CEM) leverages work previously performed within LAERTES, also known as the OHDSI Knowledgebase.  However the focus here is building infrastructure to update the incoming raw sources as well as the post processing of finding Negative Controls.
 
  ![CEM Process Flow](src/img/CEM_PROCESS.png)
 

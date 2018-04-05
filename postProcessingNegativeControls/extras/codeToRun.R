@@ -62,7 +62,7 @@ library(postProcessingNegativeControls)
 ################################################################################
 #PREPROCESSED
 conceptUniverseLookupData <- paste0(Sys.getenv("evidence"),".NC_LU_CONCEPT_UNIVERSE")
-broadConceptsData <- paste0(Sys.getenv("evidence"),".NC_LU_BROAD_CONDITIONS")
+broadConceptsData <- paste0(Sys.getenv("evidence"),".NC_LU_BROAD_CONCEPTS")
 drugInducedConditionsData <- paste0(Sys.getenv("evidence"),".NC_LU_DRUG_INDUCED_CONDITIONS")
 pregnancyConditionData <- paste0(Sys.getenv("evidence"),".NC_LU_PREGNANCY_CONDITIONS")
 
@@ -173,14 +173,13 @@ summarizeEvidence(conn=conn,
                   broadConceptsData=broadConceptsData,
                   drugInducedConditionsData=drugInducedConditionsData,
                   pregnancyConditionData=pregnancyConditionData,
-                  splicerConceptData=splicerConceptData,
-                  faersConceptsData=faersConceptsData,
                   conceptsToExclude=conceptsToExcludeData,
                   conceptsToInclude=conceptsToIncludeData)
 
 ################################################################################
 # OPTIMIZE
-################################################################################
+##
+##############################################################################
 optimizeEvidence(conn=conn,
                  outcomeOfInterest=outcomeOfInterest,
                  storeData=summaryOptimizedData,

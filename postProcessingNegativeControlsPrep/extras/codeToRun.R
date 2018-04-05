@@ -63,7 +63,7 @@ sourceData <- paste0(Sys.getenv("patient_schema"),".dbo")
 vocabulary <-"VOCABULARY.dbo"
 
 conceptUniverseData <- paste0(Sys.getenv("evidence"),".NC_LU_CONCEPT_UNIVERSE")
-broadConceptsData <- paste0(Sys.getenv("evidence"),".NC_LU_BROAD_CONDITIONS")
+broadConceptsData <- paste0(Sys.getenv("evidence"),".NC_LU_BROAD_CONCEPTS")
 drugInducedConditionsData <- paste0(Sys.getenv("evidence"),".NC_LU_DRUG_INDUCED_CONDITIONS")
 pregnancyConditionData <- paste0(Sys.getenv("evidence"),".NC_LU_PREGNANCY_CONDITIONS")
 

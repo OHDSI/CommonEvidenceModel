@@ -32,15 +32,67 @@
 #'
 #' @export
 pullEvidence <- function(conn,adeData,storeData,conceptsOfInterest,vocabulary,outcomeOfInterest,conceptUniverse){
+  print("### PULL EVIDENCE #####################################################")
+  print("--- Table Prep")
+  #create table
+  sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "pullEvidencePrep.sql",
+                                           packageName = "postProcessingNegativeControls",
+                                           dbms = attr(conn, "dbms"),
+                                           oracleTempSchema = NULL,
+                                           storeData=storeData)
+  DatabaseConnector::executeSql(conn=conn,sql)
+
+  print("--- Winnenburg")
+  #Winnenburg
   sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "pullEvidence.sql",
                                            packageName = "postProcessingNegativeControls",
                                            dbms = attr(conn, "dbms"),
                                            oracleTempSchema = NULL,
                                            storeData=storeData,
-                                           adeData=adeData,
+                                           adeType = "MEDLINE_WINNENBURG",
+                                           adeData="translated.MEDLINE_WINNENBURG",
                                            vocabulary=vocabulary,
                                            conceptsOfInterest=conceptsOfInterest,
                                            outcomeOfInterest=outcomeOfInterest,
                                            conceptUniverseData=conceptUniverseData)
+  DatabaseConnector::executeSql(conn=conn,sql)
+
+  print("--- Product Labels")
+  #product labels
+  sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "pullEvidence.sql",
+                                           packageName = "postProcessingNegativeControls",
+                                           dbms = attr(conn, "dbms"),
+                                           oracleTempSchema = NULL,
+                                           storeData=storeData,
+                                           adeType = "SPLICER",
+                                           adeData="translated.SPLICER",
+                                           vocabulary=vocabulary,
+                                           conceptsOfInterest=conceptsOfInterest,
+                                           outcomeOfInterest=outcomeOfInterest,
+                                           conceptUniverseData=conceptUniverseData)
+  DatabaseConnector::executeSql(conn=conn,sql)
+
+  print("--- AEOLUS")
+  #FAERS
+  sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "pullEvidence.sql",
+                                           packageName = "postProcessingNegativeControls",
+                                           dbms = attr(conn, "dbms"),
+                                           oracleTempSchema = NULL,
+                                           storeData=storeData,
+                                           adeType = "AEOLUS",
+                                           adeData="translated.AEOLUS",
+                                           vocabulary=vocabulary,
+                                           conceptsOfInterest=conceptsOfInterest,
+                                           outcomeOfInterest=outcomeOfInterest,
+                                           conceptUniverseData=conceptUniverseData)
+  DatabaseConnector::executeSql(conn=conn,sql)
+
+  print("--- Index")
+  #Index
+  sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "pullEvidencePost.sql",
+                                           packageName = "postProcessingNegativeControls",
+                                           dbms = attr(conn, "dbms"),
+                                           oracleTempSchema = NULL,
+                                           storeData=storeData)
   DatabaseConnector::executeSql(conn=conn,sql)
 }

@@ -38,22 +38,21 @@
 #'
 #' @param fqSTCM where is the SOURCE_TO_CONCEPT_MAP located
 #'
-#' @param faers where is the faers data located
-#'
-#' @param splicerConceptData where is the splicerADRs data located
-#'
 #' @param conceptsToExclude look up tabel with concepts to exclude
 #'
 #' @param conceptsToInclude look up table with concepts to include
 #'
 #' @export
-summarizeEvidence <- function(conn,outcomeOfInterest,conceptUniverseData,
-                              storeData,adeSummaryData,
+summarizeEvidence <- function(conn,outcomeOfInterest,
+                              conceptUniverseData,
+                              storeData,
+                              adeSummaryData,
                               indicationData,
-                              broadConceptsData,drugInducedConditionsData,
+                              broadConceptsData,
+                              drugInducedConditionsData,
                               pregnancyConditionData,
-                              faersConceptsData,
-                              splicerConceptData,conceptsToExclude,conceptsToInclude){
+                              conceptsToExclude,
+                              conceptsToInclude){
   sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "summarizeEvidence.sql",
                                            packageName = "postProcessingNegativeControls",
                                            dbms = attr(conn, "dbms"),
@@ -66,8 +65,6 @@ summarizeEvidence <- function(conn,outcomeOfInterest,conceptUniverseData,
                                            broadConceptsData=broadConceptsData,
                                            drugInducedConditionsData=drugInducedConditionsData,
                                            pregnancyConditionData=pregnancyConditionData,
-                                           splicerConceptData=splicerConceptData,
-                                           faersConceptsData=faersConceptsData,
                                            conceptsToExclude=conceptsToExclude,
                                            conceptsToInclude=conceptsToInclude)
   DatabaseConnector::executeSql(conn=conn,sql)
