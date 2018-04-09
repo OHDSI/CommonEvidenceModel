@@ -13,7 +13,7 @@ CTE_CONCEPTS AS (
 	AND EXACT_PMID_COUNT = 0
 	AND PARENT_PMID_COUNT = 0
 	AND ANCESTOR_PMID_COUNT = 0
-	AND INDICATION = 0
+	AND IND_CI = 0
 	{@outcomeOfInterest=='condition'}?{AND TOO_BROAD = 0}
 	AND DRUG_INDUCED = 0
 	{@outcomeOfInterest=='condition'}?{AND PREGNANCY = 0}

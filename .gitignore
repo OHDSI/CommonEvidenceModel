@@ -52,3 +52,5 @@ postProcessingNegativeControls/extras/config_patient_data.csv
 postProcessingNegativeControlsPrep/errorReport.txt
 postProcessingNegativeControlsPrep/extras/config.csv
 postProcessingNegativeControlsPrep/extras/config_patient_data.csv
+postProcessingNegativeControls/NEGATIVE_CONTROLS_*.xlsx
+postProcessingNegativeControls/test.sql
