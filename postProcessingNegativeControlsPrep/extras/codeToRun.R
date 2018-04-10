@@ -42,7 +42,9 @@ Sys.setenv(patient_user = patient_config$user)
 Sys.setenv(patient_pw = patient_config$pw)
 Sys.setenv(patient_server = patient_config$server)
 Sys.setenv(patient_port = patient_config$port)
-Sys.setenv(patient_schema = patient_config$schema)
+Sys.setenv(patient_schema1 = patient_config$schema1)
+Sys.setenv(patient_schema2 = patient_config$schema1)
+Sys.setenv(patient_schema3 = patient_config$schema1)
 rm(patient_config)
 
 connectionDetails <- DatabaseConnector::createConnectionDetails(
@@ -59,7 +61,9 @@ library(postProcessingNegativeControlsPrep)
 ################################################################################
 # VARIABLES
 ################################################################################
-sourceData <- paste0(Sys.getenv("patient_schema"),".dbo")
+sourceData1 <- paste0(Sys.getenv("patient_schema1"),".dbo")
+sourceData2 <- paste0(Sys.getenv("patient_schema2"),".dbo")
+sourceData3 <- paste0(Sys.getenv("patient_schema3"),".dbo")
 vocabulary <-"VOCABULARY.dbo"
 
 conceptUniverseData <- paste0(Sys.getenv("evidence"),".NC_LU_CONCEPT_UNIVERSE")
@@ -71,7 +75,9 @@ pregnancyConditionData <- paste0(Sys.getenv("evidence"),".NC_LU_PREGNANCY_CONDIT
 # FIND POTENTIAL CONCEPTS
 ################################################################################
 conceptUniverse <- findConceptUniverse(connPatientData=connPatientData,
-                                       schemaRaw=sourceData,
+                                       schemaRaw1=sourceData1,
+                                       schemaRaw2=sourceData2,
+                                       schemaRaw3=sourceData3,
                                        conn=conn,
                                        storeData=conceptUniverseData)
 

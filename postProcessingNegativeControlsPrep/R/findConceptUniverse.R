@@ -20,14 +20,18 @@
 #'
 #' @param connPatientData  Connection information for where patient data is
 #'
-#' @param schemaRaw  Definition of where raw patient condition data can found
+#' @param schemaRaw1  Definition of where raw patient condition data can found
+#'
+#' @param schemaRaw2  Definition of where raw patient condition data can found
+#'
+#' @param schemaRaw3  Definition of where raw patient condition data can found
 #'
 #' @param filter  Filter of how many exposures required to be a condition of interest
 #'
 #' @param storeData  Where you want to store the data on the analysis connection
 #'
 #' @export
-findConceptUniverse <- function(conn,connPatientData,schemaRaw,filter=1000,
+findConceptUniverse <- function(conn,connPatientData,schemaRaw1,schemaRaw2,schemaRaw3,filter=1000,
                                 storeData){
 
   old<-Sys.time()
@@ -38,7 +42,9 @@ findConceptUniverse <- function(conn,connPatientData,schemaRaw,filter=1000,
                                            packageName = "postProcessingNegativeControlsPrep",
                                            dbms = attr(connPatientData, "dbms"),
                                            oracleTempSchema = NULL,
-                                           schemaRaw=schemaRaw,
+                                           schemaRaw1=schemaRaw1,
+                                           schemaRaw2=schemaRaw2,
+                                           schemaRaw3=schemaRaw3,
                                            filter=filter)
   df <- DatabaseConnector::querySql(conn=connPatientData,sql)
 
