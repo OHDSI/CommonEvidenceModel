@@ -1,2 +1,2 @@
-dbms,user,pw,server,port,schema
-dbmsName,userName,password,server,1234,schema
+dbms,user,pw,server,port,schema1,schema2,schema3
+dbmsName,userName,password,server,1234,schema1,schema2,schema3
