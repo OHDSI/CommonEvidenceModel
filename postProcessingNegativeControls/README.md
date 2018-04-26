@@ -2,13 +2,52 @@ Post Processing - Negative Controls
 ====================
 Negative controls are designed to detect both suspected and unsuspected sources of spurious causal inference.  For example, biologists employ "negative controls" as a means of ruling out possible noncausal interpretations of their results.  The essential purpose of a negative control is to reproduce a condition that cannot involve the hypothesized causal mechanism but is very likely to invole the same sources of bias that may have been present in the original association [<a name="1">1</a>].  Martijn et al. have set the motivation for negative controls in the OHDSI community within the paper "Interpreting observational studies: why empirical calibration is needed to correct p-values" [<a name="2">2</a>].
 
-Once the CommonEvidenceModel is processed by the OHDSI team, one could use this Post Processing Package to find Negative Controls.  The entire program must be run on a case by case basis, i.e. for every negative control set you want to run the entire process needs to be run.  One must provide OMOP Concept IDs to identify the item you trying to study, these are the "concepts of interest".  The program will export an Excel document that reports:
+OHDSI's first attempt at producing negative controls can be found in the paper "Accuracy of an automated knowledge base for identifying drug adverse reactions" [<a name="3">3</a>] however the underlying data and process have been updated to run on the CommonEvidenceModel.  Once the CommonEvidenceModel is processed by the OHDSI team, one could use this Post Processing Package to find Negative Controls.  The entire program must be run on a case by case basis, i.e. for every negative control set you want to run the entire process needs to be run.  One must provide OMOP Concept IDs to identify the item you trying to study, these are the "concepts of interest".  The program will export an Excel document that reports:
 1. What were the users settings were for the run (like the concepts of interest)
 2. All potential "outcomes of interst" or potential negative controls evaluated and the scores for each
 3. A generated list of what the process thinks are the best negative controls in order of prevalence
 4. A list of Pubmed articles associated to the evidence found as a reason for removing concepts of interest
 
-OHDSI's first attempt at producing negative controls can be found in the paper "Accuracy of an automated knowledge base for identifying drug adverse reactions" [<a name="3">3</a>] however the process currently here is slightly different.  The Negative Controls tab selects negative controls by the following process:
+However the preferred method is not to use this R script but to generate negative controls directly from OHDSI's ATLAS (starting in V2.4.0+); ATLAS allows you to use a web site to generate lists of negative controls without having to go through the hassel of running the R package.
+
+## Generating Negative Controls In ATLAS
+
+
+## Interpreting Negative Controls Results from ATLAS
+
+| Column | Description |
+| --- | --- |
+| ID | - |
+| Name | - |
+| Domain | - |
+| Suggested Negative Control | - |
+| Sort Order | - |
+| Publication Count (Descendant Concept Match) | - |
+| Publication Count (Exact Concept Match) | - |
+| Publication Count (Parent Concept Match) | - |	
+| Publication Count (Ancestor Concept Match) | - |
+| Indicated | - |	
+| Broad Concept | - |	
+| Drug Induced Concept | - |	
+| Pregnancy Concept | - |	
+| Product Label Count (Descendant Concept Match) | - |	
+| Product Label (Exact Concept Match) | - |	
+| Product Label (Parent Concept Match) | - |	
+| Product Label (Ancestor Concept Match) | - |	
+| FAERS Count (Descendant Concept Match) | - |	
+| FAERS Count (Exact Concept Match | - |	
+| FAERS Count (Parent Concept Match) | - |	
+| FAERS Count (Ancestor Concept Match) | - |	
+| User Excluded | - |	
+| User Included | - |	
+| Optimized Out | - |	
+| Not Prevalent | - |	
+| RC | - |	
+| DRC  | - |
+
+
+
+ process currently here is slightly different.  The Negative Controls tab selects negative controls by the following process:
 1. Finds all potential concepts that are even possible for consideration.  This is done by finding the "concepts of interest" within patient data and finding "outcomes of interest" that occur after the "concepts of interest".  This is our "concept universe".  Using patient level data helps the program know if the concepts will even be viable for use as negative controls (i.e. a concepts may be a good negative control, however if it never occurs in data it will not be much use in quantifying bias).  While finding these concepts the program will additionally find patient counts as row counts (RC) which means how many persons had this exact concept and descendant counts (DC) which means how many persons had this exact cocnept and one of its descendants.
 2. Find all concept that are known not to be good choices.
  - Splicer - the US product labels are parsed via the tool SPLICER and reviews the "Adverse Drug Reactions" and "Postmarketing" section to find associated concepts.  Finding concepts on the label in this manner suggests there is already an association between the concepts and therefore are not good negative controls.
