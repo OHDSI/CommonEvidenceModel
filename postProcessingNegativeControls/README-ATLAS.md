@@ -18,7 +18,7 @@ If you are using ATLAS release 2.4.0 or higher you can generate negative control
 6. Once the "Generation Status" is listed as "COMPLETE", hit the "View Evidence" button.<br/>
  ![View Evidence](src/img/viewEvidence.png)
 7. A list all concept considered will be displayed below the "View Evidence" button:
- - *Left Hand Navigation* <br/>
+ - **Left Hand Navigation** <br/>
   ![Left Hand Navigation](src/img/leftHandNavigation.png) <br/>
   This can be used to filter the results.  
 	- "Suggested Negative Control" allows users to filter to just items that the system deems to be good negative controls.  
@@ -26,15 +26,15 @@ If you are using ATLAS release 2.4.0 or higher you can generate negative control
 	- "Found on Product Label" allows user to filter product label evidence.
 	- "Signal in FAERS" allows user to filter on spontaneous report information.
 	- "User Specified" allows user to filter to conditions specified above as concepts to include.
- - *Record Counts* <br/>
+ - **Record Counts** <br/>
    ![Record Counts](src/img/recordCounts.png)<br/>
    There are two columns in the evidence, one for "RC" which stands for "record counts" and another "DRC" which stands for "descendant record counts".  These columns will show you how often the exact concept appears in your data (i.e. RC) and how often the concept and its descendants show up in your data (i.e. DRC).  The drop down allows you to select your data set to use to show these counts.  If you are using the public OHDSI ATLAS it is using [SYNPUF](https://www.cms.gov/Research-Statistics-Data-and-Systems/Downloadable-Public-Use-Files/SynPUFs/DE_Syn_PUF.html) a synthetic data set, in this case the counts are meaningless.
- - *Table of Results* - the table shows the evidence generated from the CommonEvidenceModel for your concept set.  Column details can be found in the "Columns of Evidence" section below.
- - *Column visibility* <br/>
+ - **Table of Results** - the table shows the evidence generated from the CommonEvidenceModel for your concept set.  Column details can be found in the "Columns of Evidence" section below.
+ - **Column visibility** <br/>
     ![Column Visibility](src/img/columnVisibility.png)<br/>
 	Not all columns are shown by default however they can be exposed by hitting the "Column Visibility" and selecting the columns of interest. 
- - *Exporting Results* - press the CSV button to export the results.
- - *Save New Concept Set From Selection Below* - you can create a concept set from the list, it will only select concepts that are being shown (e.g. if you filter to Suggested Negative Control = "Yes" and press the button to save as new concept set, it will save the filtered concepts to the list)
+ - **Exporting Results** - press the CSV button to export the results.
+ - **Save New Concept Set From Selection Below** - you can create a concept set from the list, it will only select concepts that are being shown (e.g. if you filter to Suggested Negative Control = "Yes" and press the button to save as new concept set, it will save the filtered concepts to the list)
 
 ## Columns of Evidence
 | Column | Description |
