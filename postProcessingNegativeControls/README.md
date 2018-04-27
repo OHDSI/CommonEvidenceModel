@@ -15,35 +15,7 @@ However the preferred method is not to use this R script but to generate negativ
 
 ## Interpreting Negative Controls Results from ATLAS
 
-| Column | Description |
-| --- | --- |
-| ID | OMOP CONCEPT_ID reviewed for evidence. |
-| Name | OMOP CONCEPT_NAME reviewed for evidence. |
-| Domain | What the concept belongs to, this will either be condition or drug (however it is possible a concept moved domain and if they are not in the domain of interest do not use). |
-| Suggested Negative Control | A list of suggested negative controls based on the following: <ul><li>have no published literature association between the drug-conditon pair of interest, either exactly as the evidence was mapped, a lower lever concept contained evidence, a direct parent concept contained evidence, or an ancestor contained evidence.</li><li>not existing on the product label, either exactly as the evidence was mapped, a lower lever concept contained evidence, a direct parent concept contained evidence, or an ancestor contained evidence.</li><li>not considered a FAERS signal, either exactly as the evidence was mapped, a lower lever concept contained evidence, a direct parent concept contained evidence, or an ancestor contained evidence.</li><li>have no indication or contraindication listed in the OMOP Vocabulary for the pair.</li><li>are not considered a broad concepts.</li><li>are not considered a drug induced concept.</li><li>not considered a pregnancy related concept.</li><li>was not suggested to be excluded by the user.</li><li>was not optimized out, meaning another parent concept existed that was also considered a good negative, so the lower level concept was excluded.</li></ul> All information known about the drug-condition pair is provided so if the user wishes to loosen this criteria they can (i.e. ignore evidence from ancestor restrictions).|
-| Sort Order | - |
-| Publication Count (Descendant Concept Match) | - |
-| Publication Count (Exact Concept Match) | - |
-| Publication Count (Parent Concept Match) | - |	
-| Publication Count (Ancestor Concept Match) | - |
-| Indicated | - |	
-| Broad Concept | - |	
-| Drug Induced Concept | - |	
-| Pregnancy Concept | - |	
-| Product Label Count (Descendant Concept Match) | - |	
-| Product Label (Exact Concept Match) | - |	
-| Product Label (Parent Concept Match) | - |	
-| Product Label (Ancestor Concept Match) | - |	
-| FAERS Count (Descendant Concept Match) | - |	
-| FAERS Count (Exact Concept Match | - |	
-| FAERS Count (Parent Concept Match) | - |	
-| FAERS Count (Ancestor Concept Match) | - |	
-| User Excluded | - |	
-| User Included | - |	
-| Optimized Out | - |	
-| Not Prevalent | - |	
-| RC | - |	
-| DRC  | - |
+
 
 
 
