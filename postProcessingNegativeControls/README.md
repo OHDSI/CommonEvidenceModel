@@ -8,87 +8,30 @@ OHDSI's first attempt at producing negative controls can be found in the paper "
 3. A generated list of what the process thinks are the best negative controls in order of prevalence
 4. A list of Pubmed articles associated to the evidence found as a reason for removing concepts of interest
 
-However the preferred method is not to use this R script but to generate negative controls directly from OHDSI's ATLAS (starting in V2.4.0+); ATLAS allows you to use a web site to generate lists of negative controls without having to go through the hassel of running the R package.
+However the preferred method is not to use this R script but to generate negative controls directly from OHDSI's ATLAS (starting in V2.4.0+); ATLAS allows you to use a web site to generate lists of negative controls without having to go through the hassel of running the R package.  See this [ReadMe](https://github.com/OHDSI/CommonEvidenceModel/blob/negativeControlReadMe/postProcessingNegativeControls/README-ATLAS.md) for more information on getting negative controls from ATLAS.
 
-## Generating Negative Controls In ATLAS
+## Suggested Negative Controls Process
+1. Generate potential list of negative controls using this [ReadMe](https://github.com/OHDSI/CommonEvidenceModel/blob/negativeControlReadMe/postProcessingNegativeControls/README-ATLAS.md).
+2. Filter list by "Suggested Negative Control" = "Yes", sort the data by "Sort Order" (smallest to largest), and export the list of controls to a CSV.
+3. In Excel review the list until you get at least 50 negative controls.  It is recommended to pull about 10 extra incase further review of the list eliminates some of the selected negative controls.  
+	- If you are generating condition negative controls it is suggested to open the drug labels used to generate the list from [DailyMed](https://dailymed.nlm.nih.gov/dailymed/) and review boxed warning, warning and precautions, and adverse reactions sections.
 
-
-## Interpreting Negative Controls Results from ATLAS
-
-| Column | Description |
-| --- | --- |
-| ID | OMOP CONCEPT_ID reviewed for evidence. |
-| Name | OMOP CONCEPT_NAME reviewed for evidence. |
-| Domain | What the concept belongs to, this will either be condition or drug (however it is possible a concept moved domain and if they are not in the domain of interest do not use). |
-| Suggested Negative Control | A list of negative controls that are suggested to be good negative controls based on the following: <ul><li>have no published literature association between the drug-conditon pair of interest, either exactly as the evidence was mapped, a lower lever concept contained evidence, a direct parent concept contained evidence, or an ancestor contained evidence.</li><li>not existing on the product label, either exactly as the evidence was mapped, a lower lever concept contained evidence, a direct parent concept contained evidence, or an ancestor contained evidence.</li><li>not considered a FAERS signal, either exactly as the evidence was mapped, a lower lever concept contained evidence, a direct parent concept contained evidence, or an ancestor contained evidence.</li><li>have no indication or contraindication listed in the OMOP Vocabulary for the pair.</li><li>are not considered a broad concepts.</li><li>are not considered a drug induced concept.</li><li>not considered a pregnancy related concept.</li><li>was not suggested to be excluded by the user.</li><li>was not optimized out, meaning another parent concept existed that was also considered a good negative, so the lower level concept was excluded.</li></ul>   |
-| Sort Order | - |
-| Publication Count (Descendant Concept Match) | - |
-| Publication Count (Exact Concept Match) | - |
-| Publication Count (Parent Concept Match) | - |	
-| Publication Count (Ancestor Concept Match) | - |
-| Indicated | - |	
-| Broad Concept | - |	
-| Drug Induced Concept | - |	
-| Pregnancy Concept | - |	
-| Product Label Count (Descendant Concept Match) | - |	
-| Product Label (Exact Concept Match) | - |	
-| Product Label (Parent Concept Match) | - |	
-| Product Label (Ancestor Concept Match) | - |	
-| FAERS Count (Descendant Concept Match) | - |	
-| FAERS Count (Exact Concept Match | - |	
-| FAERS Count (Parent Concept Match) | - |	
-| FAERS Count (Ancestor Concept Match) | - |	
-| User Excluded | - |	
-| User Included | - |	
-| Optimized Out | - |	
-| Not Prevalent | - |	
-| RC | - |	
-| DRC  | - |
+## Features
 
 
-
- process currently here is slightly different.  The Negative Controls tab selects negative controls by the following process:
-1. Finds all potential concepts that are even possible for consideration.  This is done by finding the "concepts of interest" within patient data and finding "outcomes of interest" that occur after the "concepts of interest".  This is our "concept universe".  Using patient level data helps the program know if the concepts will even be viable for use as negative controls (i.e. a concepts may be a good negative control, however if it never occurs in data it will not be much use in quantifying bias).  While finding these concepts the program will additionally find patient counts as row counts (RC) which means how many persons had this exact concept and descendant counts (DC) which means how many persons had this exact cocnept and one of its descendants.
-2. Find all concept that are known not to be good choices.
- - Splicer - the US product labels are parsed via the tool SPLICER and reviews the "Adverse Drug Reactions" and "Postmarketing" section to find associated concepts.  Finding concepts on the label in this manner suggests there is already an association between the concepts and therefore are not good negative controls.
- - Drug Indication - the OMOP Vocabulary suggests concepts that are the indications for drugs, which means there is an association between the concepts.
- - FAERS - exclude concepts that US spontaneous reports suggest are in an adverse drug reaction relationship [<a name="4">4</a>].
- - User Identified Concepts to Exclude - if the user provides a list of concepts that should be exclude, the program will remove those found
- - User Identified Concepts to Include - while not forcing the concept to participate as a negative control, if they are found it will be highlighted for the user on the "Negative Controls" tab
-3. Given the concept universe found in Step 1, evidence from the CommonEvidenceModel is pulled, specifically using Medline to find publications with a co-occurrence of MeSH terms in an adverse relationship [<a name="5">5</a>].  If you have more than one "concept of interest" the program summarizes evidence across all "concepts of interest" provided.  This produces a list of Pubmed article IDs which can be found on the "PubMed Article" tab of the export for your information.
-4. The evidence is then summarized, which pulls together information from Step 2 and Step 3.
-5. Given the summarized data, the following is used to select the negative controls for the "Negative Controls" tab in the export:
- - Patient level data of a person row count >= 1000
- - No published literature evidence found as defined by the co-occurrence of MeSH terms with drug adverse event qualifiers [<a href="">5</a>]
- - Not associated via drug indication
- - Not considered too broad
- - Not associated with "drug induced" concepts
- - Not a pregnancy related concept
- - The US drug label does not suggest the concept is in an adverse event relationship
- - No spontaneous reports found (Currently Under Construction - <a href="../../../issues/3">Issue #3</a>)
- - The user has not suggested to exclude this concept
- - Finally, all remaining concepts are then "optimized", meaning parent concepts remove children concepts as defined by the OMOP Vocabulary
-
-Features
-====================
-
-Technology
-====================
+## Technology
  - R
  - RStudio
  - RTools
  
-Sytem Requirements
-====================
+## System Requirements
  - Access to the CommonEvidenceModel data
  - Access to patient level data
 
-Dependencies
-====================
+## Dependencies
 - On Windows, make sure <a href="https://cran.r-project.org/bin/windows/Rtools/">RTools</a> is installed.  This is used for the export to Excel, it needs Zip.  Additionally you may have to set the <a href="https://stackoverflow.com/questions/27952451/error-zipping-up-workbook-failed-when-trying-to-write-xlsx">default zip package</a> to point to where your "RTools\bin"" reside (Sys.setenv(R_ZIPCMD= "C:/Rtools/bin")) and add it to the search path (in Win 7, Go to Control Panel > System > Advanced system settings > Environment variables... then under System variables, find Path, Edit... add to the end ";C:\Rtools\bin;C:\Rtools\gcc-4.6.3\bin" restart RStudio and go).    
 
-Getting Started
-====================
+## Getting Started
 1. Under extras/ set up your config.csv.  There is an example found <a href="extras/config.example.csv">here</a>.  
  - evidenceProcessingClean = "clean"
  - evidenceProcessingTranslated = "translated"
@@ -111,20 +54,14 @@ Getting Started
 
 7. Review "Negative Controls" tab until you are comfortable you have between 50 and 100 negative controls.  Start the review from the top of the list down.
 
-Getting Involved
-====================
+## Getting Involved
 Refer <a href="../../../#getting-involved">here</a>.
 
-Contact Erica Voss and Lee Evans for access to the CommonEvidenceModel.
+## License
 
-License
-====================
+## Development
 
-Development
-====================
-
-Refereces
-====================
+## Refereces
 [1](#1) Lipsitch M, Tchetgen Tchetgen E, Cohen T. Negative controls: a tool for detecting confounding and bias in observational studies. Epidemiology. 2010 May;21(3):383-8. doi: 10.1097/EDE.0b013e3181d61eeb. Erratum in: Epidemiology. 2010 Jul;21(4):589. PubMed PMID: 20335814; PubMed Central PMCID: PMC3053408.
 
 [2](#2) Schuemie MJ, Ryan PB, DuMouchel W, Suchard MA, Madigan D. Interpreting observational studies: why empirical calibration is needed to correct p-values. Stat Med. 2014 Jan 30;33(2):209-18. doi: 10.1002/sim.5925. Epub 2013 Jul 30. PubMed PMID: 23900808; PubMed Central PMCID: PMC4285234.
