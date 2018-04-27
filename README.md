@@ -7,7 +7,7 @@ The CommonEvidenceModel (CEM) leverages work previously performed within LAERTES
 
 This project is an offshoot of the OHDSI Knowledgebase which more information can be found here:
 * [https://github.com/OHDSI/KnowledgeBase](https://github.com/OHDSI/KnowledgeBase)
-* Boyce RD, Ryan PB, Norén GN, Schuemie MJ, Reich C, Duke J, Tatonetti NP, Trifirò G, Harpaz R, Overhage JM, Hartzema AG, Khayter M, Voss EA, Lambert CG, Huser V, Dumontier M. Bridging islands of information to establish an integrated knowledge base of drugs and health outcomes of interest. Drug Saf. 2014 Aug;37(8):557-67. doi: 10.1007/s40264-014-0189-0. [PubMed PMID: 24985530](https://www.ncbi.nlm.nih.gov/pubmed/24985530); PubMed Central PMCID: PMC4134480.
+* Boyce RD, Ryan PB, NorÃ©n GN, Schuemie MJ, Reich C, Duke J, Tatonetti NP, TrifirÃ² G, Harpaz R, Overhage JM, Hartzema AG, Khayter M, Voss EA, Lambert CG, Huser V, Dumontier M. Bridging islands of information to establish an integrated knowledge base of drugs and health outcomes of interest. Drug Saf. 2014 Aug;37(8):557-67. doi: 10.1007/s40264-014-0189-0. [PubMed PMID: 24985530](https://www.ncbi.nlm.nih.gov/pubmed/24985530); PubMed Central PMCID: PMC4134480.
 * Voss EA, Boyce RD, Ryan PB, van der Lei J, Rijnbeek PR, Schuemie MJ. Accuracy of an automated knowledge base for identifying drug adverse reactions. J Biomed Inform. 2017 Feb;66:72-81. doi: 10.1016/j.jbi.2016.12.005. Epub 2016 Dec 16. [PubMed PMID: 27993747](https://www.ncbi.nlm.nih.gov/pubmed/27993747); PubMed Central PMCID: PMC5316295.
 * Knowledge Base workgroup of the Observational Health Data Sciences and Informatics (OHDSI) collaborative. Large-scale adverse effects related to treatment evidence standardization (LAERTES): an open scalable system for linking pharmacovigilance evidence sources with clinical data. J Biomed Semantics. 2017 Mar 7;8(1):11. doi: 10.1186/s13326-017-0115-3. PubMed PMID: 28270198; [PubMed Central PMCID: PMC5341176](https://www.ncbi.nlm.nih.gov/pubmed/28270198).
 
@@ -30,6 +30,7 @@ This project is an offshoot of the OHDSI Knowledgebase which more information ca
 To learn more about the negative controls processing please refer to the following:
  - [Preparatory Steps](https://github.com/OHDSI/CommonEvidenceModel/blob/negativeControlReadMe/postProcessingNegativeControlsPrep/README.md)
  - [Obtaining Negative Controls from ATLAS](https://github.com/OHDSI/CommonEvidenceModel/blob/negativeControlReadMe/postProcessingNegativeControls/README-ATLAS.md)
+ - [High Level Negative Controls Processing Information](https://github.com/OHDSI/CommonEvidenceModel/blob/negativeControlReadMe/postProcessingNegativeControls/README.md)
 
 ## Technology
 
