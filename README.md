@@ -13,6 +13,10 @@ This project is an offshoot of the OHDSI Knowledgebase which more inforamtion ca
 
 ## Features
 
+### Post Processing - Negative Controls
+To learn more about the negative controls processing please refer to the following:
+ - [Preparatory Steps](https://github.com/OHDSI/CommonEvidenceModel/blob/negativeControlReadMe/postProcessingNegativeControlsPrep/README.md)
+
 ## Technology
 
 ## System Requirements

@@ -32,11 +32,7 @@ FROM (
 	/*CONDITIONS*/
 	SELECT DISTINCT c1.CONCEPT_ID
 	FROM @vocabulary.concept c1
-	  JOIN @conceptUniverseData c2
-	    ON c2.CONDITION_CONCEPT_ID = c1.CONCEPT_ID
-	/*Eliminate Concepts with Too Many People*/
-	WHERE PERSON_COUNT_ESTIMATE_DC >= 10000000
-	OR c1.CONCEPT_ID IN (
+  WHERE c1.CONCEPT_ID IN (
 	  /*Eliminate Concepts with Many Relationships*/
 	  select ancestor_concept_id AS CONCEPT_ID
 	  from @vocabulary.concept_ancestor ca
