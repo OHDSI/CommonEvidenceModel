@@ -36,7 +36,7 @@ Exposure-outcome pairs for which there is no known causal relationship [1].  The
 
 Often epidemiologic studies on observational data declare results statistically significant when the “p < 0.05” saying that there is only a 5% probability that the observed effect is by chance alone.  However, observational data is vulnerable to systematic error such as bias and confounding [2].  In 2013, the OHDSI community published work showing that empirical calibration “reduced spurious results to the desired 5% level” [2].  The empirical calibration framework is based on modeling the observed null distribution of negative controls.  “Using the empirical distributions of negative controls, we can compute a better estimate of the probability that a value at least as extreme as a certain effect estimate could have been observed under the null hypothesis” [2].  The OHDSI community recommends that observational study always include negative controls to derive the empirical null distribution and use these to calibrate p-values.
 
-##### Common Evidence Model Information
+#### Common Evidence Model Information
 
 The CommonEvidenceModel (CEM) leverages work previously performed within LAERTES, also known as the OHDSI Knowledgebase [3]. However, the focus of CEM was building infrastructure to update the incoming raw sources as well as the post processing of finding Negative Controls.
 
@@ -44,17 +44,17 @@ The CommonEvidenceModel (CEM) leverages work previously performed within LAERTES
 
 Typically, negative controls are processed for a user given a set of concepts of interest.  However, some data processing can occur prior to a given user’s request for negative controls.  Find detailed documentation here on the preparatory processing.
 
-[Negative Controls Prep](https://github.com/OHDSI/CommonEvidenceModel/blob/negativeControlReadMe/postProcessingNegativeControlsPrep/README.md)
+[Negative Controls Prep](https://github.com/OHDSI/CommonEvidenceModel/blob/master/postProcessingNegativeControlsPrep/README.md)
 
 ##### Where to Obtain Negative Controls
 
 OHDSI has built a tool called ATLAS where negative controls can be processed calling evidence from the CommonEvidenceModel.  See detailed information here on how to perform this process.
 
-[Getting Negative Controls from ATLAS](https://github.com/OHDSI/CommonEvidenceModel/blob/negativeControlReadMe/postProcessingNegativeControls/README-ATLAS.md)
+[Getting Negative Controls from ATLAS](https://github.com/OHDSI/CommonEvidenceModel/blob/master/postProcessingNegativeControls/README-ATLAS.md)
 
 ##### Best Practices of Obtaining Negative Controls
 
-1.	For your given study, generate one concept set with all drugs or conditions that you are trying to study.  
+1.	For your given study, generate one concept set with all drugs or conditions that you are trying to study.  We recommend when choosing negative controls for drugs, using the classes of target and comparator drug.  
 2.	Via ATLAS generate and view evidence based on that one concept set.
 3.	Export concept set to CSV.
 4.	Reviewing in the “Sort Order” (smallest to largest) review concepts till you get between 50 and 60 concepts.  50 negative controls are recommended for calibration so shooting for 60 gives you a few additional concepts if it is determined later that they should not be included.  If you are reviewing conditions for a set of drugs, open the drug labels to help in your review.
