@@ -105,7 +105,7 @@ DatabaseConnector::insertTable(conn=conn,
                                oracleTempSchema=NULL)
 sql <- "ALTER TABLE @tableName OWNER TO RW_GRP;"
 renderedSql <- SqlRender::renderSql(sql=sql,
-                                    tableName = paste0(Sys.getenv("clean"),'.',source))
+                                    tableName = paste0(Sys.getenv("clean"),'.',tablePubmed))
 translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                          targetDialect=Sys.getenv("dbms"))
 DatabaseConnector::executeSql(conn, translatedSql$sql)
@@ -118,9 +118,15 @@ pubmed(conn,
        meshTags=tableMeshTags,
        sqlFile="pubmed.sql",
        pullPubMed = 1,
-       pubMedPullStart = 3532,
+       pubMedPullStart = 3805,
        summarize = 1,
        summarizeStart = 1)
+
+#bombed at
+# 1423:4005 - Hepatitis, Drug-Induced
+# 2540:4005 - thonzylamine
+# 3416:4005 - Pneumonia, Atypical Interstitial, of Cattle
+# 3805:4005 - Vitreoretinopathy, Proliferative
 
 #SEMMEDDB
 genericLoad(conn=conn,

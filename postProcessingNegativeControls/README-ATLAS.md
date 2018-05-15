@@ -9,17 +9,17 @@ If you are using ATLAS release 2.4.0 or higher you can generate negative control
 	 - The list should either be drugs or conditions; given drugs you will receive condition negative controls and given conditions you’ll receive drug negative controls.
 	 - You want to generate one list of negative controls for all exposures or conditions of interest.  No need to generate separate concept sets for each exposure or condition of interest, put them all together in one list.
 3. Within you concept set, navigate to the “Explore Evidence” tab. <br/>
- ![Explore Evidence Tab](src/img/exploreEvidenceTab.png)
+ ![Explore Evidence Tab](extras/img/exploreEvidenceTab.png)
 4. On the “Explore Evidence” tab there are two optional "Generation Settings": to note concepts to include and concepts to exclude.  In order to add concepts to these lists, generate a "Concept Set" and then add that concept set to the include/exclude option using the folder icon. <br/>
- ![Folder Icon](src/img/folderIcon.png)
+ ![Folder Icon](extras/img/folderIcon.png)
 	- **What concepts do you want to include as known negative controls? (Optional)** - If you already have a list of concepts you know you would like to use, add them here.  Note that this does not force concepts into the list, it merely highlights concepts that you already believe are good.  The process may also note the concept you wanted to include is not a good negative control.  Adding concepts here is for information purposes only.
 	- **What concepts do you want to exclude as known positive controls? (Optional)** - If you already have a list of concepts you know you would like to exclude, add them here.  For example, concepts used within your cohort definition are good concepts to consider adding to the exclude list.  Excluded concepts defined by the users will be eliminated from consideration as good negative controls regardless of what the system believes.  
 5. Hit the "Generate Button", it may take several moments to generate your list however the system will communicate its status while doing so.
 6. Once the "Generation Status" is listed as "COMPLETE", hit the "View Evidence" button.<br/>
- ![View Evidence](src/img/viewEvidence.png)
+ ![View Evidence](extras/img/viewEvidence.png)
 7. A list all concept considered will be displayed below the "View Evidence" button:
  - **Left Hand Navigation** <br/>
-  ![Left Hand Navigation](src/img/leftHandNavigation.png) <br/>
+  ![Left Hand Navigation](extras/img/leftHandNavigation.png) <br/>
   This can be used to filter the results.  
 	- "Suggested Negative Control" allows users to filter to just items that the system deems to be good negative controls.  
 	- "Found in Publications" allows user to filter publication evidence.  
@@ -27,11 +27,11 @@ If you are using ATLAS release 2.4.0 or higher you can generate negative control
 	- "Signal in FAERS" allows user to filter on spontaneous report information.
 	- "User Specified" allows user to filter to conditions specified above as concepts to include.
  - **Record Counts** <br/>
-   ![Record Counts](src/img/recordCounts.png)<br/>
+   ![Record Counts](extras/img/recordCounts.png)<br/>
    There are two columns in the evidence, one for "RC" which stands for "record counts" and another "DRC" which stands for "descendant record counts".  These columns will show you how often the exact concept appears in your data (i.e. RC) and how often the concept and its descendants show up in your data (i.e. DRC).  The drop down allows you to select your data set to use to show these counts.  If you are using the public OHDSI ATLAS it is using [SYNPUF](https://www.cms.gov/Research-Statistics-Data-and-Systems/Downloadable-Public-Use-Files/SynPUFs/DE_Syn_PUF.html) a synthetic data set, in this case the counts are meaningless.
  - **Table of Results** - the table shows the evidence generated from the CommonEvidenceModel for your concept set.  Column details can be found in the "Columns of Evidence" section below.
  - **Column visibility** <br/>
-    ![Column Visibility](src/img/columnVisibility.png)<br/>
+    ![Column Visibility](extras/img/columnVisibility.png)<br/>
 	Not all columns are shown by default however they can be exposed by hitting the "Column Visibility" and selecting the columns of interest. 
  - **Exporting Results** - press the CSV button to export the results.
  - **Save New Concept Set From Selection Below** - you can create a concept set from the list, it will only select concepts that are being shown (e.g. if you filter to Suggested Negative Control = "Yes" and press the button to save as new concept set, it will save the filtered concepts to the list)
