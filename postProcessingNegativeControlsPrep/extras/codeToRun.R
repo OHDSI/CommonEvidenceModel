@@ -43,8 +43,8 @@ Sys.setenv(patient_pw = patient_config$pw)
 Sys.setenv(patient_server = patient_config$server)
 Sys.setenv(patient_port = patient_config$port)
 Sys.setenv(patient_schema1 = patient_config$schema1)
-Sys.setenv(patient_schema2 = patient_config$schema1)
-Sys.setenv(patient_schema3 = patient_config$schema1)
+Sys.setenv(patient_schema2 = patient_config$schema2)
+Sys.setenv(patient_schema3 = patient_config$schema3)
 rm(patient_config)
 
 connectionDetails <- DatabaseConnector::createConnectionDetails(

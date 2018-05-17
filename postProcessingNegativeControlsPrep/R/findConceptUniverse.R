@@ -31,7 +31,7 @@
 #' @param storeData  Where you want to store the data on the analysis connection
 #'
 #' @export
-findConceptUniverse <- function(conn,connPatientData,schemaRaw1,schemaRaw2,schemaRaw3,filter=1000,
+findConceptUniverse <- function(conn,connPatientData,schemaRaw1,schemaRaw2,schemaRaw3,
                                 storeData){
 
   old<-Sys.time()
@@ -44,27 +44,29 @@ findConceptUniverse <- function(conn,connPatientData,schemaRaw1,schemaRaw2,schem
                                            oracleTempSchema = NULL,
                                            schemaRaw1=schemaRaw1,
                                            schemaRaw2=schemaRaw2,
-                                           schemaRaw3=schemaRaw3,
-                                           filter=filter)
+                                           schemaRaw3=schemaRaw3)
   df <- DatabaseConnector::querySql(conn=connPatientData,sql)
 
-  #store
-  DatabaseConnector::insertTable(conn=conn,
-                                 tableName=storeData,
-                                 data=df,
-                                 dropTableIfExists = TRUE,
-                                 createTable = TRUE,
-                                 tempTable = FALSE,
-                                 oracleTempSchema = NULL)
+  write.csv(df,file=paste0("CONCEPT_UNIVERSE_",Sys.Date(),".xlsx"))
 
-  #index & ownership
-  sql <- paste0("CREATE INDEX IDX_LU_CONCEPT_UNIVERSE_CONCEPT_ID ON ",
-                storeData," (DRUG_CONCEPT_ID,CONDITION_CONCEPT_ID);
-                ALTER TABLE ", storeData, " OWNER TO RW_GRP;")
-  renderedSql <- SqlRender::renderSql(sql=sql)
-  translatedSql <- SqlRender::translateSql(renderedSql$sql,
-                                           targetDialect=Sys.getenv("dbms"))
-  DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
+  #store
+  # ^^^ THIS IS TAKING TOO LONG, MANUALLY LOADING THE DATA ^^^
+  # DatabaseConnector::insertTable(conn=conn,
+  #                                tableName=storeData,
+  #                                data=df,
+  #                                dropTableIfExists = TRUE,
+  #                                createTable = TRUE,
+  #                                tempTable = FALSE,
+  #                                oracleTempSchema = NULL)
+  #
+  # #index & ownership
+  # sql <- paste0("CREATE INDEX IDX_LU_CONCEPT_UNIVERSE_CONCEPT_ID ON ",
+  #               storeData," (DRUG_CONCEPT_ID,CONDITION_CONCEPT_ID);
+  #               ALTER TABLE ", storeData, " OWNER TO RW_GRP;")
+  # renderedSql <- SqlRender::renderSql(sql=sql)
+  # translatedSql <- SqlRender::translateSql(renderedSql$sql,
+  #                                          targetDialect=Sys.getenv("dbms"))
+  # DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
 
   print(paste0("Time Duration: ",Sys.time()-old))
   #Clean Up
