@@ -23,7 +23,8 @@ OR c1.CONCEPT_ID IN (
   437456,	/*Poisoning by anticonvulsant*/
   433083,	/*Poisoning by opiate AND/OR related narcotic*/
   438661,	/*Complication of infusion*/
-  4168644	/*Propensity to adverse reactions to substance*/
+  4168644,	/*Propensity to adverse reactions to substance*/
+  434900 /*Drug-induced psychosis*/
 )
 ORDER BY PERSON_COUNT_DC DESC;
 
