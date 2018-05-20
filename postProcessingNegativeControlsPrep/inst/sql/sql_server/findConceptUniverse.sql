@@ -51,8 +51,8 @@ WITH CTE_RC AS (
 		group by de1.drug_concept_id, ce1.condition_concept_id
 	) t1
 	group by t1.drug_concept_id, t1.condition_concept_id
-	HAVING sum(t1.num_persons) > 1000
 )
 SELECT DRUG_CONCEPT_ID, CONDITION_CONCEPT_ID,
 	ROW_NUMBER() OVER(ORDER BY PERSON_COUNT_ESTIMATE_RC DESC, DRUG_CONCEPT_ID, CONDITION_CONCEPT_ID) AS SORT_ORDER
-FROM CTE_RC r;
+FROM CTE_RC r
+WHERE PERSON_COUNT_ESTIMATE_RC >= 10;
