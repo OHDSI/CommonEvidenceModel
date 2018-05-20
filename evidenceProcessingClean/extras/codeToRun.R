@@ -25,15 +25,14 @@ connectionDetails <- DatabaseConnector::createConnectionDetails(
 conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
 #variables
-tableSource <- "source"
-fileSource <- "source.csv"
-createTableSource <-"source.sql"
 schemaVocab <- "vocabulary"
+schemaSource <- "staging_audit"
 schemaAeolus <- "staging_aeolus"
 schemaMedline <- "staging_medline"
 schemaSplicer <- "staging_splicer"
 schemaEUPLADR <- "staging_eu_pl_adr"
 schemaSemMedDb <- "staging_semmeddb"
+tableSource <- "source"
 tableAeolus <- "aeolus"
 tableAvillach <- "medline_avillach"
 tableWinnenburg <- "medline_winnenburg"
@@ -49,11 +48,14 @@ library(evidenceProcessingClean)
 ################################################################################
 # DATA LOADING
 ################################################################################
-loadTable(conn=conn,
-          targetDbSchema=Sys.getenv("clean"),
-          targetTable=tableSource,
-          fileName=fileSource,
-          createTableSql=createTableSource)
+
+#SOURCE
+genericLoad(conn=conn,
+            targetDbSchema=Sys.getenv("clean"),
+            targetTable=tableSource,
+            sourceSchema=schemaSource,
+            sqlFile="source.sql",
+            vocabSchema=schemaVocab)
 
 ################################################################################
 # FAERS

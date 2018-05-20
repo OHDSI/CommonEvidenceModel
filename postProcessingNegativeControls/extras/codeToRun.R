@@ -204,7 +204,7 @@ export(conn = conn,
        adeSummaryData = adeSummaryData)
 
 ################################################################################
-# EXPORT
+# CLEAN UP
 ################################################################################
 dropTable(conn = conn,dropTable=indicationData)
 dropTable(conn = conn,dropTable=conceptsToExcludeData)
