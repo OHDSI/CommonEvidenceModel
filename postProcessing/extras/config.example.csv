@@ -1,0 +1,2 @@
+dbms,user,pw,server,port,vocabulary,evidenceProcessingClean,evidenceProcessingTranslated,postProcessing
+dbmsName,userName,password,server,1234,vocabularyDB,evidenceCleanDB,evidenceTranslatedDB,postProcessingDB

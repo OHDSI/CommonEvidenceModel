@@ -66,7 +66,7 @@ broadConceptsData <- paste0(Sys.getenv("evidence"),".NC_LU_BROAD_CONCEPTS")
 drugInducedConditionsData <- paste0(Sys.getenv("evidence"),".NC_LU_DRUG_INDUCED_CONDITIONS")
 pregnancyConditionData <- paste0(Sys.getenv("evidence"),".NC_LU_PREGNANCY_CONDITIONS")
 
-fileConceptUniverse <- paste0("EVIDENCE.NC_LU_CONCEPT_UNIVERSE_",Sys.Date(),".xlsx")
+fileConceptUniverse <- paste0("EVIDENCE.NC_LU_CONCEPT_UNIVERSE_",Sys.Date(),".csv")
 
 ################################################################################
 # FIND POTENTIAL CONCEPTS
@@ -80,13 +80,11 @@ conceptUniverse <- findConceptUniverse(connPatientData=connPatientData,
                                        conn=conn,
                                        storeData=conceptUniverseData)
 
-#Store to XLS
-wb1 <- openxlsx::createWorkbook()
-openxlsx::addWorksheet(wb1,sheetName="CONCEPT_UNIVERSE")
-openxlsx::writeDataTable(wb1,sheet="CONCEPT_UNIVERSE",x=conceptUniverse,colNames = TRUE,rowNames = FALSE)
-openxlsx::saveWorkbook(wb1, fileConceptUniverse, overwrite = TRUE)
 
-#Put XLS on FTP
+#Store to CSV
+utils::write.csv(x=conceptUniverse,fileConceptUniverse,row.names = FALSE)
+
+#Put CSV on FTP
 RCurl::ftpUpload(what = fileConceptUniverse,
                  to = paste0("ftp://",Sys.getenv("ftpUserid"),":",Sys.getenv("ftpPassword"),"@",Sys.getenv("ftpHost"),"/",fileConceptUniverse))
 
