@@ -68,6 +68,7 @@ DatabaseConnector::executeSql(conn, translatedSql$sql)
 translate(conn=conn,
           sourceTable=paste0(Sys.getenv("clean"),'.',aeolus),
           targetTable=paste0(Sys.getenv("translated"),'.',aeolus),
+          id=aeolus,
           stcmTable=stcmTable,
           translationSql="aeolus.sql")
 
