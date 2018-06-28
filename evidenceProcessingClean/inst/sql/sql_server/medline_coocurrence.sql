@@ -1,13 +1,14 @@
 IF OBJECT_ID('tempdb..#TEMP_DRUG', 'U') IS NOT NULL DROP TABLE #TEMP_DRUG;
 IF OBJECT_ID('tempdb..#TEMP_CONDITION', 'U') IS NOT NULL DROP TABLE #TEMP_CONDITION;
 IF OBJECT_ID('tempdb..#TEMP_RUNNING_PMID', 'U') IS NOT NULL DROP TABLE #TEMP_RUNNING_PMID;
+IF OBJECT_ID('tempdb..#TEMP_MESH', 'U') IS NOT NULL DROP TABLE #TEMP_MESH;
 
 {@i == 1}?{
 	/*RUN THE FIRST ITERATION*/
 	IF OBJECT_ID('@targetTable','U') IS NOT NULL DROP TABLE @targetTable;
 
 	CREATE TABLE @targetTable (
-		ID SERIAL,
+		ID BIGSERIAL,
 		SOURCE_ID	VARCHAR(30),
 		SOURCE_CODE_1	VARCHAR(50),
 		SOURCE_CODE_TYPE_1	VARCHAR(55),
@@ -61,6 +62,7 @@ IF OBJECT_ID('tempdb..#TEMP_RUNNING_PMID', 'U') IS NOT NULL DROP TABLE #TEMP_RUN
 		FROM TEMP_PUB_TYPE
 	) z;
 	CREATE INDEX IDX_TEMP_ACCEPTABLE_PMID ON TEMP_ACCEPTABLE_PMID (PMID);
+	ANALYZE TEMP_ACCEPTABLE_PMID;
 
 }
 
@@ -69,6 +71,7 @@ INTO #TEMP_RUNNING_PMID
 FROM TEMP_ACCEPTABLE_PMID
 WHERE PMID BETWEEN @start AND @end;
 CREATE INDEX IDX_TEMP_RUNNING_PMID ON TEMP_RUNNING_PMID (PMID);
+ANALYZE TEMP_RUNNING_PMID;
 
 {@qualifier}?{
 	select meshheading.pmid, meshheading.descriptorname, meshheading.descriptorname_ui
@@ -81,6 +84,7 @@ CREATE INDEX IDX_TEMP_RUNNING_PMID ON TEMP_RUNNING_PMID (PMID);
 			and meshheading.medcit_meshheadinglist_meshheading_order = qualifier.medcit_meshheadinglist_meshheading_order
 			AND lower(qualifier.value) = 'adverse effects';
 	CREATE INDEX IDX_TEMP_DRUG ON #TEMP_DRUG (PMID);
+	ANALYZE #TEMP_DRUG;
 
 	select meshheading.pmid, meshheading.descriptorname, meshheading.descriptorname_ui
 	INTO #TEMP_CONDITION
@@ -92,12 +96,13 @@ CREATE INDEX IDX_TEMP_RUNNING_PMID ON TEMP_RUNNING_PMID (PMID);
 			and meshheading.medcit_meshheadinglist_meshheading_order = qualifier.medcit_meshheadinglist_meshheading_order
 			AND lower(qualifier.value) = 'chemically induced';
 	CREATE INDEX IDX_TEMP_CONDITION ON #TEMP_CONDITION (PMID);
+	ANALYZE #TEMP_CONDITION;
 }:{
 	SELECT m.pmid, m.descriptorname, m.descriptorname_ui
 	INTO #TEMP_MESH
 	from @sourceSchema.medcit_meshheadinglist_meshheading m
 		JOIN TEMP_RUNNING_PMID rp
-			ON rp.PMID = m.PMID
+			ON rp.PMID = m.PMID;
 }
 
 with drug_of_ade_step1 as (
@@ -186,6 +191,7 @@ FROM CTE_RELEVANT_PMIDS rp
 {@i == @iteraterNum}?{
   /*RUN THE LAST ITERATION*/
   CREATE INDEX IDX_@sourceID_SOURCE_CODE_1_SOURCE_CODE_2 ON @targetTable (SOURCE_CODE_1,SOURCE_CODE_2);
+  ANALYZE @targetTable;
 
   ALTER TABLE @targetTable OWNER TO RW_GRP;
 }

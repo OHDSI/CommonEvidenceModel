@@ -119,15 +119,15 @@ pubmed(conn,
        sourceId=tablePubmed,
        meshTags=tableMeshTags,
        sqlFile="pubmed.sql",
-       pullPubMed = 1,
-       pubMedPullStart = 3805,
+       pullPubMed = 0,
+       pubMedPullStart = 1,
        summarize = 1,
-       summarizeStart = 1)
+       summarizeStart = 1044)
 
 #bombed at
-# 1423:4005 - Hepatitis, Drug-Induced
-# 2540:4005 - thonzylamine
-# 3416:4005 - Pneumonia, Atypical Interstitial, of Cattle
+# 1423:4005 - Hepatitis, Drug-Induced -- 1424:4041 - Hepatitis, Drug-Induced
+# 2540:4005 - thonzylamine - 2540:4041 - thonzylamine
+# 3416:4005 - Pneumonia, Atypical Interstitial, of Cattle - 3425:4041 - Pneumonia, Atypical Interstitial, of Cattle
 # 3805:4005 - Vitreoretinopathy, Proliferative
 
 #SEMMEDDB
