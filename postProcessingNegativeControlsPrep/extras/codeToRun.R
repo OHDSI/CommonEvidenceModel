@@ -66,7 +66,7 @@ broadConceptsData <- paste0(Sys.getenv("evidence"),".NC_LU_BROAD_CONCEPTS")
 drugInducedConditionsData <- paste0(Sys.getenv("evidence"),".NC_LU_DRUG_INDUCED_CONDITIONS")
 pregnancyConditionData <- paste0(Sys.getenv("evidence"),".NC_LU_PREGNANCY_CONDITIONS")
 
-fileConceptUniverse <- paste0("CONCEPT_UNIVERSE_",Sys.Date(),".xlsx")
+fileConceptUniverse <- paste0("EVIDENCE.NC_LU_CONCEPT_UNIVERSE_",Sys.Date(),".xlsx")
 
 ################################################################################
 # FIND POTENTIAL CONCEPTS
