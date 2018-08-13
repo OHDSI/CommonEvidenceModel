@@ -117,7 +117,7 @@ FROM (
 			  AND UPPER(cr.RELATIONSHIP_ID) = 'IS A'
 		JOIN @adeData a
 			{@outcomeOfInterest == 'condition'}?{
-  		  ON a.CONCEPT_ID_2 = cr.CONCEPT_ID_2
+  		  ON a.CONCEPT_ID_2 = cr.CONCEPT_ID_1
 			  AND a.CONCEPT_ID_2 != cr.CONCEPT_ID_1
   		}
   		{@outcomeOfInterest == 'drug'}?{
