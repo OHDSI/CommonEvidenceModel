@@ -1,0 +1,898 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job>
+  <name>medline_load</name>
+  <description>load MEDLINE data</description>
+  <extended_description />
+  <job_version />
+  <job_status>0</job_status>
+  <directory>/</directory>
+  <created_user>-</created_user>
+  <created_date>2016/03/11 02:15:12.214</created_date>
+  <modified_user>-</modified_user>
+  <modified_date>2016/03/11 02:15:12.214</modified_date>
+  <parameters>
+    <parameter>
+      <name>CONFIG_DIR</name>
+      <default_value>/home/ubuntu/cem/jobs/MEDLINE</default_value>
+      <description />
+    </parameter>
+    <parameter>
+      <name>FILE_DIR</name>
+      <default_value>/home/ubuntu/cem/inbound/MEDLINE</default_value>
+      <description />
+    </parameter>
+    <parameter>
+      <name>FTP_DIR</name>
+      <default_value>/pubmed/baseline/</default_value>
+      <description />
+    </parameter>
+    <parameter>
+      <name>FTP_FILE_NAME_PATTERN</name>
+      <default_value>pubmed18n.*.xml.gz</default_value>
+      <description />
+    </parameter>
+    <parameter>
+      <name>FTP_MESH_DIR</name>
+      <default_value>/online/mesh/MESH_FILES/xmlmesh/</default_value>
+      <description />
+    </parameter>
+    <parameter>
+      <name>FTP_UPDATEFILES_DIR</name>
+      <default_value>/pubmed/updatefiles/</default_value>
+      <description />
+    </parameter>
+    <parameter>
+      <name>INI_FILE_NAME</name>
+      <default_value>medline_load.ini</default_value>
+      <description />
+    </parameter>
+    <parameter>
+      <name>NCBI_FTP_PASSWORD</name>
+      <default_value>secret-password</default_value>
+      <description />
+    </parameter>
+    <parameter>
+      <name>NCBI_FTP_USERID</name>
+      <default_value>anonymous</default_value>
+      <description />
+    </parameter>
+    <parameter>
+      <name>NLMPUBS_FTP_PASSWORD</name>
+      <default_value>secret-password</default_value>
+      <description />
+    </parameter>
+    <parameter>
+      <name>NLMPUBS_FTP_USERID</name>
+      <default_value>anonymous</default_value>
+      <description />
+    </parameter>
+  </parameters>
+  <connection>
+    <name>cem</name>
+    <server>cem.cqnqzwtn5s1q.us-east-1.rds.amazonaws.com</server>
+    <type>POSTGRESQL</type>
+    <access>JNDI</access>
+    <database>Connection-CEM-PROD</database>
+    <port>5432</port>
+    <username />
+    <password>Encrypted </password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>5432</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <slaveservers>
+    </slaveservers>
+  <job-log-table>
+    <connection />
+    <schema />
+    <table />
+    <size_limit_lines />
+    <interval />
+    <timeout_days />
+    <field>
+      <id>ID_JOB</id>
+      <enabled>Y</enabled>
+      <name>ID_JOB</name>
+    </field>
+    <field>
+      <id>CHANNEL_ID</id>
+      <enabled>Y</enabled>
+      <name>CHANNEL_ID</name>
+    </field>
+    <field>
+      <id>JOBNAME</id>
+      <enabled>Y</enabled>
+      <name>JOBNAME</name>
+    </field>
+    <field>
+      <id>STATUS</id>
+      <enabled>Y</enabled>
+      <name>STATUS</name>
+    </field>
+    <field>
+      <id>LINES_READ</id>
+      <enabled>Y</enabled>
+      <name>LINES_READ</name>
+    </field>
+    <field>
+      <id>LINES_WRITTEN</id>
+      <enabled>Y</enabled>
+      <name>LINES_WRITTEN</name>
+    </field>
+    <field>
+      <id>LINES_UPDATED</id>
+      <enabled>Y</enabled>
+      <name>LINES_UPDATED</name>
+    </field>
+    <field>
+      <id>LINES_INPUT</id>
+      <enabled>Y</enabled>
+      <name>LINES_INPUT</name>
+    </field>
+    <field>
+      <id>LINES_OUTPUT</id>
+      <enabled>Y</enabled>
+      <name>LINES_OUTPUT</name>
+    </field>
+    <field>
+      <id>LINES_REJECTED</id>
+      <enabled>Y</enabled>
+      <name>LINES_REJECTED</name>
+    </field>
+    <field>
+      <id>ERRORS</id>
+      <enabled>Y</enabled>
+      <name>ERRORS</name>
+    </field>
+    <field>
+      <id>STARTDATE</id>
+      <enabled>Y</enabled>
+      <name>STARTDATE</name>
+    </field>
+    <field>
+      <id>ENDDATE</id>
+      <enabled>Y</enabled>
+      <name>ENDDATE</name>
+    </field>
+    <field>
+      <id>LOGDATE</id>
+      <enabled>Y</enabled>
+      <name>LOGDATE</name>
+    </field>
+    <field>
+      <id>DEPDATE</id>
+      <enabled>Y</enabled>
+      <name>DEPDATE</name>
+    </field>
+    <field>
+      <id>REPLAYDATE</id>
+      <enabled>Y</enabled>
+      <name>REPLAYDATE</name>
+    </field>
+    <field>
+      <id>LOG_FIELD</id>
+      <enabled>Y</enabled>
+      <name>LOG_FIELD</name>
+    </field>
+    <field>
+      <id>EXECUTING_SERVER</id>
+      <enabled>N</enabled>
+      <name>EXECUTING_SERVER</name>
+    </field>
+    <field>
+      <id>EXECUTING_USER</id>
+      <enabled>N</enabled>
+      <name>EXECUTING_USER</name>
+    </field>
+    <field>
+      <id>START_JOB_ENTRY</id>
+      <enabled>N</enabled>
+      <name>START_JOB_ENTRY</name>
+    </field>
+    <field>
+      <id>CLIENT</id>
+      <enabled>N</enabled>
+      <name>CLIENT</name>
+    </field>
+  </job-log-table>
+  <jobentry-log-table>
+    <connection />
+    <schema />
+    <table />
+    <timeout_days />
+    <field>
+      <id>ID_BATCH</id>
+      <enabled>Y</enabled>
+      <name>ID_BATCH</name>
+    </field>
+    <field>
+      <id>CHANNEL_ID</id>
+      <enabled>Y</enabled>
+      <name>CHANNEL_ID</name>
+    </field>
+    <field>
+      <id>LOG_DATE</id>
+      <enabled>Y</enabled>
+      <name>LOG_DATE</name>
+    </field>
+    <field>
+      <id>JOBNAME</id>
+      <enabled>Y</enabled>
+      <name>TRANSNAME</name>
+    </field>
+    <field>
+      <id>JOBENTRYNAME</id>
+      <enabled>Y</enabled>
+      <name>STEPNAME</name>
+    </field>
+    <field>
+      <id>LINES_READ</id>
+      <enabled>Y</enabled>
+      <name>LINES_READ</name>
+    </field>
+    <field>
+      <id>LINES_WRITTEN</id>
+      <enabled>Y</enabled>
+      <name>LINES_WRITTEN</name>
+    </field>
+    <field>
+      <id>LINES_UPDATED</id>
+      <enabled>Y</enabled>
+      <name>LINES_UPDATED</name>
+    </field>
+    <field>
+      <id>LINES_INPUT</id>
+      <enabled>Y</enabled>
+      <name>LINES_INPUT</name>
+    </field>
+    <field>
+      <id>LINES_OUTPUT</id>
+      <enabled>Y</enabled>
+      <name>LINES_OUTPUT</name>
+    </field>
+    <field>
+      <id>LINES_REJECTED</id>
+      <enabled>Y</enabled>
+      <name>LINES_REJECTED</name>
+    </field>
+    <field>
+      <id>ERRORS</id>
+      <enabled>Y</enabled>
+      <name>ERRORS</name>
+    </field>
+    <field>
+      <id>RESULT</id>
+      <enabled>Y</enabled>
+      <name>RESULT</name>
+    </field>
+    <field>
+      <id>NR_RESULT_ROWS</id>
+      <enabled>Y</enabled>
+      <name>NR_RESULT_ROWS</name>
+    </field>
+    <field>
+      <id>NR_RESULT_FILES</id>
+      <enabled>Y</enabled>
+      <name>NR_RESULT_FILES</name>
+    </field>
+    <field>
+      <id>LOG_FIELD</id>
+      <enabled>N</enabled>
+      <name>LOG_FIELD</name>
+    </field>
+    <field>
+      <id>COPY_NR</id>
+      <enabled>N</enabled>
+      <name>COPY_NR</name>
+    </field>
+  </jobentry-log-table>
+  <channel-log-table>
+    <connection />
+    <schema />
+    <table />
+    <timeout_days />
+    <field>
+      <id>ID_BATCH</id>
+      <enabled>Y</enabled>
+      <name>ID_BATCH</name>
+    </field>
+    <field>
+      <id>CHANNEL_ID</id>
+      <enabled>Y</enabled>
+      <name>CHANNEL_ID</name>
+    </field>
+    <field>
+      <id>LOG_DATE</id>
+      <enabled>Y</enabled>
+      <name>LOG_DATE</name>
+    </field>
+    <field>
+      <id>LOGGING_OBJECT_TYPE</id>
+      <enabled>Y</enabled>
+      <name>LOGGING_OBJECT_TYPE</name>
+    </field>
+    <field>
+      <id>OBJECT_NAME</id>
+      <enabled>Y</enabled>
+      <name>OBJECT_NAME</name>
+    </field>
+    <field>
+      <id>OBJECT_COPY</id>
+      <enabled>Y</enabled>
+      <name>OBJECT_COPY</name>
+    </field>
+    <field>
+      <id>REPOSITORY_DIRECTORY</id>
+      <enabled>Y</enabled>
+      <name>REPOSITORY_DIRECTORY</name>
+    </field>
+    <field>
+      <id>FILENAME</id>
+      <enabled>Y</enabled>
+      <name>FILENAME</name>
+    </field>
+    <field>
+      <id>OBJECT_ID</id>
+      <enabled>Y</enabled>
+      <name>OBJECT_ID</name>
+    </field>
+    <field>
+      <id>OBJECT_REVISION</id>
+      <enabled>Y</enabled>
+      <name>OBJECT_REVISION</name>
+    </field>
+    <field>
+      <id>PARENT_CHANNEL_ID</id>
+      <enabled>Y</enabled>
+      <name>PARENT_CHANNEL_ID</name>
+    </field>
+    <field>
+      <id>ROOT_CHANNEL_ID</id>
+      <enabled>Y</enabled>
+      <name>ROOT_CHANNEL_ID</name>
+    </field>
+  </channel-log-table>
+  <pass_batchid>N</pass_batchid>
+  <shared_objects_file />
+  <entries>
+    <entry>
+      <name>START</name>
+      <description />
+      <type>SPECIAL</type>
+      <start>Y</start>
+      <dummy>N</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>32</xloc>
+      <yloc>16</yloc>
+    </entry>
+    <entry>
+      <name>DROP MEDLINE_INDEXES</name>
+      <description />
+      <type>SQL</type>
+      <sql>-- Some recommended indices
+set search_path = staging_medline;
+
+DROP INDEX IF EXISTS idx_medcit_meshheadinglist_meshheading_descriptorname_ui;
+DROP INDEX IF EXISTS idx_medcit_supplmeshlist_supplmeshname_ui;
+DROP INDEX IF EXISTS idx_mesh_term_ui;
+DROP INDEX IF EXISTS idx_mesh_relationship_ui_1;
+DROP INDEX IF EXISTS idx_mesh_relationship_ui_2;
+DROP INDEX IF EXISTS idx_mesh_ancestor_ancestor_ui;
+DROP INDEX IF EXISTS idx_mesh_ancestor_descendant_ui;
+
+</sql>
+      <useVariableSubstitution>T</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename>/home/ubuntu/cem/jobs/MEDLINE/drop_MEDLINE_indexes.sql</sqlfilename>
+      <sendOneStatement>F</sendOneStatement>
+      <connection>cem</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>96</xloc>
+      <yloc>144</yloc>
+    </entry>
+    <entry>
+      <name>CREATE MEDLINE MESH INDEXES</name>
+      <description />
+      <type>SQL</type>
+      <sql>-- Some recommended indices
+set search_path = staging_medline;
+
+CREATE INDEX idx_medcit_meshheadinglist_meshheading_descriptorname_ui ON medcit_meshheadinglist_meshheading (descriptorname_ui);
+CREATE INDEX idx_medcit_supplmeshlist_supplmeshname_ui ON medcit_supplmeshlist_supplmeshname (ui);
+CREATE INDEX idx_mesh_term_ui ON mesh_term (ui);
+CREATE INDEX idx_mesh_relationship_ui_1 ON mesh_relationship (ui_1);
+CREATE INDEX idx_mesh_relationship_ui_2 ON mesh_relationship (ui_2);
+CREATE INDEX idx_mesh_ancestor_ancestor_ui ON mesh_ancestor (ancestor_ui);
+CREATE INDEX idx_mesh_ancestor_descendant_ui ON mesh_ancestor (descendant_ui);
+
+</sql>
+      <useVariableSubstitution>T</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename />
+      <sendOneStatement>F</sendOneStatement>
+      <connection>cem</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>96</xloc>
+      <yloc>272</yloc>
+    </entry>
+    <entry>
+      <name>Load Medline</name>
+      <description />
+      <type>SHELL</type>
+      <filename />
+      <work_directory />
+      <arg_from_previous>N</arg_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <set_append_logfile>N</set_append_logfile>
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <insertScript>Y</insertScript>
+      <script>cd /home/ubuntu/cem/GitHub/MedlineXmlToDatabase/dist
+java -Xmx12G -jar MedlineXmlToDatabase.jar -parse -ini ${CONFIG_DIR}/${INI_FILE_NAME}</script>
+      <loglevel>Basic</loglevel>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>560</xloc>
+      <yloc>144</yloc>
+    </entry>
+    <entry>
+      <name>download baseline files with FTP</name>
+      <description />
+      <type>FTP</type>
+      <port>21</port>
+      <servername>ftp.ncbi.nlm.nih.gov</servername>
+      <username>${NCBI_FTP_USERID}</username>
+      <password>${NCBI_FTP_PASSORD}</password>
+      <ftpdirectory>${FTP_DIR}</ftpdirectory>
+      <targetdirectory>${FILE_DIR}</targetdirectory>
+      <wildcard>${FTP_FILE_NAME_PATTERN}</wildcard>
+      <binary>Y</binary>
+      <timeout>0</timeout>
+      <remove>N</remove>
+      <only_new>N</only_new>
+      <active>N</active>
+      <control_encoding>ISO-8859-1</control_encoding>
+      <movefiles>N</movefiles>
+      <movetodirectory />
+      <adddate>N</adddate>
+      <addtime>N</addtime>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format />
+      <AddDateBeforeExtension>N</AddDateBeforeExtension>
+      <isaddresult>Y</isaddresult>
+      <createmovefolder>N</createmovefolder>
+      <proxy_host />
+      <proxy_port />
+      <proxy_username />
+      <proxy_password>Encrypted </proxy_password>
+      <socksproxy_host />
+      <socksproxy_port>1080</socksproxy_port>
+      <socksproxy_username />
+      <socksproxy_password>Encrypted </socksproxy_password>
+      <ifFileExists>ifFileExistsSkip</ifFileExists>
+      <nr_limit>10</nr_limit>
+      <success_condition>success_if_no_errors</success_condition>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>208</xloc>
+      <yloc>16</yloc>
+    </entry>
+    <entry>
+      <name>download daily update files with FTP</name>
+      <description />
+      <type>FTP</type>
+      <port>21</port>
+      <servername>ftp.ncbi.nlm.nih.gov</servername>
+      <username>${NCBI_FTP_USERID}</username>
+      <password>${NCBI_FTP_PASSWORD}</password>
+      <ftpdirectory>${FTP_UPDATEFILES_DIR}</ftpdirectory>
+      <targetdirectory>${FILE_DIR}</targetdirectory>
+      <wildcard>${FTP_FILE_NAME_PATTERN}</wildcard>
+      <binary>Y</binary>
+      <timeout>0</timeout>
+      <remove>N</remove>
+      <only_new>Y</only_new>
+      <active>N</active>
+      <control_encoding>ISO-8859-1</control_encoding>
+      <movefiles>N</movefiles>
+      <movetodirectory />
+      <adddate>N</adddate>
+      <addtime>N</addtime>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format />
+      <AddDateBeforeExtension>N</AddDateBeforeExtension>
+      <isaddresult>Y</isaddresult>
+      <createmovefolder>N</createmovefolder>
+      <proxy_host />
+      <proxy_port />
+      <proxy_username />
+      <proxy_password>Encrypted </proxy_password>
+      <socksproxy_host />
+      <socksproxy_port>1080</socksproxy_port>
+      <socksproxy_username />
+      <socksproxy_password>Encrypted </socksproxy_password>
+      <ifFileExists>ifFileExistsFail</ifFileExists>
+      <nr_limit>10</nr_limit>
+      <success_condition>success_if_no_errors</success_condition>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>448</xloc>
+      <yloc>16</yloc>
+    </entry>
+    <entry>
+      <name>download MESH desc and supp files with FTP</name>
+      <description />
+      <type>FTP</type>
+      <port>21</port>
+      <servername>nlmpubs.nlm.nih.gov</servername>
+      <username>${NLMPUBS_FTP_USERID}</username>
+      <password>${NLMPUBS_FTP_PASSWORD}</password>
+      <ftpdirectory>${FTP_MESH_DIR}</ftpdirectory>
+      <targetdirectory>${FILE_DIR}/MESH</targetdirectory>
+      <wildcard>.*.gz</wildcard>
+      <binary>Y</binary>
+      <timeout>0</timeout>
+      <remove>N</remove>
+      <only_new>Y</only_new>
+      <active>N</active>
+      <control_encoding>ISO-8859-1</control_encoding>
+      <movefiles>N</movefiles>
+      <movetodirectory />
+      <adddate>N</adddate>
+      <addtime>N</addtime>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format />
+      <AddDateBeforeExtension>N</AddDateBeforeExtension>
+      <isaddresult>Y</isaddresult>
+      <createmovefolder>N</createmovefolder>
+      <proxy_host />
+      <proxy_port />
+      <proxy_username />
+      <proxy_password>Encrypted </proxy_password>
+      <socksproxy_host />
+      <socksproxy_port>1080</socksproxy_port>
+      <socksproxy_username />
+      <socksproxy_password>Encrypted </socksproxy_password>
+      <ifFileExists>ifFileExistsFail</ifFileExists>
+      <nr_limit>10</nr_limit>
+      <success_condition>success_if_no_errors</success_condition>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>784</xloc>
+      <yloc>16</yloc>
+    </entry>
+    <entry>
+      <name>Load Medline Mesh</name>
+      <description />
+      <type>SHELL</type>
+      <filename />
+      <work_directory />
+      <arg_from_previous>N</arg_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <set_append_logfile>N</set_append_logfile>
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <insertScript>Y</insertScript>
+      <script>cd /home/ubuntu/cem/GitHub/MedlineXmlToDatabase/dist
+java -Xmx12G -jar MedlineXmlToDatabase.jar -parse_mesh -ini ${CONFIG_DIR}/${INI_FILE_NAME}</script>
+      <loglevel>Basic</loglevel>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>784</xloc>
+      <yloc>144</yloc>
+    </entry>
+    <entry>
+      <name>Re-create staging_medline schema tables</name>
+      <description />
+      <type>SHELL</type>
+      <filename />
+      <work_directory />
+      <arg_from_previous>N</arg_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <set_append_logfile>N</set_append_logfile>
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <insertScript>Y</insertScript>
+      <script>cd /home/ubuntu/cem/GitHub/MedlineXmlToDatabase/dist
+java -Xmx12G -jar MedlineXmlToDatabase.jar -analyse -ini ${CONFIG_DIR}/${INI_FILE_NAME}</script>
+      <loglevel>Basic</loglevel>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>336</xloc>
+      <yloc>144</yloc>
+    </entry>
+    <entry>
+      <name>analyze staging_medline tables</name>
+      <description />
+      <type>SQL</type>
+      <sql>-- Some recommended indices
+set search_path = staging_medline;
+
+ANALYZE medcit_meshheadinglist_meshheading;
+ANALYZE medcit_supplmeshlist_supplmeshname;
+ANALYZE mesh_term;
+ANALYZE mesh_relationship;
+ANALYZE mesh_ancestor;
+
+analyze medcit;
+analyze medcit_art_abstract_abstracttext;
+analyze medcit_art_authorlist_author;
+analyze medcit_art_authorlist_author_affiliationinfo;
+analyze medcit_art_authorlist_author_affiliationinfo_identifier;
+analyze medcit_art_authorlist_author_identifier;
+analyze medcit_art_dblist_db;
+analyze medcit_art_dblist_db_accessionnumberlist_accessionnumber;
+analyze medcit_art_elocationid;
+analyze medcit_art_grantlist_grant;
+analyze medcit_art_language;
+analyze medcit_art_publicationtypelist_publicationtype;
+analyze medcit_chemicallist_chemical;
+analyze medcit_citationsubset;
+analyze medcit_commentscorrectionslist_commentscorrections;
+analyze medcit_generalnote;
+analyze medcit_genesymbollist_genesymbol;
+analyze medcit_investigatorlist_investigator;
+analyze medcit_investigatorlist_investigator_affiliationinfo;
+analyze medcit_keywordlist;
+analyze medcit_keywordlist_keyword;
+analyze medcit_meshheadinglist_meshheading;
+analyze medcit_meshheadinglist_meshheading_qualifiername;
+analyze medcit_otherabstract;
+analyze medcit_otherabstract_abstracttext;
+analyze medcit_otherid;
+analyze medcit_personalnamesubjectlist_personalnamesubject;
+analyze medcit_spaceflightmission;
+analyze medcit_supplmeshlist_supplmeshname;
+analyze mesh_ancestor;
+analyze mesh_relationship;
+analyze mesh_term;
+analyze pmid_to_date;
+
+
+
+</sql>
+      <useVariableSubstitution>T</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename />
+      <sendOneStatement>F</sendOneStatement>
+      <connection>cem</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>368</xloc>
+      <yloc>272</yloc>
+    </entry>
+    <entry>
+      <name>staging_medline tables grants</name>
+      <description />
+      <type>SQL</type>
+      <sql>GRANT USAGE ON SCHEMA staging_medline TO staging_ro_grp;
+ALTER DEFAULT PRIVILEGES IN SCHEMA staging_medline GRANT SELECT ON TABLES TO staging_ro_grp;
+
+GRANT SELECT ON medcit_art_abstract_abstracttext TO staging_ro_grp;
+GRANT SELECT ON medcit_art_authorlist_author_affiliationinfo_identifier TO staging_ro_grp;
+GRANT SELECT ON medcit_art_authorlist_author_affiliationinfo TO staging_ro_grp;
+GRANT SELECT ON medcit_art_authorlist_author_identifier TO staging_ro_grp;
+GRANT SELECT ON medcit_art_authorlist_author TO staging_ro_grp;
+GRANT SELECT ON medcit_art_dblist_db_accessionnumberlist_accessionnumber TO staging_ro_grp;
+GRANT SELECT ON medcit_art_dblist_db TO staging_ro_grp;
+GRANT SELECT ON medcit_art_elocationid TO staging_ro_grp;
+GRANT SELECT ON medcit_art_grantlist_grant TO staging_ro_grp;
+GRANT SELECT ON medcit_art_language TO staging_ro_grp;
+GRANT SELECT ON medcit_art_publicationtypelist_publicationtype TO staging_ro_grp;
+GRANT SELECT ON medcit_chemicallist_chemical TO staging_ro_grp;
+GRANT SELECT ON medcit_citationsubset TO staging_ro_grp;
+GRANT SELECT ON medcit_commentscorrectionslist_commentscorrections TO staging_ro_grp;
+GRANT SELECT ON medcit_generalnote TO staging_ro_grp;
+GRANT SELECT ON medcit_genesymbollist_genesymbol TO staging_ro_grp;
+GRANT SELECT ON medcit_investigatorlist_investigator_affiliationinfo TO staging_ro_grp;
+GRANT SELECT ON medcit_investigatorlist_investigator TO staging_ro_grp;
+GRANT SELECT ON medcit_keywordlist_keyword TO staging_ro_grp;
+GRANT SELECT ON medcit_keywordlist TO staging_ro_grp;
+GRANT SELECT ON medcit_meshheadinglist_meshheading_qualifiername TO staging_ro_grp;
+GRANT SELECT ON medcit_meshheadinglist_meshheading TO staging_ro_grp;
+GRANT SELECT ON medcit_otherabstract_abstracttext TO staging_ro_grp;
+GRANT SELECT ON medcit_otherabstract TO staging_ro_grp;
+GRANT SELECT ON medcit_otherid TO staging_ro_grp;
+GRANT SELECT ON medcit_personalnamesubjectlist_personalnamesubject TO staging_ro_grp;
+GRANT SELECT ON medcit_spaceflightmission TO staging_ro_grp;
+GRANT SELECT ON medcit_supplmeshlist_supplmeshname TO staging_ro_grp;
+GRANT SELECT ON medcit TO staging_ro_grp;
+GRANT SELECT ON mesh_ancestor TO staging_ro_grp;
+GRANT SELECT ON mesh_relationship TO staging_ro_grp;
+GRANT SELECT ON mesh_term TO staging_ro_grp;
+GRANT SELECT ON pmid_to_date TO staging_ro_grp;
+
+
+
+</sql>
+      <useVariableSubstitution>T</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename />
+      <sendOneStatement>F</sendOneStatement>
+      <connection>cem</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>624</xloc>
+      <yloc>272</yloc>
+    </entry>
+  </entries>
+  <hops>
+    <hop>
+      <from>START</from>
+      <to>download baseline files with FTP</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>download baseline files with FTP</from>
+      <to>download daily update files with FTP</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>download daily update files with FTP</from>
+      <to>download MESH desc and supp files with FTP</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>download MESH desc and supp files with FTP</from>
+      <to>DROP MEDLINE_INDEXES</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Load Medline</from>
+      <to>Load Medline Mesh</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Load Medline Mesh</from>
+      <to>CREATE MEDLINE MESH INDEXES</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>DROP MEDLINE_INDEXES</from>
+      <to>Re-create staging_medline schema tables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Re-create staging_medline schema tables</from>
+      <to>Load Medline</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>CREATE MEDLINE MESH INDEXES</from>
+      <to>analyze staging_medline tables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>analyze staging_medline tables</from>
+      <to>staging_medline tables grants</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+  </hops>
+  <notepads>
+  </notepads>
+  <attributes>
+    <group>
+      <name>METASTORE.pentaho</name>
+      <attribute>
+        <key>Default Run Configuration</key>
+        <value>{"namespace":"pentaho","id":"Default Run Configuration","name":"Default Run Configuration","description":"Defines a default run configuration","metaStoreName":null}</value>
+      </attribute>
+    </group>
+    <group>
+      <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
+      <attribute>
+        <key>Pentaho local</key>
+        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
+      </attribute>
+    </group>
+  </attributes>
+</job>
