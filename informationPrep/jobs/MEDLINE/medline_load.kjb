@@ -431,7 +431,7 @@ DROP INDEX IF EXISTS idx_mesh_ancestor_descendant_ui;
 </sql>
       <useVariableSubstitution>T</useVariableSubstitution>
       <sqlfromfile>F</sqlfromfile>
-      <sqlfilename>/home/ubuntu/cem/jobs/MEDLINE/drop_MEDLINE_indexes.sql</sqlfilename>
+      <sqlfilename />
       <sendOneStatement>F</sendOneStatement>
       <connection>cem</connection>
       <parallel>N</parallel>
@@ -482,7 +482,7 @@ CREATE INDEX idx_mesh_ancestor_descendant_ui ON mesh_ancestor (descendant_ui);
       <add_date>N</add_date>
       <add_time>N</add_time>
       <insertScript>Y</insertScript>
-      <script>cd /home/ubuntu/cem/GitHub/MedlineXmlToDatabase/dist
+      <script>cd ${CONFIG_DIR}
 java -Xmx12G -jar MedlineXmlToDatabase.jar -parse -ini ${CONFIG_DIR}/${INI_FILE_NAME}</script>
       <loglevel>Basic</loglevel>
       <parallel>N</parallel>
@@ -635,7 +635,7 @@ java -Xmx12G -jar MedlineXmlToDatabase.jar -parse -ini ${CONFIG_DIR}/${INI_FILE_
       <add_date>N</add_date>
       <add_time>N</add_time>
       <insertScript>Y</insertScript>
-      <script>cd /home/ubuntu/cem/GitHub/MedlineXmlToDatabase/dist
+      <script>cd ${CONFIG_DIR}
 java -Xmx12G -jar MedlineXmlToDatabase.jar -parse_mesh -ini ${CONFIG_DIR}/${INI_FILE_NAME}</script>
       <loglevel>Basic</loglevel>
       <parallel>N</parallel>
@@ -659,7 +659,7 @@ java -Xmx12G -jar MedlineXmlToDatabase.jar -parse_mesh -ini ${CONFIG_DIR}/${INI_
       <add_date>N</add_date>
       <add_time>N</add_time>
       <insertScript>Y</insertScript>
-      <script>cd /home/ubuntu/cem/GitHub/MedlineXmlToDatabase/dist
+      <script>cd ${CONFIG_DIR}
 java -Xmx12G -jar MedlineXmlToDatabase.jar -analyse -ini ${CONFIG_DIR}/${INI_FILE_NAME}</script>
       <loglevel>Basic</loglevel>
       <parallel>N</parallel>

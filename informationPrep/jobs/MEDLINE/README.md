@@ -22,6 +22,8 @@ Dependencies
 
 [MedlineXMLToDatabase GitHub repository](https://github.com/OHDSI/MedlineXmlToDatabase)
 
+Install the MedlineXmlToDatabase java app in the same directory as the Pentaho job.
+
 Instructions
 ------------
 1. Load the Pentaho job in the Pentaho Spoon client.
