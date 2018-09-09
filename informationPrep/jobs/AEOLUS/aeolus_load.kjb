@@ -451,7 +451,7 @@ psql -h ${CEM_POSTGRES_HOST} -U ${CEM_POSTGRES_USER} -c "\COPY staging_aeolus.st
       <sql />
       <useVariableSubstitution>F</useVariableSubstitution>
       <sqlfromfile>T</sqlfromfile>
-      <sqlfilename>/home/ubuntu/cem/jobs/AEOLUS/create_AEOLUS_indexes.sql</sqlfilename>
+      <sqlfilename>${Internal.Entry.Current.Directory}/create_AEOLUS_indexes.sql</sqlfilename>
       <sendOneStatement>F</sendOneStatement>
       <connection>cem</connection>
       <parallel>N</parallel>
@@ -467,7 +467,7 @@ psql -h ${CEM_POSTGRES_HOST} -U ${CEM_POSTGRES_USER} -c "\COPY staging_aeolus.st
       <sql />
       <useVariableSubstitution>F</useVariableSubstitution>
       <sqlfromfile>T</sqlfromfile>
-      <sqlfilename>/home/ubuntu/cem/jobs/AEOLUS/drop_AEOLUS_indexes.sql</sqlfilename>
+      <sqlfilename>${Internal.Entry.Current.Directory}/drop_AEOLUS_indexes.sql</sqlfilename>
       <sendOneStatement>F</sendOneStatement>
       <connection>cem</connection>
       <parallel>N</parallel>
