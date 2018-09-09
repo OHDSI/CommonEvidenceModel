@@ -36,6 +36,7 @@ vignettes/*.pdf
 
 # PDI workflow secrets
 secret.config
+dynamic.config
 
 meshTags/extras/config_patient_data.csv
 meshTags/extras/config.csv
