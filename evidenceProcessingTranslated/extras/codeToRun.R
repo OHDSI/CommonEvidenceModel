@@ -44,10 +44,10 @@ source = "source"
 # VOCAB
 ################################################################################
 buildStcm(conn=conn,
-     vocabulary=vocabulary,
-     stcmTable=stcmTable,
-     umlsSchema="staging_umls",
-     faers=paste0(Sys.getenv("clean"),'.',aeolus))
+          vocabulary=vocabulary,
+          stcmTable=stcmTable,
+          umlsSchema="staging_umls",
+          faers=paste0(Sys.getenv("clean"),'.',aeolus))
 
 ################################################################################
 # SOURCE
