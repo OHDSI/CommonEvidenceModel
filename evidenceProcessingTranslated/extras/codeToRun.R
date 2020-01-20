@@ -1,53 +1,16 @@
-################################################################################
-# CONFIG
-################################################################################
-#Connection
-config <- read.csv("extras/config.csv",as.is=TRUE)[1,]
-
-Sys.setenv(dbms = config$dbms)
-Sys.setenv(user = config$user)
-Sys.setenv(pw = config$pw)
-Sys.setenv(server = config$server)
-Sys.setenv(port = config$port)
-Sys.setenv(vocabulary = config$vocabulary)
-Sys.setenv(clean = config$evidenceProcessingClean)
-Sys.setenv(translated = config$evidenceProcessingTranslated)
-Sys.setenv(evidence = config$postProcessing)
-
-#connect
-connectionDetails <- DatabaseConnector::createConnectionDetails(
-  dbms = Sys.getenv("dbms"),
-  server = Sys.getenv("server"),
-  port = as.numeric(Sys.getenv("port")),
-  user = Sys.getenv("user"),
-  password = Sys.getenv("pw")
-)
-conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
-
 library(evidenceProcessingTranslated)
 
 ################################################################################
 # VARIABLES
 ################################################################################
-stcmTable = paste0(Sys.getenv("vocabulary"),".SOURCE_TO_CONCEPT_MAP")
-aeolus = "aeolus"
-medline_avillach = "medline_avillach"
-medline_winnenburg = "medline_winnenburg"
-medline_cooccurrence = "medline_cooccurrence"
-pubmed = "pubmed"
-semmeddb = "semmeddb"
-splicer = "splicer"
-euPlAdr = "eu_pl_adr"
-source = "source"
 
 ################################################################################
-# VOCAB
+# WORK
 ################################################################################
-buildStcm(conn=conn,
-          vocabulary=vocabulary,
-          stcmTable=stcmTable,
-          umlsSchema="staging_umls",
-          faers=paste0(Sys.getenv("clean"),'.',aeolus))
+execute(buildStcm = FALSE,
+        pullSR_AEOLUS = TRUE,
+        pullPL_SPLICER = FALSE,
+        pullPL_EUPLADR = FALSE)
 
 ################################################################################
 # SOURCE
@@ -60,17 +23,6 @@ translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                          targetDialect=Sys.getenv("dbms"))
 DatabaseConnector::executeSql(conn, translatedSql$sql)
 
-################################################################################
-# FAERS
-################################################################################
-
-#AEOLUS
-translate(conn=conn,
-          sourceTable=paste0(Sys.getenv("clean"),'.',aeolus),
-          targetTable=paste0(Sys.getenv("translated"),'.',aeolus),
-          id=aeolus,
-          stcmTable=stcmTable,
-          translationSql="aeolus.sql")
 
 ################################################################################
 # MEDLINE
@@ -121,18 +73,7 @@ translate(conn=conn,
 ################################################################################
 
 #SPLICER
-translate(conn=conn,
-          sourceTable=paste0(Sys.getenv("clean"),'.',splicer),
-          targetTable=paste0(Sys.getenv("translated"),'.',splicer),
-          id=splicer,
-          stcmTable=stcmTable,
-          translationSql="splicer.sql")
 
-#EUPLADR
-translate(conn=conn,
-          sourceTable=paste0(Sys.getenv("clean"),'.',euPlAdr),
-          targetTable=paste0(Sys.getenv("translated"),'.',euPlAdr),
-          id=euPlAdr,
-          stcmTable=stcmTable,
-          translationSql="euPlAdr.sql")
+
+
 

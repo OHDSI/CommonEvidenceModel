@@ -16,7 +16,7 @@
 
 #' Build SOURCE_TO_CONCEPT_MAP
 #'
-#' @param conn connection information
+#' @param connectionDetails connection information
 #'
 #' @param vocabulary where is the vocabulary located
 #'
@@ -27,29 +27,49 @@
 #' @param faers where can we find the FAERS data
 #'
 #' @export
-buildStcm <- function(conn,vocabulary,stcmTable,umlsSchema,faers){
+buildStcm <- function(connectionDetails,vocabulary,stcmTable,umlsSchema,faers){
+  ################################################################################
+  # VARIABLES
+  ################################################################################
+  conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
+
+  ################################################################################
+  # WORK
+  ################################################################################
   #Create Table & Load Data
   sql <- SqlRender::readSql("./inst/sql/sql_server/CEM_SOURCE_TO_CONCEPT_MAP.sql")
-  renderedSql <- SqlRender::renderSql(sql=sql,
+
+  renderedSql <- SqlRender::render(sql=sql,
                                       stcmTable=stcmTable,
                                       vocabulary=vocabulary,
                                       umlsSchema=umlsSchema,
                                       faers=faers)
-  translatedSql <- SqlRender::translateSql(renderedSql$sql,
+
+  translatedSql <- SqlRender::translate(renderedSql,
                                            targetDialect=Sys.getenv("dbms"))
-  DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
 
-  #Load Manual Maps
-  df <- read.csv(system.file("csv","EU_PL_ADR_SUBSTANCES_TO_STANDARD.csv",package="evidenceProcessingTranslated"),
+  DatabaseConnector::executeSql(conn=conn,translatedSql)
+
+
+  #Load Manual Maps #1
+  df <- read.csv("inst/csv/EU_PL_ADR_SUBSTANCES_TO_STANDARD.csv",
                  sep=",",header=TRUE)
+  df$valid_start_date <- as.Date(df$valid_start_date)
+  df$valid_end_date <- as.Date(df$valid_end_date)
   DatabaseConnector::insertTable(conn,stcmTable,df,
                                  dropTableIfExists = FALSE, createTable = FALSE)
   rm(df)
 
-  df <- read.csv(system.file("csv","TRIFIRO_23_CONDITIONS_STCM.csv",package="evidenceProcessingTranslated"),
+  #Load Manual Maps #2
+  df <- read.csv("inst/csv/TRIFIRO_23_CONDITIONS_STCM.csv",
                  sep=",",header=TRUE)
+  df$valid_start_date <- as.Date(df$valid_start_date)
+  df$valid_end_date <- as.Date(df$valid_end_date)
   DatabaseConnector::insertTable(conn,stcmTable,df,
                                  dropTableIfExists = FALSE, createTable = FALSE)
+  ################################################################################
+  # CLEAN
+  ################################################################################
   rm(df)
-
-}
+  DatabaseConnector::disconnect(conn)
+  }

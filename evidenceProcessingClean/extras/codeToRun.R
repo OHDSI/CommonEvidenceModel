@@ -1,73 +1,10 @@
-################################################################################
-# CONFIG
-################################################################################
-#Connection
-config <- read.csv("extras/config.csv",as.is=TRUE)[1,]
-
-Sys.setenv(dbms = config$dbms)
-Sys.setenv(user = config$user)
-Sys.setenv(pw = config$pw)
-Sys.setenv(server = config$server)
-Sys.setenv(port = config$port)
-Sys.setenv(vocabulary = config$vocabulary)
-Sys.setenv(clean = config$evidenceProcessingClean)
-Sys.setenv(translated = config$evidenceProcessingTranslated)
-Sys.setenv(evidence = config$postProcessing)
-
-#connect
-connectionDetails <- DatabaseConnector::createConnectionDetails(
-  dbms = Sys.getenv("dbms"),
-  server = Sys.getenv("server"),
-  port = as.numeric(Sys.getenv("port")),
-  user = Sys.getenv("user"),
-  password = Sys.getenv("pw")
-)
-conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
-
-#variables
-schemaVocab <- "vocabulary"
-schemaSource <- "staging_audit"
-schemaAeolus <- "staging_aeolus"
-schemaMedline <- "staging_medline"
-schemaSplicer <- "staging_splicer"
-schemaEUPLADR <- "staging_eu_pl_adr"
-schemaSemMedDb <- "staging_semmeddb"
-tableSource <- "source"
-tableAeolus <- "aeolus"
-tableAvillach <- "medline_avillach"
-tableWinnenburg <- "medline_winnenburg"
-tableEUPLADR <- "eu_pl_adr"
-tableCoOccurrence <- "medline_cooccurrence"
-tableSplicer <- "splicer"
-tableSemMedDb <- "semmeddb"
-tableMeshTags <- paste0(Sys.getenv("clean"),".lu_pubmed_mesh_tags")
-tablePubmed <- "pubmed"
-
 library(evidenceProcessingClean)
 
-################################################################################
-# DATA LOADING
-################################################################################
-
-#SOURCE
-genericLoad(conn=conn,
-            targetDbSchema=Sys.getenv("clean"),
-            targetTable=tableSource,
-            sourceSchema=schemaSource,
-            sqlFile="source.sql",
-            vocabSchema=schemaVocab)
-
-################################################################################
-# FAERS
-################################################################################
-
-#AEOLUS
-genericLoad(conn=conn,
-            targetDbSchema=Sys.getenv("clean"),
-            targetTable=tableAeolus,
-            sourceSchema=schemaAeolus,
-            sqlFile="aeolus.sql",
-            vocabSchema=schemaVocab)
+execute(loadSource = FALSE,
+        loadSR_AEOLUS = FALSE,
+        loadPL_SPLICER = FALSE,
+        loadPL_EUPLADR = FALSE,
+        loadCT_SHERLOCK = TRUE)
 
 ################################################################################
 # MEDLINE
@@ -137,20 +74,5 @@ genericLoad(conn=conn,
             sourceSchema=schemaSemMedDb,
             sqlFile="semmeddb.sql")
 
-################################################################################
-# PRODUCT LABELS
-################################################################################
 
-#SPLICER
-genericLoad(conn=conn,
-            targetDbSchema=Sys.getenv("clean"),
-            targetTable=tableSplicer,
-            sourceSchema=schemaSplicer,
-            sqlFile="splicer.sql")
 
-#EUPLADR
-genericLoad(conn=conn,
-            targetDbSchema=Sys.getenv("clean"),
-            targetTable=tableEUPLADR,
-            sourceSchema=schemaEUPLADR,
-            sqlFile="eu_pl_adr.sql")

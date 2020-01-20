@@ -1,3 +1,5 @@
+--@vocabSchema
+
 IF OBJECT_ID('@tableName','U') IS NOT NULL
 DROP TABLE @tableName;
 

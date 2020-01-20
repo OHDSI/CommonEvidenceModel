@@ -29,8 +29,11 @@
 #' @param vocabSchema where can the Vocabulary be found
 #'
 #' @export
-genericLoad <- function(conn,targetDbSchema,targetTable,sourceSchema,sqlFile,
+genericLoad <- function(connnectionDetails,targetDbSchema,targetTable,sourceSchema,sqlFile,
                         vocabSchema=NULL){
+
+  conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
+
   sql <- SqlRender::loadRenderTranslateSql(sqlFilename = sqlFile,
                                            packageName = "evidenceProcessingClean",
                                            dbms = attr(conn, "dbms"),
@@ -40,4 +43,6 @@ genericLoad <- function(conn,targetDbSchema,targetTable,sourceSchema,sqlFile,
                                            sourceSchema=sourceSchema,
                                            vocabSchema=vocabSchema)
   DatabaseConnector::executeSql(conn=conn,sql)
+
+  DatabaseConnector::disconnect(conn)
 }

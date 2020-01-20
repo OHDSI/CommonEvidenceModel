@@ -16,7 +16,7 @@
 
 #' Translate
 #'
-#' @param conn connection information
+#' @param connectionDetails connection information
 #'
 #' @param sourceTable where will we get the information to translate
 #'
@@ -29,17 +29,29 @@
 #' @param id name of the pull
 #'
 #' @export
-translate <- function(conn,sourceTable,targetTable,stcmTable,
+translate <- function(connectionDetails,sourceTable,targetTable,stcmTable,
                       translationSql,id){
 
-  sql <- SqlRender::readSql(paste0("./inst/sql/sql_server/",translationSql))
-  renderedSql <- SqlRender::renderSql(sql=sql,
-                                      targetTable=targetTable,
-                                      sourceTable=sourceTable,
-                                      stcmTable=stcmTable,
-                                      id=id)
-  translatedSql <- SqlRender::translateSql(renderedSql$sql,
-                                           targetDialect=Sys.getenv("dbms"))
-  DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
+  ################################################################################
+  # VARIABLES
+  ################################################################################
+  conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
+  ################################################################################
+  # WORK
+  ################################################################################
+  sql <- SqlRender::readSql(paste0("./inst/sql/sql_server/",translationSql))
+  renderedSql <- SqlRender::render(sql=sql,
+                                   targetTable=targetTable,
+                                   sourceTable=sourceTable,
+                                   stcmTable=stcmTable,
+                                   id=id)
+  translatedSql <- SqlRender::translate(renderedSql,
+                                        targetDialect=Sys.getenv("dbms"))
+  DatabaseConnector::executeSql(conn=conn,translatedSql)
+
+  ################################################################################
+  # CLEAN
+  ################################################################################
+  DatabaseConnector::disconnect(conn)
 }
