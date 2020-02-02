@@ -4,7 +4,8 @@ execute(loadSource = FALSE,
         loadSR_AEOLUS = FALSE,
         loadPL_SPLICER = FALSE,
         loadPL_EUPLADR = FALSE,
-        loadCT_SHERLOCK = TRUE)
+        loadCT_SHERLOCK = FALSE,
+        loadPub_SEMMEDDB = TRUE)
 
 ################################################################################
 # MEDLINE
@@ -68,11 +69,7 @@ pubmed(conn,
 # 3805:4005 - Vitreoretinopathy, Proliferative
 
 #SEMMEDDB
-genericLoad(conn=conn,
-            targetDbSchema=Sys.getenv("clean"),
-            targetTable=tableSemMedDb,
-            sourceSchema=schemaSemMedDb,
-            sqlFile="semmeddb.sql")
+
 
 
 

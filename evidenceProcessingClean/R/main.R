@@ -2,7 +2,8 @@ execute <- function(loadSource = FALSE,
                     loadSR_AEOLUS = FALSE,
                     loadPL_SPLICER = FALSE,
                     loadPL_EUPLADR = FALSE,
-                    loadCT_SHERLOCK = FALSE){
+                    loadCT_SHERLOCK = FALSE,
+                    loadPub_SEMMEDDB = FALSE){
   ################################################################################
   # VARIABLES
   ################################################################################
@@ -85,6 +86,17 @@ execute <- function(loadSource = FALSE,
                 targetTable=tableEUPLADR,
                 sourceSchema=schemaEUPLADR,
                 sqlFile="eu_pl_adr.sql")
+  }
+
+  ################################################################################
+  #WORK - Publications
+  ################################################################################
+  if(loadPub_SEMMEDDB){
+    genericLoad(connnectionDetails=connnectionDetails,
+                targetDbSchema=Sys.getenv("clean"),
+                targetTable=tableSemMedDb,
+                sourceSchema=schemaSemMedDb,
+                sqlFile="semmeddb.sql")
   }
 
   ################################################################################

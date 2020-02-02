@@ -1,13 +1,25 @@
 execute <- function(buildStcm = FALSE,
                     pullSR_AEOLUS = FALSE,
                     pullPL_SPLICER = FALSE,
-                    pullPL_EUPLADR = FALSE){
+                    pullPL_EUPLADR = FALSE,
+                    pullPub_SEMMEDDB = FALSE){
 
   ################################################################################
   # VARIABLES
   ################################################################################
   configFile <- "extras/config.csv"
+
   connectionDetails <- getConnectionDetails(configFile)
+
+  Sys.setenv(dbms = config$dbms)
+  Sys.setenv(user = config$user)
+  Sys.setenv(pw = config$pw)
+  Sys.setenv(server = config$server)
+  Sys.setenv(port = config$port)
+  Sys.setenv(vocabulary = config$vocabulary)
+  Sys.setenv(clean = config$evidenceProcessingClean)
+  Sys.setenv(translated = config$evidenceProcessingTranslated)
+  Sys.setenv(evidence = config$postProcessing)
 
   aeolus = "aeolus"
   medline_avillach = "medline_avillach"
@@ -55,6 +67,18 @@ execute <- function(buildStcm = FALSE,
             stcmTable=stcmTable,
             translationSql="aeolus.sql")
 
+  ################################################################################
+  # WORK - PUBLICATIONS
+  ################################################################################
+  #SEMMEDDB
+  if(pullPub_SEMMEDDB){
+    translate(connectionDetails = connectionDetails,
+              sourceTable=paste0(cleanSchema,'.',semmeddb),
+              targetTable=paste0(translatedSchema,'.',semmeddb),
+              id=semmeddb,
+              stcmTable=stcmTable,
+              translationSql="semmeddb.sql")
+  }
   ################################################################################
   # WORK - PRODUCT LABELS
   ################################################################################

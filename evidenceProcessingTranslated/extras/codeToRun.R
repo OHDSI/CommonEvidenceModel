@@ -1,16 +1,13 @@
 library(evidenceProcessingTranslated)
 
 ################################################################################
-# VARIABLES
-################################################################################
-
-################################################################################
 # WORK
 ################################################################################
 execute(buildStcm = FALSE,
-        pullSR_AEOLUS = TRUE,
+        pullSR_AEOLUS = FALSE,
         pullPL_SPLICER = FALSE,
-        pullPL_EUPLADR = FALSE)
+        pullPL_EUPLADR = FALSE,
+        pullPub_SEMMEDDB = TRUE)
 
 ################################################################################
 # SOURCE
@@ -60,19 +57,8 @@ translate(conn=conn,
           stcmTable=stcmTable,
           translationSql="pubmed.sql")
 
-#SEMMEDDB
-translate(conn=conn,
-          sourceTable=paste0(Sys.getenv("clean"),'.',semmeddb),
-          targetTable=paste0(Sys.getenv("translated"),'.',semmeddb),
-          id=semmeddb,
-          stcmTable=stcmTable,
-          translationSql="semmeddb.sql")
 
-################################################################################
-# PRODUCT LABELS
-################################################################################
 
-#SPLICER
 
 
 
