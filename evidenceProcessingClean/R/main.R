@@ -2,8 +2,13 @@ execute <- function(loadSource = FALSE,
                     loadSR_AEOLUS = FALSE,
                     loadPL_SPLICER = FALSE,
                     loadPL_EUPLADR = FALSE,
-                    loadCT_SHERLOCK = FALSE,
-                    loadPub_SEMMEDDB = FALSE){
+                    loadPub_MEDLINE_COOCCURRENCE = FALSE,
+                    loadPub_MEDLINE_AVILLACH = FALSE,
+                    loadPub_MEDLINE_WINNENBURG = FALSE,
+                    loadPub_PUBMED = FALSE,
+                    loadPub_SEMMEDDB = FALSE,
+                    loadCT_SHERLOCK = FALSE
+                    ){
   ################################################################################
   # VARIABLES
   ################################################################################
@@ -91,6 +96,69 @@ execute <- function(loadSource = FALSE,
   ################################################################################
   #WORK - Publications
   ################################################################################
+  if(loadPub_MEDLINE_COOCCURRENCE){
+    #COOCCURRENCE
+    medlineCoOccurrence(connnectionDetails=connnectionDetails,
+                        targetDbSchema=Sys.getenv("clean"),
+                        targetTable=tableCoOccurrence,
+                        sourceSchema=schemaMedline,
+                        sourceID=tableCoOccurrence)
+  }
+
+  if(loadPub_MEDLINE_AVILLACH){
+    #AVILLACH
+    medlineCoOccurrence(connnectionDetails=connnectionDetails,
+                        targetDbSchema=Sys.getenv("clean"),
+                        targetTable=tableAvillach,
+                        sourceSchema=schemaMedline,
+                        sourceID=tableAvillach,
+                        qualifier=1)
+  }
+
+  if(loadPub_MEDLINE_WINNENBURG){
+    #WINNENBURG
+    medlineCoOccurrenceWinnenburg(connnectionDetails=connnectionDetails,
+                                  targetDbSchema=Sys.getenv("clean"),
+                                  targetTable=tableWinnenburg,
+                                  sourceSchema=schemaMedline,
+                                  sourceID=tableWinnenburg)
+  }
+
+  if(loadPub_PUBMED){
+    conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
+
+    #PUBMED PULL
+    #requires loading of Pubmed MeSH tags from the MeshTags Package
+    df <- read.table("inst/csv/MeshTags.csv", header = TRUE)
+    DatabaseConnector::insertTable(conn=conn,
+                                   tableName=tableMeshTags,
+                                   data=df,
+                                   dropTableIfExists=TRUE,
+                                   createTable=TRUE,
+                                   tempTable=FALSE,
+                                   oracleTempSchema=NULL)
+    sql <- "ALTER TABLE @tableName OWNER TO RW_GRP;"
+    renderedSql <- SqlRender::renderSql(sql=sql,
+                                        tableName = paste0(Sys.getenv("clean"),'.',tablePubmed))
+    translatedSql <- SqlRender::translateSql(renderedSql$sql,
+                                             targetDialect=Sys.getenv("dbms"))
+    DatabaseConnector::executeSql(conn, translatedSql$sql)
+    rm(df)
+
+    pubmed(conn,
+           targetDbSchema=Sys.getenv("clean"),
+           targetTable=tablePubmed,
+           sourceId=tablePubmed,
+           meshTags=tableMeshTags,
+           sqlFile="pubmed.sql",
+           pullPubMed = 0,
+           pubMedPullStart = 1,
+           summarize = 1,
+           summarizeStart = 1)
+
+    DatabaseConnector::disconnect(conn)
+  }
+
   if(loadPub_SEMMEDDB){
     genericLoad(connnectionDetails=connnectionDetails,
                 targetDbSchema=Sys.getenv("clean"),
@@ -113,5 +181,6 @@ execute <- function(loadSource = FALSE,
   ################################################################################
   # CLEAN
   ################################################################################
+
 
 }

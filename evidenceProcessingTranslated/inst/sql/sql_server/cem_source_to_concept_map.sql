@@ -4,10 +4,10 @@ IF OBJECT_ID('tempdb..#TEMP_DUPES', 'U') IS NOT NULL DROP TABLE #TEMP_DUPES;
 IF OBJECT_ID('tempdb..#TEMP_UMLS_LU', 'U') IS NOT NULL DROP TABLE #TEMP_UMLS_LU;
 
 CREATE TABLE @stcmTable (
-	source_code             varchar(255) NOT NULL,
+	source_code             varchar(MAX) NOT NULL,
 	source_concept_id       int NOT NULL,
 	source_vocabulary_id    varchar(20) NOT NULL,
-	source_code_description varchar(255) NULL,
+	source_code_description varchar(MAX) NULL,
 	target_concept_id       int NOT NULL,
 	target_vocabulary_id    varchar(20) NULL,
 	valid_start_date        date NOT NULL,

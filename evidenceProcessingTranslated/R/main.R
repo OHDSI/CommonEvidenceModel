@@ -2,7 +2,12 @@ execute <- function(buildStcm = FALSE,
                     pullSR_AEOLUS = FALSE,
                     pullPL_SPLICER = FALSE,
                     pullPL_EUPLADR = FALSE,
-                    pullPub_SEMMEDDB = FALSE){
+                    pullPub_MEDLINE_COOCCURRENCE = FALSE,
+                    pullPub_MEDLINE_AVILLACH = FALSE,
+                    pullPub_MEDLINE_WINNENBURG = FALSE,
+                    pullPub_PUBMED = FALSE,
+                    pullPub_SEMMEDDB = FALSE,
+                    pullCT_SHERLOCK = FALSE){
 
   ################################################################################
   # VARIABLES
@@ -11,6 +16,7 @@ execute <- function(buildStcm = FALSE,
 
   connectionDetails <- getConnectionDetails(configFile)
 
+  config <- read.csv(configFile,as.is=TRUE)[1,]
   Sys.setenv(dbms = config$dbms)
   Sys.setenv(user = config$user)
   Sys.setenv(pw = config$pw)
@@ -29,6 +35,7 @@ execute <- function(buildStcm = FALSE,
   semmeddb = "semmeddb"
   splicer = "splicer"
   euPlAdr = "eu_pl_adr"
+  sherlock = "sherlock"
   source = "source"
 
   #schemas
@@ -39,6 +46,7 @@ execute <- function(buildStcm = FALSE,
 
   #clean data
   cleanAeolus <- paste0(cleanSchema,'.',aeolus)
+  cleanSherlock <- paste0(cleanSchema,'.',sherlock)
 
   #tables
   stcmTable <- paste0(vocabulary,".SOURCE_TO_CONCEPT_MAP")
@@ -53,7 +61,8 @@ execute <- function(buildStcm = FALSE,
               vocabulary=vocabulary,
               stcmTable=stcmTable,
               umlsSchema=umlsSchema,
-              faers=cleanAeolus)
+              faers=cleanAeolus,
+              sherlock=cleanSherlock)
   }
 
   ################################################################################
@@ -70,6 +79,48 @@ execute <- function(buildStcm = FALSE,
   ################################################################################
   # WORK - PUBLICATIONS
   ################################################################################
+  #COOCCURRENCE
+  if(pullPub_MEDLINE_COOCCURRENCE){
+    #COOCCURRENCE
+    translate(connectionDetails = connectionDetails,
+              sourceTable=paste0(cleanSchema,'.',medline_cooccurrence),
+              targetTable=paste0(translatedSchema,'.',medline_cooccurrence),
+              id=medline_cooccurrence,
+              stcmTable=stcmTable,
+              translationSql="medline.sql")
+  }
+
+  #AVILLACH
+  if(pullPub_MEDLINE_AVILLACH){
+    translate(connectionDetails = connectionDetails,
+              sourceTable=paste0(cleanSchema,'.',medline_avillach),
+              targetTable=paste0(translatedSchema,'.',medline_avillach),
+              id=medline_avillach,
+              stcmTable=stcmTable,
+              translationSql="medline.sql")
+  }
+
+  #WINNENBURG
+  if(pullPub_MEDLINE_WINNENBURG){
+    translate(connectionDetails = connectionDetails,
+              sourceTable=paste0(cleanSchema,'.',medline_winnenburg),
+              targetTable=paste0(translatedSchema,'.',medline_winnenburg),
+              id=medline_winnenburg,
+              stcmTable=stcmTable,
+              translationSql="medline.sql")
+  }
+
+  #PUBMED PULL
+  if(pullPub_PUBMED){
+    translate(connectionDetails = connectionDetails,
+              sourceTable=paste0(cleanSchema,'.',pubmed),
+              targetTable=paste0(translatedSchema,'.',pubmed),
+              id=pubmed,
+              stcmTable=stcmTable,
+              translationSql="pubmed.sql")
+
+  }
+
   #SEMMEDDB
   if(pullPub_SEMMEDDB){
     translate(connectionDetails = connectionDetails,
@@ -102,4 +153,16 @@ execute <- function(buildStcm = FALSE,
               translationSql="euPlAdr.sql")
   }
 
+  ################################################################################
+  # WORK - CLINICAL TRIAL
+  ################################################################################
+  #SHERLOCK
+  if(pullCT_SHERLOCK){
+    translate(connectionDetails = connectionDetails,
+              sourceTable=paste0(cleanSchema,'.',sherlock),
+              targetTable=paste0(translatedSchema,'.',sherlock),
+              id=sherlock,
+              stcmTable=stcmTable,
+              translationSql="sherlock.sql")
+  }
 }

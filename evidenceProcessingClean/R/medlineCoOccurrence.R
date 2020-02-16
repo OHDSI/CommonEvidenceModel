@@ -29,9 +29,11 @@
 #' @param qualifier define the drug qualifiers/condition qualifiers to be used (e.g. adverse effects, chemically induced)
 #'
 #' @export
-medlineCoOccurrence <- function(conn,targetDbSchema,targetTable,
+medlineCoOccurrence <- function(connectionDetails,targetDbSchema,targetTable,
                                 sourceSchema,sourceID,
                                 qualifier=0){
+
+  conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
   #Find Max PMID and how to iterate to it
   options(scipen=999)
