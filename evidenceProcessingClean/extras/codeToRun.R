@@ -5,20 +5,8 @@ execute(loadSource = FALSE,
         loadPL_SPLICER = FALSE,
         loadPL_EUPLADR = FALSE,
         loadPub_MEDLINE_COOCCURRENCE = FALSE,
-        loadPub_MEDLINE_AVILLACH = FALSE,
-        loadPub_MEDLINE_WINNENBURG = FALSE,
-        loadPub_PUBMED = TRUE,
+        loadPub_MEDLINE_AVILLACH = TRUE,
+        loadPub_MEDLINE_WINNENBURG = TRUE,
+        loadPub_PUBMED = FALSE, #DO NOT RUN AGAIN FOR V2.0, TAKES 5 days
         loadPub_SEMMEDDB = FALSE,
         loadCT_SHERLOCK = FALSE)
-
-
-#bombed at
-# 1423:4005 - Hepatitis, Drug-Induced -- 1424:4041 - Hepatitis, Drug-Induced
-# 2540:4005 - thonzylamine - 2540:4041 - thonzylamine
-# 3416:4005 - Pneumonia, Atypical Interstitial, of Cattle - 3425:4041 - Pneumonia, Atypical Interstitial, of Cattle
-# 3805:4005 - Vitreoretinopathy, Proliferative
-
-
-
-
-

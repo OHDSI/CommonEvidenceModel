@@ -106,9 +106,10 @@ execute <- function(loadSource = FALSE,
   }
 
   if(loadPub_MEDLINE_AVILLACH){
+    print("LOAD PUBLICATIONS:  MEDLINE AVILLACH")
     #AVILLACH
     medlineCoOccurrence(connnectionDetails=connnectionDetails,
-                        targetDbSchema=Sys.getenv("clean"),
+                        targetDbSchema=schemaClean,
                         targetTable=tableAvillach,
                         sourceSchema=schemaMedline,
                         sourceID=tableAvillach,
@@ -116,9 +117,10 @@ execute <- function(loadSource = FALSE,
   }
 
   if(loadPub_MEDLINE_WINNENBURG){
+    print("LOAD PUBLICATIONS:  MEDLINE WINNENBERG")
     #WINNENBURG
     medlineCoOccurrenceWinnenburg(connnectionDetails=connnectionDetails,
-                                  targetDbSchema=Sys.getenv("clean"),
+                                  targetDbSchema=schemaClean,
                                   targetTable=tableWinnenburg,
                                   sourceSchema=schemaMedline,
                                   sourceID=tableWinnenburg)
