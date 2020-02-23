@@ -29,7 +29,7 @@
 #' @param vocabSchema where can the Vocabulary be found
 #'
 #' @export
-genericLoad <- function(connnectionDetails,targetDbSchema,targetTable,sourceSchema,sqlFile,
+genericLoad <- function(connectionDetails,targetDbSchema,targetTable,sourceSchema,sqlFile,
                         vocabSchema=NULL){
 
   conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)

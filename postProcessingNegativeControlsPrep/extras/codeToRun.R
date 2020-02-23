@@ -1,7 +1,7 @@
 library(postProcessingNegativeControlsPrep)
 
-execute(findPotentialConcepts=TRUE,
-        ftpPotentialConcepts=TRUE,
+execute(findPotentialConcepts=FALSE,
+        ftpPotentialConcepts=FALSE,       #LEE LOADED MANUALLY
         findBroadConcepts=TRUE,
         findDrugRelated=TRUE,
         findPregnancyRelated = TRUE)

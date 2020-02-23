@@ -14,8 +14,9 @@ execute <- function(loadSource = FALSE,
   ################################################################################
   configFile <- "extras/config.csv"
 
-  config <- read.csv(configFile,as.is=TRUE)[1,]
+  connectionDetails <- getConnectionDetails(configFile)
 
+  config <- read.csv(configFile,as.is=TRUE)[1,]
   Sys.setenv(dbms = config$dbms)
   Sys.setenv(user = config$user)
   Sys.setenv(pw = config$pw)
@@ -54,7 +55,7 @@ execute <- function(loadSource = FALSE,
   #WORK - GENERAL
   ################################################################################
   if(loadSource){
-    genericLoad(connnectionDetails=connnectionDetails,
+    genericLoad(connectionDetails=connectionDetails,
                 targetDbSchema=schemaClean,
                 targetTable=tableSource,
                 sourceSchema=schemaSource,
@@ -65,20 +66,22 @@ execute <- function(loadSource = FALSE,
   ################################################################################
   #WORK - FAERS
   ################################################################################
-
-  #AEOLUS
-  genericLoad(connnectionDetails=connnectionDetails,
-              targetDbSchema=schemaClean,
-              targetTable=tableAeolus,
-              sourceSchema=schemaAeolus,
-              sqlFile="aeolus.sql",
-              vocabSchema=schemaVocab)
+  if(loadSR_AEOLUS){
+    print("LOAD SPONTANEOUS REPORTS:  AEOLUS")
+    genericLoad(connectionDetails=connectionDetails,
+                targetDbSchema=schemaClean,
+                targetTable=tableAeolus,
+                sourceSchema=schemaAeolus,
+                sqlFile="aeolus.sql",
+                vocabSchema=schemaVocab)
+  }
 
   ################################################################################
   #WORK - PRODUCT LABELS
   ################################################################################
   if(loadPL_SPLICER){
-    genericLoad(connnectionDetails=connnectionDetails,
+    print("LOAD PRODUCT LABELS:  SPLICER")
+    genericLoad(connectionDetails=connectionDetails,
                 targetDbSchema=schemaClean,
                 targetTable=tableSplicer,
                 sourceSchema=schemaSplicer,
@@ -86,7 +89,8 @@ execute <- function(loadSource = FALSE,
   }
 
   if(loadPL_EUPLADR){
-    genericLoad(connnectionDetails=connnectionDetails,
+    print("LOAD PRODUCT LABELS:  EUPLADR")
+    genericLoad(connectionDetails=connectionDetails,
                 targetDbSchema=schemaClean,
                 targetTable=tableEUPLADR,
                 sourceSchema=schemaEUPLADR,
@@ -98,7 +102,7 @@ execute <- function(loadSource = FALSE,
   ################################################################################
   if(loadPub_MEDLINE_COOCCURRENCE){
     #COOCCURRENCE
-    medlineCoOccurrence(connnectionDetails=connnectionDetails,
+    medlineCoOccurrence(connectionDetails=connectionDetails,
                         targetDbSchema=Sys.getenv("clean"),
                         targetTable=tableCoOccurrence,
                         sourceSchema=schemaMedline,
@@ -108,7 +112,7 @@ execute <- function(loadSource = FALSE,
   if(loadPub_MEDLINE_AVILLACH){
     print("LOAD PUBLICATIONS:  MEDLINE AVILLACH")
     #AVILLACH
-    medlineCoOccurrence(connnectionDetails=connnectionDetails,
+    medlineCoOccurrence(connectionDetails=connectionDetails,
                         targetDbSchema=schemaClean,
                         targetTable=tableAvillach,
                         sourceSchema=schemaMedline,
@@ -119,7 +123,7 @@ execute <- function(loadSource = FALSE,
   if(loadPub_MEDLINE_WINNENBURG){
     print("LOAD PUBLICATIONS:  MEDLINE WINNENBERG")
     #WINNENBURG
-    medlineCoOccurrenceWinnenburg(connnectionDetails=connnectionDetails,
+    medlineCoOccurrenceWinnenburg(connectionDetails=connectionDetails,
                                   targetDbSchema=schemaClean,
                                   targetTable=tableWinnenburg,
                                   sourceSchema=schemaMedline,
@@ -162,7 +166,8 @@ execute <- function(loadSource = FALSE,
   }
 
   if(loadPub_SEMMEDDB){
-    genericLoad(connnectionDetails=connnectionDetails,
+    print("LOAD PUBLICATIONS:  SEMMEDDB")
+    genericLoad(connectionDetails=connectionDetails,
                 targetDbSchema=Sys.getenv("clean"),
                 targetTable=tableSemMedDb,
                 sourceSchema=schemaSemMedDb,
@@ -173,7 +178,8 @@ execute <- function(loadSource = FALSE,
   #WORK - Clinical Trials
   ################################################################################
   if(loadCT_SHERLOCK){
-    genericLoad(connnectionDetails=connnectionDetails,
+    print("LOAD CLINICAL TRIALS:  SHERLOCK")
+    genericLoad(connectionDetails=connectionDetails,
                 targetDbSchema=schemaClean,
                 targetTable=tableSherlock,
                 sourceSchema=schemaSherlock,
