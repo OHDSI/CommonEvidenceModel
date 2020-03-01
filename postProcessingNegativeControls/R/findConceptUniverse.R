@@ -67,10 +67,10 @@ findConceptUniverse <- function(conn,connPatientData,schemaRaw='',filter=10,
   sql <- paste0("CREATE INDEX IDX_CONCEPT_UNIVERSE_CONCEPT_ID ON ",
                 storeData," (CONCEPT_ID);
                 ALTER TABLE ", storeData, " OWNER TO RW_GRP;")
-  renderedSql <- SqlRender::renderSql(sql=sql)
-  translatedSql <- SqlRender::translateSql(renderedSql$sql,
+  renderedSql <- SqlRender::render(sql=sql)
+  translatedSql <- SqlRender::translate(renderedSql,
                                            targetDialect=Sys.getenv("dbms"))
-  DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
+  DatabaseConnector::executeSql(conn=conn,translatedSql)
 
 
   print(paste0("Time Duration: ",Sys.time()-old))
