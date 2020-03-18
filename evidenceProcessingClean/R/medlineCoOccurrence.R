@@ -46,7 +46,7 @@ medlineCoOccurrence <- function(connectionDetails,targetDbSchema,targetTable,
   translatedSql <- SqlRender::translateSql(renderedSql$sql,
                                            targetDialect=attr(conn,"dbms"))
   maxPMID <- DatabaseConnector::querySql(conn=conn,translatedSql$sql)
-  iterateToPMID <- round(maxPMID[1,1],(nchar(maxPMID[1,1])-1)*-1)
+  iterateToPMID <- round(maxPMID[1,1]+10000000,(nchar(maxPMID[1,1])-1)*-1)
   iterater <- as.data.frame(cbind(seq(0, iterateToPMID, by = 1000000),
                                   append(seq(999999, iterateToPMID, by = 1000000), iterateToPMID)))
   colnames(iterater) <- c("start","end")

@@ -42,11 +42,11 @@ medlineCoOccurrenceWinnenburg <- function(connectionDetails,targetDbSchema,targe
                 ".medcit_art_abstract_abstracttext UNION ALL SELECT pmid FROM ",
                 sourceSchema,
                 ".medcit_otherabstract_abstracttext ) z");
-  renderedSql <- SqlRender::renderSql(sql=sql)
-  translatedSql <- SqlRender::translateSql(renderedSql$sql,
-                                           targetDialect=attr(conn,"dbms"))
-  maxPMID <- DatabaseConnector::querySql(conn=conn,translatedSql$sql)
-  iterateToPMID <- round(maxPMID[1,1],(nchar(maxPMID[1,1])-1)*-1)
+  renderedSql <- SqlRender::render(sql=sql)
+  translatedSql <- SqlRender::translate(renderedSql,
+                                        targetDialect=attr(conn,"dbms"))
+  maxPMID <- DatabaseConnector::querySql(conn=conn,translatedSql)
+  iterateToPMID <- round(maxPMID[1,1]+10000000,(nchar(maxPMID[1,1])-1)*-1)
   iterater <- as.data.frame(cbind(seq(0, iterateToPMID, by = 1000000),
                                   append(seq(999999, iterateToPMID, by = 1000000), iterateToPMID)))
   colnames(iterater) <- c("start","end")
@@ -57,17 +57,17 @@ medlineCoOccurrenceWinnenburg <- function(connectionDetails,targetDbSchema,targe
     print(paste0(i,":",iteraterNum,"- Start: ",iterater$start[i]," End: ",iterater$end[i]," of ",iterateToPMID," (",maxPMID,")"))
 
     sql <- SqlRender::readSql("./inst/sql/sql_server/MEDLINE_COOCURRENCE_WINNENBURG.sql")
-    renderedSql <- SqlRender::renderSql(sql=sql,
-                                        targetTable=paste0(targetDbSchema,'.',targetTable),
-                                        i=i,
-                                        iteraterNum=iteraterNum,
-                                        sourceSchema=sourceSchema,
-                                        qualifier=qualifier,
-                                        start=iterater$start[i],
-                                        end=iterater$end[i],
-                                        sourceID = sourceID)
-    translatedSql <- SqlRender::translateSql(renderedSql$sql,
-                                             targetDialect=Sys.getenv("dbms"))
-    DatabaseConnector::executeSql(conn=conn,translatedSql$sql)
+    renderedSql <- SqlRender::render(sql=sql,
+                                     targetTable=paste0(targetDbSchema,'.',targetTable),
+                                     i=i,
+                                     iteraterNum=iteraterNum,
+                                     sourceSchema=sourceSchema,
+                                     qualifier=qualifier,
+                                     start=iterater$start[i],
+                                     end=iterater$end[i],
+                                     sourceID = sourceID)
+    translatedSql <- SqlRender::translate(renderedSql,
+                                          targetDialect=Sys.getenv("dbms"))
+    DatabaseConnector::executeSql(conn=conn,translatedSql)
   }
 }

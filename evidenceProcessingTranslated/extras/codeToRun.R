@@ -3,17 +3,17 @@ library(evidenceProcessingTranslated)
 ################################################################################
 # WORK
 ################################################################################
-execute(buildStcm = TRUE,
+execute(buildStcm = FALSE,
         loadSource = FALSE,
-        pullSR_AEOLUS = TRUE,
-        pullPL_SPLICER = TRUE,
-        pullPL_EUPLADR = TRUE,
+        pullSR_AEOLUS = FALSE,
+        pullPL_SPLICER = FALSE,
+        pullPL_EUPLADR = FALSE,
         pullPub_MEDLINE_COOCCURRENCE = FALSE,  #NOT RUNNING FOR V2.0
-        pullPub_MEDLINE_AVILLACH = TRUE,
-        pullPub_MEDLINE_WINNENBURG = TRUE,
-        pullPub_PUBMED = TRUE,
-        pullPub_SEMMEDDB = TRUE,
-        pullCT_SHERLOCK = TRUE             #This takes about 10 min to run
+        pullPub_MEDLINE_AVILLACH = FALSE,
+        pullPub_MEDLINE_WINNENBURG = FALSE,
+        pullPub_PUBMED = FALSE,
+        pullPub_SEMMEDDB = FALSE,
+        pullCT_SHERLOCK = FALSE             #This takes about 10 min to run
         )
 
 
