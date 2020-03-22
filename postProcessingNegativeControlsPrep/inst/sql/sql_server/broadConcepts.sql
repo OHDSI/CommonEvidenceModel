@@ -30,6 +30,21 @@ FROM (
 	UNION ALL
 
 	/*CONDITIONS*/
+
+	SELECT c.CONCEPT_ID
+  FROM @vocabulary.CONCEPT_ANCESTOR ca
+    JOIN @vocabulary.CONCEPT c
+      ON c.CONCEPT_ID = ca.DESCENDANT_CONCEPT_ID
+      AND c.CONCEPT_ID IN (
+        SELECT CONCEPT_ID FROM @conceptUniverseData
+      )
+  WHERE ca.ANCESTOR_CONCEPT_ID IN (
+    /*Testing Removing Measurements*/
+    40481841, 4147183
+  )
+
+  UNION ALL
+
 	SELECT DISTINCT c1.CONCEPT_ID
 	FROM @vocabulary.concept c1
   WHERE c1.CONCEPT_ID IN (
@@ -129,7 +144,8 @@ FROM (
 		4116208,	/*Choroidal and/or chorioretinal disorder*/
 		444199,		/*Iatrogenic disorder*/
 		4181217,	/*Sequelae of disorders classified by disorder-system*/
-		4206460		/*Problem*/
+		4206460,	/*Problem*/
+		43020468  /*Child in welfare custody*/
 	)
 	/*Eliminate Concepts with Certain Word Patterns*/
 	OR UPPER(c1.CONCEPT_NAME) LIKE '%FINDING%'
@@ -143,6 +159,7 @@ FROM (
 	OR UPPER(c1.CONCEPT_NAME) LIKE '%BY MECHANISM'
 	OR UPPER(c1.CONCEPT_NAME) LIKE '%OF BODY REGION%'
 	OR UPPER(c1.CONCEPT_NAME) LIKE '%OF SPECIFIC BODY STRUCTURE%'
+	OR UPPER(c1.CONCEPT_NAME) LIKE '%ABNORMAL%'
 ) z;
 
 ALTER TABLE @storeData OWNER TO RW_GRP;
