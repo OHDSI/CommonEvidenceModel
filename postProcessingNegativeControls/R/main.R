@@ -1,5 +1,5 @@
 execute <- function(conceptsOfInterest = 0,
-                    outcomeofInterest = 'condition',
+                    outcomeOfInterest = 'condition',
                     conceptsToExclude = 0,
                     conceptsToInclude = 0){
   ################################################################################
