@@ -30,15 +30,6 @@ execute <- function(conceptsOfInterest = 0,
   )
   conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
-  #connect
-  connectionDetails <- DatabaseConnector::createConnectionDetails(
-    dbms = Sys.getenv("dbms"),
-    server = Sys.getenv("server"),
-    port = as.numeric(Sys.getenv("port")),
-    user = Sys.getenv("user"),
-    password = Sys.getenv("pw")
-  )
-  conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
   #Used when connecting to patient data to inform raw data pull
   patient_config <- read.csv("extras/config_patient_data.csv",as.is=TRUE)[1,]
@@ -203,4 +194,89 @@ execute <- function(conceptsOfInterest = 0,
   dropTable(conn = conn,dropTable=adeSummaryData)
   dropTable(conn = conn,dropTable=summaryData)
   dropTable(conn = conn,dropTable=summaryOptimizedData)
+}
+
+
+executeMatrix <- function(findIngredients = 0){
+  ################################################################################
+  # CONNECTIONS
+  ################################################################################
+  #Connection
+  config <- read.csv("extras/config.csv",as.is=TRUE)[1,]
+
+  Sys.setenv(dbms = config$dbms)
+  Sys.setenv(user = config$user)
+  Sys.setenv(pw = config$pw)
+  Sys.setenv(server = config$server)
+  Sys.setenv(port = config$port)
+  Sys.setenv(vocabulary = config$vocabulary)
+  Sys.setenv(clean = config$evidenceProcessingClean)
+  Sys.setenv(translated = config$evidenceProcessingTranslated)
+  Sys.setenv(evidence = config$postProcessing)
+  rm(config)
+
+  #connect
+  connectionDetails <- DatabaseConnector::createConnectionDetails(
+    dbms = Sys.getenv("dbms"),
+    server = Sys.getenv("server"),
+    port = as.numeric(Sys.getenv("port")),
+    user = Sys.getenv("user"),
+    password = Sys.getenv("pw")
+  )
+
+
+  ################################################################################
+  # VARIABLES
+  ################################################################################
+  packageName <- "postProcessingNegativeControls"
+  cemEvidence <- paste0(Sys.getenv("evidence"),".cem_unified")
+  vocabulary <-"VOCABULARY"
+  broadConceptsData <- paste0(Sys.getenv("evidence"),".NC_LU_BROAD_CONCEPTS")
+  drugInducedConditionsData <- paste0(Sys.getenv("evidence"),".NC_LU_DRUG_INDUCED_CONDITIONS")
+  pregnancyConditionData <- paste0(Sys.getenv("evidence"),".NC_LU_PREGNANCY_CONDITIONS")
+
+  matrixIngredients <- paste0(Sys.getenv("evidence"),".nc_matrix_ingredients")
+  matrixConditions <- paste0(Sys.getenv("evidence"),".nc_matrix_conditions")
+
+  ################################################################################
+  # FIND POTENTIAL INGREDIENTS
+  ################################################################################
+  # Find ingredients that occur in all three evidence sources (drug labels, spontaneous reports, and literature)
+  if(findIngredients){
+    conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
+
+    sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "findMatrixIngredients.sql",
+                                             packageName = packageName,
+                                             dbms = attr(conn, "dbms"),
+                                             oracleTempSchema = NULL,
+                                             cemEvidence = cemEvidence,
+                                             storeData=matrixIngredients,
+                                             vocabulary=vocabulary)
+
+    DatabaseConnector::executeSql(conn=conn,sql)
+
+  }
+
+  ################################################################################
+  # FIND POTENTIAL CONDITIONS
+  ################################################################################
+  # Find conditions that occur in all three evidence sources (drug labels, spontaneous reports, and literature)
+  if(findConditions){
+    conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
+
+    sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "findMatrixConditions.sql",
+                                             packageName = packageName,
+                                             dbms = attr(conn, "dbms"),
+                                             oracleTempSchema = NULL,
+                                             cemEvidence = cemEvidence,
+                                             storeData=matrixConditions,
+                                             vocabulary=vocabulary,
+                                             broadConceptsData = broadConceptsData,
+                                             drugInducedConditionsData  = drugInducedConditionsData,
+                                             pregnancyConditionData = pregnancyConditionData)
+
+    DatabaseConnector::executeSql(conn=conn,sql)
+
+  }
+
 }
