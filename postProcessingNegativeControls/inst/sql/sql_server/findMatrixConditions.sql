@@ -9,7 +9,7 @@ FROM (
   	JOIN @vocabulary.CONCEPT c1
   		on cu.concept_id_2 = c1.concept_id
   WHERE c1.DOMAIN_ID = 'Condition'
-  and SOURCE_ID IN ('medline_avillach','MEDLINE_PUBMED','medline_winnenburg','semmeddb', 'aeolus', 'splicer','eu_pl_adr')
+  and SOURCE_ID IN ('medline_avillach','MEDLINE_PUBMED','medline_winnenburg','aeolus', 'splicer','eu_pl_adr')
   and cu.concept_id_2 not in (
   	select concept_id from @broadConceptsData
   	UNION ALL
@@ -26,13 +26,13 @@ FROM (
   		from @cemEvidence cu
   			JOIN @vocabulary.CONCEPT_ANCESTOR ca
   				on ca.ancestor_concept_id = cu.concept_id_2
-  		WHERE SOURCE_ID IN ('medline_avillach','MEDLINE_PUBMED','medline_winnenburg','semmeddb')
+  		WHERE SOURCE_ID IN ('medline_avillach','MEDLINE_PUBMED','medline_winnenburg')
   		UNION ALL
   		select ca.ANCESTOR_concept_id
   		from @cemEvidence cu
   			JOIN @vocabulary.CONCEPT_ANCESTOR ca
   				on ca.DESCENDANT_concept_id = cu.concept_id_2
-  		WHERE SOURCE_ID IN ('medline_avillach','MEDLINE_PUBMED','medline_winnenburg','semmeddb')
+  		WHERE SOURCE_ID IN ('medline_avillach','MEDLINE_PUBMED','medline_winnenburg')
   	)
   )
   AND c1.CONCEPT_ID IN (

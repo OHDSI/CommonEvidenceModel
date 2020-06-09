@@ -13,7 +13,7 @@ FROM (
   			AND c1.DOMAIN_ID = 'Drug'
   			AND c1.CONCEPT_CLASS_ID = 'Ingredient'
   			AND c1.STANDARD_CONCEPT = 'S'
-  	WHERE SOURCE_ID IN ('medline_avillach','MEDLINE_PUBMED','medline_winnenburg','semmeddb')
+  	WHERE SOURCE_ID IN ('medline_avillach','MEDLINE_PUBMED','medline_winnenburg')
   ) literature
 
   INTERSECT
