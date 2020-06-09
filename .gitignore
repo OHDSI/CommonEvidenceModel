@@ -49,6 +49,7 @@ postProcessingEvidenceUnify/extras/config.csv
 postProcessingEvidenceUnify/errorReport.txt
 postProcessingNegativeControls/errorReport.txt
 postProcessingNegativeControls/extras/config.csv
+postProcessingNegativeControls/extras/config_aps.csv
 postProcessingNegativeControls/extras/config_patient_data.csv
 postProcessingNegativeControlsPrep/errorReport.txt
 postProcessingNegativeControlsPrep/extras/config.csv

@@ -197,46 +197,19 @@ execute <- function(conceptsOfInterest = 0,
 }
 
 
-executeMatrix <- function(findIngredients = 0){
-  ################################################################################
-  # CONNECTIONS
-  ################################################################################
-  #Connection
-  config <- read.csv("extras/config.csv",as.is=TRUE)[1,]
-
-  Sys.setenv(dbms = config$dbms)
-  Sys.setenv(user = config$user)
-  Sys.setenv(pw = config$pw)
-  Sys.setenv(server = config$server)
-  Sys.setenv(port = config$port)
-  Sys.setenv(vocabulary = config$vocabulary)
-  Sys.setenv(clean = config$evidenceProcessingClean)
-  Sys.setenv(translated = config$evidenceProcessingTranslated)
-  Sys.setenv(evidence = config$postProcessing)
-  rm(config)
-
-  #connect
-  connectionDetails <- DatabaseConnector::createConnectionDetails(
-    dbms = Sys.getenv("dbms"),
-    server = Sys.getenv("server"),
-    port = as.numeric(Sys.getenv("port")),
-    user = Sys.getenv("user"),
-    password = Sys.getenv("pw")
-  )
-
+executeMatrix <- function(connectionDetails, evidenceData, vocabulary, findIngredients = 0, findConditions = 0){
 
   ################################################################################
   # VARIABLES
   ################################################################################
   packageName <- "postProcessingNegativeControls"
-  cemEvidence <- paste0(Sys.getenv("evidence"),".cem_unified")
-  vocabulary <-"VOCABULARY"
-  broadConceptsData <- paste0(Sys.getenv("evidence"),".NC_LU_BROAD_CONCEPTS")
-  drugInducedConditionsData <- paste0(Sys.getenv("evidence"),".NC_LU_DRUG_INDUCED_CONDITIONS")
-  pregnancyConditionData <- paste0(Sys.getenv("evidence"),".NC_LU_PREGNANCY_CONDITIONS")
+  cemEvidence <- paste0(evidenceData,".cem_unified")
+  broadConceptsData <- paste0(evidenceData,".NC_LU_BROAD_CONCEPTS")
+  drugInducedConditionsData <- paste0(evidenceData,".NC_LU_DRUG_INDUCED_CONDITIONS")
+  pregnancyConditionData <- paste0(evidenceData,".NC_LU_PREGNANCY_CONDITIONS")
 
-  matrixIngredients <- paste0(Sys.getenv("evidence"),".nc_matrix_ingredients")
-  matrixConditions <- paste0(Sys.getenv("evidence"),".nc_matrix_conditions")
+  matrixIngredients <- paste0(evidenceData,".nc_matrix_ingredients")
+  matrixConditions <- paste0(evidenceData,".nc_matrix_conditions")
 
   ################################################################################
   # FIND POTENTIAL INGREDIENTS
@@ -278,5 +251,10 @@ executeMatrix <- function(findIngredients = 0){
     DatabaseConnector::executeSql(conn=conn,sql)
 
   }
+
+  ################################################################################
+  # CLEAN UP
+  ################################################################################
+
 
 }

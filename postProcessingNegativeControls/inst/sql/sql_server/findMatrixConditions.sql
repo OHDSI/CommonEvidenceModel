@@ -1,6 +1,6 @@
 IF OBJECT_ID('@storeData', 'U') IS NOT NULL DROP TABLE @storeData;
 
-SELECT *
+SELECT CONCEPT_ID AS CONDITION_CONCEPT_ID
 INTO @storeData
 FROM (
 
@@ -8,7 +8,7 @@ FROM (
   FROM @cemEvidence cu
   	JOIN @vocabulary.CONCEPT c1
   		on cu.concept_id_2 = c1.concept_id
-  WHERE c1.DOMAIN_ID = 'condition'
+  WHERE c1.DOMAIN_ID = 'Condition'
   and SOURCE_ID IN ('medline_avillach','MEDLINE_PUBMED','medline_winnenburg','semmeddb', 'aeolus', 'splicer','eu_pl_adr')
   and cu.concept_id_2 not in (
   	select concept_id from @broadConceptsData
@@ -72,6 +72,6 @@ FROM (
   	)
   )
 
-);
+) z;
 
 CREATE INDEX IDX_MATRIX_CONDITION ON @storeData (CONDITION_CONCEPT_ID);
