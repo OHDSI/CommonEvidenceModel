@@ -31,5 +31,5 @@ connectionDetails <- DatabaseConnector::createConnectionDetails(
 executeMatrix(connectionDetails = connectionDetails,
               evidenceData = Sys.getenv("evidence"),
               vocabulary = Sys.getenv("vocabulary"),
-              findIngredients = 0,
+              findIngredients = 1,
               findConditions = 1)
