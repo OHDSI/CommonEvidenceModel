@@ -197,7 +197,7 @@ execute <- function(conceptsOfInterest = 0,
 }
 
 
-executeMatrix <- function(connectionDetails, evidenceData, vocabulary, findIngredients = 0, findConditions = 0){
+executeMatrix <- function(connectionDetails, evidenceData, vocabulary, findIngredients = 0, findConditions = 0, summarizeEvidenceMatrix = 0){
 
   ################################################################################
   # VARIABLES
@@ -210,6 +210,7 @@ executeMatrix <- function(connectionDetails, evidenceData, vocabulary, findIngre
 
   matrixIngredients <- paste0(evidenceData,".nc_matrix_ingredients")
   matrixConditions <- paste0(evidenceData,".nc_matrix_conditions")
+  matrixSummary <- paste0(evidenceData,".matrix_summary")
 
   ################################################################################
   # FIND POTENTIAL INGREDIENTS
@@ -251,6 +252,28 @@ executeMatrix <- function(connectionDetails, evidenceData, vocabulary, findIngre
     DatabaseConnector::executeSql(conn=conn,sql)
 
   }
+
+  ################################################################################
+  # FIND MATRIX SUMMARY
+  ################################################################################
+  if(summarizeEvidenceMatrix){
+    conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
+
+    sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "summarizeEvidenceMatrix.sql",
+                                             packageName = packageName,
+                                             dbms = attr(conn, "dbms"),
+                                             oracleTempSchema = NULL,
+                                             cemEvidence = cemEvidence,
+                                             storeData=matrixSummary,
+                                             matrixIngredients = matrixIngredients,
+                                             matrixConditions = matrixConditions,
+                                             vocabulary=vocabulary,
+                                             evidence = evidenceData
+                                             )
+
+    DatabaseConnector::executeSql(conn=conn,sql)
+  }
+
 
   ################################################################################
   # CLEAN UP

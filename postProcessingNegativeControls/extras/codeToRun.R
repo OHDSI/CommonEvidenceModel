@@ -10,6 +10,8 @@ execute(conceptsOfInterest = '372599,432285,432290,432866,432876,432883,433440,4
 ################################################################################
 # CONNECTIONS - RUN ON APS
 ################################################################################
+library(postProcessingNegativeControls)
+
 config <- read.csv("extras/config_aps.csv",as.is=TRUE)[1,]
 Sys.setenv(dbms = config$dbms)
 Sys.setenv(user = config$user)
@@ -31,5 +33,6 @@ connectionDetails <- DatabaseConnector::createConnectionDetails(
 executeMatrix(connectionDetails = connectionDetails,
               evidenceData = Sys.getenv("evidence"),
               vocabulary = Sys.getenv("vocabulary"),
-              findIngredients = 1,
-              findConditions = 1)
+              findIngredients = 0,
+              findConditions = 0,
+              summarizeEvidenceMatrix = 1)
