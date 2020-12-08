@@ -415,6 +415,22 @@
       <yloc>16</yloc>
     </entry>
     <entry>
+      <name>Create staging vocabulary schema</name>
+      <description />
+      <type>SQL</type>
+      <sql />
+      <useVariableSubstitution>T</useVariableSubstitution>
+      <sqlfromfile>T</sqlfromfile>
+      <sqlfilename>${Internal.Entry.Current.Directory}/create_schema.sql</sqlfilename>
+      <sendOneStatement>F</sendOneStatement>
+      <connection>cem</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>576</xloc>
+      <yloc>16</yloc>
+    </entry>
+    <entry>
       <name>Load staging DOMAIN</name>
       <description />
       <type>SHELL</type>
@@ -715,6 +731,15 @@ psql -h ${CEM_POSTGRES_HOST} -U ${CEM_POSTGRES_USER} -f show_record_counts.sql $
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Set job variables</from>
+      <to>Create staging vocabulary schema</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
     </hop>
     <hop>
       <from>Load staging VOCABULARY</from>
