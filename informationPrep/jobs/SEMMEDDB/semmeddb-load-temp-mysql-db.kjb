@@ -301,7 +301,7 @@
       <add_date>N</add_date>
       <add_time>N</add_time>
       <insertScript>Y</insertScript>
-      <script>mysql -h ${rdsdbhost} -u ${SEMMEDDB_MYSQL_USER}  --password=${SEMMEDDB_MYSQL_PASSWORD} semmeddb &lt; ${FILE_DIR}/${FILE_NAME}
+      <script>mysql -h ${SEMMED_MYSQL_HOST} -u ${SEMMEDDB_MYSQL_USER}  --password=${SEMMEDDB_MYSQL_PASSWORD} SEMMED &lt; ${FILE_DIR}/${FILE_NAME}
 </script>
       <loglevel>Basic</loglevel>
       <parallel>N</parallel>
@@ -361,11 +361,11 @@
       <add_date>N</add_date>
       <add_time>N</add_time>
       <insertScript>Y</insertScript>
-      <script>echo ${rdsdbhost}
+      <script>echo ${SEMMED_MYSQL_HOST}
 echo ${SEMMEDDB_MYSQL_USER}
 echo ${SEMMEDDB_MYSQL_PASSWORD}
-echo ${CONFIG_DIR}
-mysql -h ${rdsdbhost} -u ${SEMMEDDB_MYSQL_USER}  --password=${SEMMEDDB_MYSQL_PASSWORD} semmeddb &lt; ${CONFIG_DIR}/show_mysql_table_counts.sql
+echo ${FILE_DIR}
+mysql -h ${SEMMED_MYSQL_HOST} -u ${SEMMEDDB_MYSQL_USER}  --password=${SEMMEDDB_MYSQL_PASSWORD} semmeddb &lt; ${FILE_DIR}/show_mysql_table_counts.sql
 </script>
       <loglevel>Basic</loglevel>
       <parallel>N</parallel>

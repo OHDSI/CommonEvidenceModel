@@ -469,7 +469,7 @@
     <ini_section_field />
     <section />
     <file>
-      <name>${CONFIG_DIR}</name>
+      <name>${FILE_DIR}</name>
       <exclude_filemask />
       <filemask>dynamic.config</filemask>
       <file_required>N</file_required>

@@ -18,11 +18,11 @@ staging_medline tables
 Dependencies
 ------------
 1. Java JDK (e.g. openjdk).
-2. MedlineXmlToDatabase java executable - see the below GitHub repo for installation and usage details:
+2. MedlineXmlToDatabase java executable and lib, as well as the .ini file - see the below GitHub repo for installation and usage details:
 
 [MedlineXMLToDatabase GitHub repository](https://github.com/OHDSI/MedlineXmlToDatabase)
 
-Install the MedlineXmlToDatabase java app in the same directory as the Pentaho job.
+Install the MedlineXmlToDatabase.jar and MedlineXmlToDatabase_lib folder in the same directory as the Pentaho job.
 
 Instructions
 ------------

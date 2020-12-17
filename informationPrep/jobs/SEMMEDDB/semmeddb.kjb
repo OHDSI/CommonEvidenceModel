@@ -23,7 +23,7 @@
     </parameter>
     <parameter>
       <name>FILE_NAME</name>
-      <default_value>semmedVER31_R_WHOLEDB_to12312017.sql</default_value>
+      <default_value>semmedVER43_2020_R_WHOLEDB.sql</default_value>
       <description />
     </parameter>
     <parameter>
@@ -414,30 +414,20 @@
     <entry>
       <name>semmeddb-unzip-file</name>
       <description />
-      <type>JOB</type>
-      <specification_method>filename</specification_method>
-      <job_object_id />
-      <filename>${Internal.Entry.Current.Directory}/semmeddb-unzip-file.kjb</filename>
-      <jobname />
+      <type>SHELL</type>
+      <filename />
+      <work_directory />
       <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <set_logfile>N</set_logfile>
       <logfile />
+      <set_append_logfile>N</set_append_logfile>
       <logext />
       <add_date>N</add_date>
       <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
+      <insertScript>Y</insertScript>
+      <script>gunzip ${FILE_DIR}/${ZIP_FILE_NAME}</script>
+      <loglevel>Basic</loglevel>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
@@ -487,7 +477,6 @@ CREATE UNIQUE INDEX semmeddb_unique_citations_pmid_idx ON staging_semmeddb.citat
 CREATE UNIQUE INDEX semmeddb_unique_sentence_sentence_id_idx ON staging_semmeddb.sentence (sentence_id);
 
 analyze staging_semmeddb.sentence;
-analyze staging_semmeddb.metainfo;
 analyze staging_semmeddb.predication;
 analyze staging_semmeddb.citations;</sql>
       <useVariableSubstitution>F</useVariableSubstitution>
@@ -506,11 +495,10 @@ analyze staging_semmeddb.citations;</sql>
       <description />
       <type>SQL</type>
       <sql>DROP INDEX IF EXISTS semmeddb_predication_pmid_idx;
-DROP INDEX IF EXISTS semmeddb_predication_sentence_id_idx;
-
-DROP INDEX semmeddb_unique_citations_pmid_idx;
-
-DROP INDEX semmeddb_unique_sentence_sentence_id_idx;</sql>
+        DROP INDEX IF EXISTS semmeddb_predication_sentence_id_idx;
+        DROP INDEX IF EXISTS semmeddb_unique_citations_pmid_idx;
+        DROP INDEX IF EXSITS semmeddb_unique_sentence_sentence_id_idx;
+      </sql>
       <useVariableSubstitution>F</useVariableSubstitution>
       <sqlfromfile>F</sqlfromfile>
       <sqlfilename />

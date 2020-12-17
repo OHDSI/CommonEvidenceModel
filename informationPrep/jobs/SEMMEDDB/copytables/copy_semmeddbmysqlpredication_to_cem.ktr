@@ -462,7 +462,7 @@ After that, it writes the information to table [PREDICATION] on database [cem]</
     <server>cem.cqnqzwtn5s1q.us-east-1.rds.amazonaws.com</server>
     <type>POSTGRESQL</type>
     <access>JNDI</access>
-    <database>cem</database>
+    <database>Connection-CEM-PROD</database>
     <port>5432</port>
     <username />
     <password>Encrypted </password>

@@ -494,67 +494,6 @@ to:   [cem].[GENERIC_CONCEPT]</description>
       <yloc>656</yloc>
     </entry>
     <entry>
-      <name>Create table [METAINFO]</name>
-      <description>This executes the SQL to create table [cem].[METAINFO]</description>
-      <type>SQL</type>
-      <sql>CREATE TABLE staging_semmeddb.METAINFO
-(
-  DBVERSION VARCHAR(10)
-, SEMREPVERSION VARCHAR(10)
-, PUBMED_TODATE VARCHAR(10)
-, "COMMENT" VARCHAR(500)
-)
-;</sql>
-      <useVariableSubstitution>F</useVariableSubstitution>
-      <sqlfromfile>F</sqlfromfile>
-      <sqlfilename />
-      <sendOneStatement>F</sendOneStatement>
-      <connection>cem</connection>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>240</xloc>
-      <yloc>128</yloc>
-    </entry>
-    <entry>
-      <name>Copy data to [METAINFO]</name>
-      <description>This job entry executes the transformation to copy data
-from: [semmeddb-mysql].[METAINFO]
-to:   [cem].[METAINFO]</description>
-      <type>TRANS</type>
-      <specification_method>filename</specification_method>
-      <trans_object_id />
-      <filename>${Internal.Job.Filename.Directory}/copy_semmeddbmysqlmetainfo_to_cem.ktr</filename>
-      <transname>copy_semmeddbmysqlmetainfo_to_cem</transname>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name />
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <run_configuration />
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>640</xloc>
-      <yloc>128</yloc>
-    </entry>
-    <entry>
       <name>Create table [SENTENCE]</name>
       <description>This executes the SQL to create table [cem].[SENTENCE]</description>
       <type>SQL</type>
@@ -564,8 +503,10 @@ to:   [cem].[METAINFO]</description>
 , PMID VARCHAR(20)
 , "TYPE" VARCHAR(2)
 , "NUMBER" INTEGER
-, SECTION_HEADER VARCHAR(50)
+, SENT_START_INDEX INTEGER
 , SENTENCE VARCHAR(999)
+, SENT_END_INDEX INTEGER
+, SECTION_HEADER VARCHAR(50)
 , NORMALIZED_SECTION_HEADER VARCHAR(50)
 )
 ;</sql>
@@ -698,6 +639,9 @@ to:   [cem].[CITATIONS]</description>
 , OBJECT_NAME VARCHAR(999)
 , OBJECT_SEMTYPE VARCHAR(50)
 , OBJECT_NOVELTY BOOLEAN
+, FACT_VALUE CHAR(20)
+, MOD_SCALE CHAR(20)
+, MOD_VALUE DECIMAL(3,2)
 )
 ;</sql>
       <useVariableSubstitution>F</useVariableSubstitution>
@@ -753,14 +697,8 @@ to:   [cem].[PREDICATION]</description>
       <name>drop cem postgresql staging_semmeddb tables</name>
       <description />
       <type>SQL</type>
-      <sql>drop table if exists staging_semmeddb.METAINFO;
-drop table if exists staging_semmeddb.SENTENCE;
-drop table if exists staging_semmeddb.CITATIONS;
-drop table if exists staging_semmeddb.PREDICATION;
-
--- The below tables are not currently needed by downstream processing
---drop table if exists staging_semmeddb.PREDICATION_AUX;
---drop table if exists staging_semmeddb.GENERIC_CONCEPT;
+      <sql>drop schema if exists staging_semmeddb cascade;
+      create schema staging_semmeddb;
 
 
 
@@ -869,15 +807,6 @@ drop table if exists staging_semmeddb.PREDICATION;
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Create table [METAINFO]</from>
-      <to>Copy data to [METAINFO]</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>Create table [SENTENCE]</from>
       <to>Copy data to [SENTENCE]</to>
       <from_nr>0</from_nr>
@@ -924,15 +853,6 @@ drop table if exists staging_semmeddb.PREDICATION;
     </hop>
     <hop>
       <from>drop cem postgresql staging_semmeddb tables</from>
-      <to>Create table [METAINFO]</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Copy data to [METAINFO]</from>
       <to>Create table [SENTENCE]</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>

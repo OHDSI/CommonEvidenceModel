@@ -28,7 +28,7 @@
     </parameter>
     <parameter>
       <name>FTP_FILE_NAME_PATTERN</name>
-      <default_value>pubmed18n.*.xml.gz</default_value>
+      <default_value>pubmed.*.xml.gz</default_value>
       <description />
     </parameter>
     <parameter>
@@ -674,12 +674,6 @@ java -Xmx12G -jar MedlineXmlToDatabase.jar -analyse -ini ${CONFIG_DIR}/${INI_FIL
       <type>SQL</type>
       <sql>-- Some recommended indices
 set search_path = staging_medline;
-
-ANALYZE medcit_meshheadinglist_meshheading;
-ANALYZE medcit_supplmeshlist_supplmeshname;
-ANALYZE mesh_term;
-ANALYZE mesh_relationship;
-ANALYZE mesh_ancestor;
 
 analyze medcit;
 analyze medcit_art_abstract_abstracttext;
