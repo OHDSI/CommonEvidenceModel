@@ -14,7 +14,6 @@
     </parameters>
   <connection>
     <name>cem</name>
-    <server>cem.cqnqzwtn5s1q.us-east-1.rds.amazonaws.com</server>
     <type>POSTGRESQL</type>
     <access>JNDI</access>
     <database>Connection-CEM-PROD</database>

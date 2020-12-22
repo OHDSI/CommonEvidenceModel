@@ -45,15 +45,13 @@ CAS Registry Number
 CAS Registry Number is a Registered Trademark of the American Chemical Society.
 
 ------------------------------------------------------------
+As of December 2020 the load_ctd.sh script does this for you, if the url used no longer works you might want to follow these steps
 INSTRUCTIONS TO RETRIEVE THE DATA:
-
 (1) Go to http://ctdbase.org
-(2) Click on "Download", then on "Data Files" from the dropdown
-    menu.
+(2) Click on "Download", then on "Data Files" from the dropdown menu.
 (3) Scroll down to "Chemical-disease associations".
 (4) Click on and download "CTD_chemicals.tsv.gz".
 (5) Extract the file "CTD_chemicals.tsv" to the CTD_chemicals_diseases.tsv in folder you want.
-
 
 
 Table(s) loaded
@@ -62,8 +60,5 @@ staging_ctd.ctd_chemical_disease
 
 Instructions
 ------------
-1. Load the Pentaho job in the Pentaho Spoon client.
-2. Update the file name in the URL variable within the "set job variables" step.
-3. Save the job.
-4. Run the job.
+1. Run `./load_ctd.sh`. It should do everything for you
 

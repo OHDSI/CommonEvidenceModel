@@ -12,7 +12,7 @@ unzip ./*.zip -d ${OMOP_FILES_FOLDER} || exit 1
 export PGPASSWORD=${CEM_POSTGRES_PASSWORD}
 
 echo "Creating staging_vocabulary schema"
-psql -h ${CEM_POSTGRES_HOST} -U ${CEM_POSTGRES_USER} -f create_schema.sql ${CEM_POSTGRES_DATABASE} || exit 1
+psql -h ${CEM_POSTGRES_HOST} -U ${CEM_POSTGRES_USER} -f ./sql/create_vocabulary_schema.sql ${CEM_POSTGRES_DATABASE} || exit 1
 
 echo "Populating domain"
 psql -h ${CEM_POSTGRES_HOST} -U ${CEM_POSTGRES_USER} -c "\COPY staging_vocabulary.domain FROM './${OMOP_FILES_FOLDER}/DOMAIN.csv' WITH DELIMITER E'\t' CSV HEADER QUOTE E'\b'" ${CEM_POSTGRES_DATABASE} || exit 1
@@ -42,12 +42,12 @@ echo "Populating concept"
 psql -h ${CEM_POSTGRES_HOST} -U ${CEM_POSTGRES_USER} -c "\COPY staging_vocabulary.concept FROM './${OMOP_FILES_FOLDER}/CONCEPT.csv' WITH DELIMITER E'\t' CSV HEADER" ${CEM_POSTGRES_DATABASE} || exit 1
 
 echo "Creating indexes"
-psql -h ${CEM_POSTGRES_HOST} -U ${CEM_POSTGRES_USER} -f create_vocab_indexes.sql ${CEM_POSTGRES_DATABASE} || exit 1
+psql -h ${CEM_POSTGRES_HOST} -U ${CEM_POSTGRES_USER} -f ./sql/create_vocabulary_indexes.sql ${CEM_POSTGRES_DATABASE} || exit 1
 
 echo "Getting record count"
-psql -h ${CEM_POSTGRES_HOST} -U ${CEM_POSTGRES_USER} -f show_record_counts.sql ${CEM_POSTGRES_DATABASE} || exit 1
+psql -h ${CEM_POSTGRES_HOST} -U ${CEM_POSTGRES_USER} -f ./sql/show_vocabulary_record_counts.sql ${CEM_POSTGRES_DATABASE} || exit 1
 
-echo "Removing omop files"
+echo "Removing unzipped omop files"
 rm -r ${OMOP_FILES_FOLDER}
 
 echo "All done!"

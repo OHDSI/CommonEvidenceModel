@@ -1,4 +1,4 @@
-﻿DROP SCHEMA IF EXISTS staging_eu_pl_adr CASCADE;
+DROP SCHEMA IF EXISTS staging_eu_pl_adr CASCADE;
 CREATE SCHEMA IF NOT EXISTS staging_eu_pl_adr;
 
 set search_path = staging_eu_pl_adr;
