@@ -45,6 +45,9 @@ XML_FOLDER = $FILES_FOLDER
 MESH_XML_FOLDER = $FILES_FOLDER_PATH
 EOF
 
+echo "Creating schema... this will take about 5 hours ..."
+java -Xmx12G -jar MedlineXmlToDatabase.jar -analyse -ini ${INI_FILE_NAME} || exit 1
+
 echo "Loading pubmed xml files into db ... hold tight ... this will take about 6 days ..."
 java -Xmx12G -jar MedlineXmlToDatabase.jar -parse -ini ${INI_FILE_NAME} || exit 1
 
