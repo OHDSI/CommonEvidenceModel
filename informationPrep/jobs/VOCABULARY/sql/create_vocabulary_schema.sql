@@ -1,9 +1,6 @@
---
--- Database: cem
---
 
 DROP SCHEMA IF EXISTS staging_vocabulary CASCADE;
-CREATE SCHEMA IF NOT EXISTS staging_vocabulary;
+CREATE SCHEMA staging_vocabulary;
 
 -- --------------------------------------------------------
 

@@ -1,5 +1,5 @@
 DROP SCHEMA IF EXISTS staging_eu_pl_adr CASCADE;
-CREATE SCHEMA IF NOT EXISTS staging_eu_pl_adr;
+CREATE SCHEMA staging_eu_pl_adr;
 
 set search_path = staging_eu_pl_adr;
 
@@ -28,8 +28,6 @@ CREATE TABLE staging_eu_pl_adr.eu_product_labels_original
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE staging_eu_pl_adr.eu_product_labels_original
-  OWNER TO rw_grp;
 
 
 CREATE TABLE staging_eu_pl_adr.eu_product_labels
@@ -57,5 +55,3 @@ CREATE TABLE staging_eu_pl_adr.eu_product_labels
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE staging_eu_pl_adr.eu_product_labels_original
-  OWNER TO rw_grp;

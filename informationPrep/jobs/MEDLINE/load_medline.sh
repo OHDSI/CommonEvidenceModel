@@ -25,7 +25,7 @@ echo "Downloading pubmed update files"
 wget -r --no-parent -nH -l1 -A '*.gz' --user=${FTP_USER} --password=${FTP_PASSWORD} ftp://${FTP_PUBMED_SERVER}${FTP_PUBMED_PATH_DAILY} || exit 1
 
 echo "Downloading mesh files"
-wget -r --no-parent -nH -l1 -A '*.gz' --user=${FTP_USER} --password=${FTP_PASSWORD} ftp://${FTP_MESH_SERVER}${FTP_MESH_PATH}
+wget -r --no-parent -nH -l1 -A '*.gz' --user=${FTP_USER} --password=${FTP_PASSWORD} ftp://${FTP_MESH_SERVER}${FTP_MESH_PATH} || exit 1
 
 echo "Moving all downloaded files to one folder"
 mkdir ${FILES_FOLDER}

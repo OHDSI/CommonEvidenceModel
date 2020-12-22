@@ -17,5 +17,3 @@ CREATE TABLE STAGING_CTD.ctd_chemical_disease
     WITH (
         OIDS= FALSE
     );
-ALTER TABLE STAGING_CTD.ctd_chemical_disease
-    OWNER TO postgres;

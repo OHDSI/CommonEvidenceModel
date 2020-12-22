@@ -23,7 +23,7 @@ Dependencies
 [MedlineXMLToDatabase GitHub repository](https://github.com/OHDSI/MedlineXmlToDatabase)
 
 Note: The .ini file required for running the app is created in the `load_medline.sh` script. It is based on the
-variables in the secret.config file. If the required ini configurations are been updated please update the script.
+variables in the secret.config file. If the required ini configurations have been updated please update the script.
 
 
 Instructions

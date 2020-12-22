@@ -8,7 +8,7 @@ echo "Reading config file"
 
 echo "The following steps may take up to several hours each, don't panic, get busy with something else."
 
-echo "Downloading complete db dump... "
+echo "Downloading complete db dump ... "
 wget -O ${SEMMED_MYSQL_DUMP}.gz ${DOWNLOAD_URL} || exit 1
 
 echo "Unzipping source file (may take a while)"

@@ -10,5 +10,3 @@ CREATE TABLE STAGING_CONCEPT_SIM.concept_similarity
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE STAGING_CONCEPT_SIM.concept_similarity
-  OWNER TO rw_grp;
