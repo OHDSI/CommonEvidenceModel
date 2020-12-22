@@ -63,7 +63,6 @@ postProcessing/extras/errorReport.txt
 #External apps
 informationPrep/jobs/MEDLINE/MedlineXmlToDatabase.jar
 informationPrep/jobs/MEDLINE/MedlineXmlToDatabase_lib
-informationPrep/jobs/MEDLINE/MedlineXmlToDatabase_lib/*.jar
 
 #IntelliJ
 .idea
