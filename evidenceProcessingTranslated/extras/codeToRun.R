@@ -3,8 +3,8 @@ library(evidenceProcessingTranslated)
 ################################################################################
 # WORK
 ################################################################################
-execute(buildStcm = FALSE,
-        loadSource = FALSE,
+execute(buildStcm = FALSE,      #Required on first run, expects umls and aeolus to be present.
+        loadSource = FALSE,     #Required on first run
         pullSR_AEOLUS = TRUE,
         pullPL_SPLICER = FALSE,
         pullPL_EUPLADR = FALSE,

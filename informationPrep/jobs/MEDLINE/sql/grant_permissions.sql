@@ -1,7 +1,6 @@
 GRANT USAGE ON SCHEMA staging_medline TO :CEM_POSTGRES_USER;
 ALTER DEFAULT PRIVILEGES IN SCHEMA staging_medline GRANT SELECT ON TABLES TO :CEM_POSTGRES_USER;
 
-GRANT SELECT ON medcit_art_abstract_abstracttext TO :CEM_POSTGRES_USER;
 GRANT SELECT ON medcit_art_authorlist_author_affiliationinfo_identifier TO :CEM_POSTGRES_USER;
 GRANT SELECT ON medcit_art_authorlist_author_affiliationinfo TO :CEM_POSTGRES_USER;
 GRANT SELECT ON medcit_art_authorlist_author_identifier TO :CEM_POSTGRES_USER;

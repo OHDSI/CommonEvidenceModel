@@ -28,7 +28,7 @@ execute <- function(loadSource = FALSE,
   Sys.setenv(evidence = config$postProcessing)
 
   schemaClean <- Sys.getenv("clean")
-  schemaVocab <- "vocabulary"
+  schemaVocab <- "staging_vocabulary"
   schemaSource <- "staging_audit"
   schemaAeolus <- "staging_aeolus"
   schemaMedline <- "staging_medline"
@@ -131,10 +131,10 @@ execute <- function(loadSource = FALSE,
   }
 
   if(loadPub_PUBMED){
-    conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
 
     #PUBMED PULL
     #requires loading of Pubmed MeSH tags from the MeshTags Package
+    print("LOAD MESH TAGS:  PUBMED")
     df <- read.table("inst/csv/MeshTags.csv", header = TRUE)
     DatabaseConnector::insertTable(conn=conn,
                                    tableName=tableMeshTags,
@@ -143,21 +143,15 @@ execute <- function(loadSource = FALSE,
                                    createTable=TRUE,
                                    tempTable=FALSE,
                                    oracleTempSchema=NULL)
-    sql <- "ALTER TABLE @tableName OWNER TO RW_GRP;"
-    renderedSql <- SqlRender::renderSql(sql=sql,
-                                        tableName = paste0(Sys.getenv("clean"),'.',tablePubmed))
-    translatedSql <- SqlRender::translateSql(renderedSql$sql,
-                                             targetDialect=Sys.getenv("dbms"))
-    DatabaseConnector::executeSql(conn, translatedSql$sql)
-    rm(df)
 
+    print("LOAD PUBMED:  PUBMED")
     pubmed(conn,
            targetDbSchema=Sys.getenv("clean"),
            targetTable=tablePubmed,
            sourceId=tablePubmed,
            meshTags=tableMeshTags,
            sqlFile="pubmed.sql",
-           pullPubMed = 0,
+           pullPubMed = 1,
            pubMedPullStart = 1,
            summarize = 1,
            summarizeStart = 1)

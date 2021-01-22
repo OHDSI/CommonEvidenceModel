@@ -48,7 +48,7 @@ EOF
 echo "Creating schema... this will take about 5 hours ..."
 java -Xmx12G -jar MedlineXmlToDatabase.jar -analyse -ini ${INI_FILE_NAME} || exit 1
 
-echo "Loading pubmed xml files into db ... hold tight ... this will take about 6 days ..."
+echo "Loading pubmed xml files into db ... hold tight ... this will take about 8 days ..."
 java -Xmx12G -jar MedlineXmlToDatabase.jar -parse -ini ${INI_FILE_NAME} || exit 1
 
 echo "Loading mesh"

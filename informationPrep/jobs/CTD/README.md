@@ -1,6 +1,8 @@
 CTD staging data load process
 ===================================
 
+CTD is not used further downstream...
+
 Background
 ----------
 This is the Comparative Toxicogenomics Database (CTD) staging data load process.

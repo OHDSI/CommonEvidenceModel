@@ -22,13 +22,15 @@ Dependencies
 
 [MedlineXMLToDatabase GitHub repository](https://github.com/OHDSI/MedlineXmlToDatabase)
 
-Note: The .ini file required for running the app is created in the `load_medline.sh` script. It is based on the
-variables in the secret.config file. If the required ini configurations have been updated please update the script.
-
+Notes:
+- The .ini file required for running the app is created in the `load_medline.sh` script. It is based on the variables in
+  the secret.config file. If the required ini configurations have been updated please update the script.
+- At the time of writing the staging_medline schema is about 134 GB in size it is likely to continue growing rapidly, be
+  sure to have sufficient disk space available
 
 Instructions
 ------------
 
 1. Place the MedlineXmlToDatabase.jar and MedlineXmlToDatabase_lib folder in this directory. \
-2. Brace yourself for a long wait...
+2. Brace yourself for a long wait (over a week)...
 3. Run the `load_medline.sh` script

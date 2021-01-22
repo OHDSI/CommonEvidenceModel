@@ -14,10 +14,13 @@ They load the source data for the following data sources which will be leveraged
 - SPLICER
 - EU PL ADR
 - UMLS
-- CTD
+- CTD (TODO: CTD is not used downstream)
 
 The vocabulary load process should be the first information preparation process run. The other information preparation
 processes can be run in any order.
+
+After loading a data source update the source.csv in the SOURCE folder and run the load_source script when all sources
+are done.
 
 Infrastructure and middleware required
 --------------------------------------
@@ -27,7 +30,7 @@ Infrastructure and middleware required
 3. PostgreSQL psql client - version 9.5.11
 4. A PostgreSQL database to store the CEM data - version 9.6.2
 5. A MySQL db to temporarily store the SemMedDB
-6. Approx 200 GB of disk space
+6. Approx 300 GB of disk space
 
 Deployment Instructions
 -----------------------

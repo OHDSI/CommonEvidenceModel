@@ -77,8 +77,32 @@ pubmed <- function(conn,targetDbSchema,targetTable,sourceId,meshTags,sqlFile,
       query <- paste(shQuote(URLencode(meshTags$MESH_SOURCE_NAME[i],reserved = TRUE)),
                      queryFilter,sep=" AND ")
 
-      res <- RISmed::EUtilsSummary(query, type="esearch", db="pubmed", datetype='pdat',
-                                   retmax=99999999)
+      res <- tryCatch({
+        RISmed::EUtilsSummary(query, type = "esearch", db = "pubmed", datetype = 'pdat')
+      }, error = function(e) {
+        # connection might fail, we wait 4 seconds and try again
+        # TODO: Works for now but ... add a nested tryCatch in case of failing again, add tag to a list to print or something.
+        #       where item is added to list that is printed at the end of the run.
+        Sys.sleep(4)
+        print(paste0('ERROR PUBMED PULL FAILED - RETRY: ', i, ":", meshTagNum, " - ", meshTags$MESH_SOURCE_NAME[i]))
+        RISmed::EUtilsSummary(query, type = "esearch", db = "pubmed", datetype = 'pdat')
+      })
+
+
+      # RISmed v 2.2 is buggy :-/, adding a maximum return value when there are no records will throw an error,
+      # not adding retmax wil set it to 1000 as default causing the QueryId method to only return 1000 entries.
+      # So, when there are over a thousand entries we get the summary again, this time passing a retmax...
+      # Good news is that next version of RISmed has a fix for this issue.
+      if (res@count >= 999) {
+        res <- tryCatch({
+          RISmed::EUtilsSummary(query, type = "esearch", db = "pubmed", datetype = 'pdat', retmax = 99999999)
+        }, error = function(e) {
+          Sys.sleep(4)
+          print(paste0('ERROR PUBMED PULL FAILED - RETRY: ', i, ":", meshTagNum, " - ", meshTags$MESH_SOURCE_NAME[i]))
+          return(RISmed::EUtilsSummary(query, type = "esearch", db = "pubmed", datetype = 'pdat', retmax = 99999999))
+        })
+      }
+
 
       df <- data.frame(rep(meshTags$MESH_SOURCE_CODE[i],res@count),
                        rep(meshTags$MESH_SOURCE_NAME[i],res@count),
