@@ -66,3 +66,6 @@ informationPrep/jobs/MEDLINE/MedlineXmlToDatabase_lib
 
 #IntelliJ
 .idea
+
+#Mac
+.DS_Store
