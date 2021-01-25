@@ -47,8 +47,6 @@ pubmed <- function(conn,targetDbSchema,targetTable,sourceId,meshTags,sqlFile,
   tableNameForPrep <- paste0(tableName,"_PREP")
   tableNameForPrepTemp <- paste0(tableNameForPrep,"TEMP")
 
-  queryFilter <- "hasabstract[text] AND English[lang] AND humans[MeSH Terms]"
-
   #grab the MeSH tags
   meshTags <- as.data.frame(DatabaseConnector::querySql(conn=conn,
                                                         paste0("SELECT * FROM ",meshTags)))
@@ -70,12 +68,13 @@ pubmed <- function(conn,targetDbSchema,targetTable,sourceId,meshTags,sqlFile,
       DatabaseConnector::executeSql(conn=conn,sql)
     }
 
+    queryFilter <- " AND hasabstract[text] AND English[lang] AND humans[MeSH Terms]"
+
     #pubmed pull
     for(i in pubMedPullStart:meshTagNum){
       print(paste0('PUBMED PULL: ',i,":",meshTagNum," - ", meshTags$MESH_SOURCE_NAME[i]))
 
-      query <- paste(shQuote(URLencode(meshTags$MESH_SOURCE_NAME[i],reserved = TRUE)),
-                     queryFilter,sep=" AND ")
+      query <- paste0("(", meshTags$MESH_SOURCE_NAME[i], ")", queryFilter)
 
       res <- tryCatch({
         RISmed::EUtilsSummary(query, type = "esearch", db = "pubmed", datetype = 'pdat')
