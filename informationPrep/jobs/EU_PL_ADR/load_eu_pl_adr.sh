@@ -14,8 +14,8 @@ java -jar XlsToCsv.jar ${ADR_FILE}.xls || exit 1
 
 export PGPASSWORD=${CEM_POSTGRES_PASSWORD}
 
-echo "Creating staging_vocabulary schema"
-psql -h ${CEM_POSTGRES_HOST} -U ${CEM_POSTGRES_USER} -f ./sql/create_eu_product_labels.sql ${CEM_POSTGRES_DATABASE} || exit 1
+echo "Creating staging_eu_pl_adr schema"
+psql -h ${CEM_POSTGRES_HOST} -U ${CEM_POSTGRES_USER} -f ./sql/create_eu_product_labels_tables.sql ${CEM_POSTGRES_DATABASE} || exit 1
 
 echo "Loading intermediary table from csv"
 psql -h ${CEM_POSTGRES_HOST} -U ${CEM_POSTGRES_USER} -c "\COPY STAGING_EU_PL_ADR.EU_PRODUCT_LABELS_ORIGINAL FROM '${ADR_FILE}.csv' WITH DELIMITER E',' CSV HEADER QUOTE E'\"' NULL ''" ${CEM_POSTGRES_DATABASE}

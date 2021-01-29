@@ -52,8 +52,8 @@ public class XlsConverter {
                         continue;
                     }
                     logProcess(row);
-                    // the second sheet has an extra column
-                    int columns = isFirstSheet ? 19 : 20;
+                    // the second sheet has two extra columns
+                    int columns = isFirstSheet ? 19 : 21;
                     for (int cn = 0; cn < columns; cn++) {
                         printColumn(isFirstSheet, cn, row, formatter, csvPrinter);
                     }
@@ -70,7 +70,7 @@ public class XlsConverter {
 
     private static void printColumn(boolean isFirstSheet, int cn, Row row, DateFormat formatter, CSVPrinter csvPrinter) throws ParseException, IOException {
         String value = "";
-        if (!isFirstSheet && cn == 1) {
+        if (!isFirstSheet && (cn == 1 || cn == 4)) {
             return;
         }
         Cell cell = row.getCell(cn, RETURN_NULL_AND_BLANK);
