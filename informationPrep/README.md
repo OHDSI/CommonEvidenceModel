@@ -25,10 +25,10 @@ are done.
 Infrastructure and middleware required
 --------------------------------------
 
-1. Linux server - Ubuntu OS 14.04
+1. Linux server - Ubuntu OS 14.04 or higher (last run on 18.04.5)
 2. Java
-3. PostgreSQL psql client - version 9.5.11
-4. A PostgreSQL database to store the CEM data - version 9.6.2
+3. PostgreSQL psql client - version 9.5.11 or higher (last ran un 13.1)
+4. A PostgreSQL database to store the CEM data - version 9.6.2 or higher (last ran un 13)
 5. A MySQL db to temporarily store the SemMedDB
 6. Approx 300 GB of disk space
 

@@ -5,7 +5,8 @@ Background
 ----------
 This is the AEOLUS staging data load process. The 2 source data files are created as the output from the AEOLUS ETL
 process, see the below github repo for details:
-[AEOLUS github repository](https://github.com/ltscomputingllc/faersdbstats)
+[original AEOLUS github repository](https://github.com/ltscomputingllc/faersdbstats) or check out the the [Eramsus MC maintained
+fork](https://github.com/mi-erasmusmc/faersdbstats)
 
 Table(s) loaded
 ---------------
