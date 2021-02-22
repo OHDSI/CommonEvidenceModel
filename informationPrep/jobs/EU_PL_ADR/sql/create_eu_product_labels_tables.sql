@@ -28,6 +28,8 @@ CREATE TABLE staging_eu_pl_adr.eu_product_labels_original
 WITH (
   OIDS=FALSE
 );
+ALTER TABLE staging_eu_pl_adr.eu_product_labels_original
+    OWNER TO rw_grp;
 
 
 CREATE TABLE staging_eu_pl_adr.eu_product_labels
@@ -55,3 +57,5 @@ CREATE TABLE staging_eu_pl_adr.eu_product_labels
 WITH (
   OIDS=FALSE
 );
+ALTER TABLE staging_eu_pl_adr.eu_product_labels_original
+    OWNER TO rw_grp;
