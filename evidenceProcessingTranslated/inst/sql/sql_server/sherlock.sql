@@ -14,28 +14,18 @@ SELECT DISTINCT
       s.SOURCE_CODE_NAME_1,
       CASE
           WHEN s.SOURCE_CODE_1 = 'Undef' OR NULL THEN 0
-          ELSE
-              CASE
-                  WHEN s.SOURCE_CODE_1 LIKE '%,%' THEN
-                      CASE
-                          WHEN v1.TARGET_CONCEPT_ID IS NULL THEN 0
-                          ELSE v1.TARGET_CONCEPT_ID END
-                  ELSE CAST(s.SOURCE_CODE_1 AS INT) END
-          END AS CONCEPT_ID_1,
+          ELSE CAST(s.SOURCE_CODE_1 AS INT) END
+          AS CONCEPT_ID_1,
       s.RELATIONSHIP_ID,
       s.SOURCE_CODE_2,
       s.SOURCE_CODE_TYPE_2,
       s.SOURCE_CODE_NAME_2,
       CASE
           WHEN s.SOURCE_CODE_2 = 'Undef' OR NULL THEN 0
-          ELSE
-              CASE
-                  WHEN s.SOURCE_CODE_2 LIKE '%,%' THEN
-                      CASE
-                          WHEN v2.TARGET_CONCEPT_ID IS NULL THEN 0
-                          ELSE v2.TARGET_CONCEPT_ID END
-                  ELSE CAST(s.SOURCE_CODE_2 AS INT) END
-          END AS CONCEPT_ID_2,
+          ELSE CAST(s.SOURCE_CODE_2 AS INT) END
+          AS CONCEPT_ID_2,
+      s.CASE_COUNT,
+      s.PARTICIPANTS,
       s.UNIQUE_IDENTIFIER,
       s.UNIQUE_IDENTIFIER_TYPE
 INTO @targetTable
@@ -47,4 +37,4 @@ FROM @sourceTable s
 
 CREATE INDEX IDX_@id_CONCEPT_ID_1_CONCEPT_ID_2 ON @targetTable (CONCEPT_ID_1, CONCEPT_ID_2);
 
-ALTER TABLE @targetTable OWNER TO RW_GRP;
+-- ALTER TABLE @targetTable OWNER TO RW_GRP;

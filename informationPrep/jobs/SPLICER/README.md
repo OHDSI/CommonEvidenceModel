@@ -5,7 +5,18 @@ Background
 ----------
 The process to load US Standard Product Labels data (SPL) into CEM is under review.
 
-In the past an SPL data extract file was created by a software program called SPLICER and then manually loaded into the CEM staging_splicer.splicer table.
+SPL data extract file is created by a program called SPLICER and is then loaded into the CEM staging_splicer.splicer
+table.
+
+SPLICER is available in a private git repo, please get in touch with CEM maintainers to request access
+
+Instructions
+------------
+
+1. Place the splicer.tsv file in this folder
+3. Run the `load_splicer.sh` script.
+
+
 
 
 
