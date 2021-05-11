@@ -7,7 +7,9 @@ This is the SEMMEDDB staging data load process.
 
 The source data file is available as a mySQL database dump file for download at the following website:
 
-[SEMMEDDB website](https://skr3.nlm.nih.gov/SemMedDB/download/download.html)
+[SEMMEDDB website](https://ii.nlm.nih.gov/SemRep_SemMedDB_SKR/SemMedDB/SemMedDB_download.shtml)
+
+To run the job you need to point the script to the url where it can find the latest version of this db.
 
 Table(s) loaded
 ---------------
@@ -15,18 +17,22 @@ staging_semmeddb tables
 
 Dependencies
 ------------
-1. mySQL database
-2. mySQL client software
 
+1. MySQL database
+2. pgloader (the script will install it for you if it is not present)
 
 Instructions
 ------------
-1. Download the latest available version of the semmeddb 'Entire database' mySQL database dump file from the SEMMEDDB website.
-2. Load the Pentaho job in the Pentaho Spoon client.
-3. Update the file name variable in the job variables.
-4. Save the job.
-5. Run the job. (It copies the semmeddb tables from the mysql database to the cem database staging_semmeddb schema tables). Note the PREDICTION_AUX and GENERIC_CONCEPT tables are not required for CEM processes so they are not copied.
 
+1. Check you have your MySQL variables configured in the secret.config file
+2. Update the DOWNLOAD_URL variable in the load_semmed.sh script to point to the most recent version of the SemMedDB
+3. Run the `load_semmed.sh` script.
+
+Notes
+---------
+The SemMedDB is approxiamtly 20GB in size, downloading, loading into mysql, and porting to postgres will take some time.
+The script does not take care of removing the MySQL db or the downloaded source file, you might want to clean these up
+after the process has run successfully. (TODO: Write a script that will do this with a single command)
 
 
 

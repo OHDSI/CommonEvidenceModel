@@ -17,6 +17,8 @@ execute <- function(buildStcm = FALSE,
 
   connectionDetails <- getConnectionDetails(configFile)
 
+  conn <- DatabaseConnector::connect(connectionDetails = connectionDetails)
+
   config <- read.csv(configFile,as.is=TRUE)[1,]
   Sys.setenv(dbms = config$dbms)
   Sys.setenv(user = config$user)
@@ -57,6 +59,7 @@ execute <- function(buildStcm = FALSE,
   ################################################################################
 
   if(loadSource){
+    print("Translation main: Source...")
     sql <- "IF OBJECT_ID('@targetTable', 'U') IS NOT NULL DROP TABLE @targetTable; SELECT * INTO @targetTable FROM @sourceTable;"
     renderedSql <- SqlRender::renderSql(sql=sql,
                                         sourceTable = paste0(Sys.getenv("clean"),'.',source),
@@ -67,6 +70,7 @@ execute <- function(buildStcm = FALSE,
   }
 
   if(buildStcm) {
+    print("Translation main: Source to Concept Map Tables...")
     #Building Source to Concept Map Tables Needed for Translation
     buildStcm(connectionDetails = connectionDetails,
               vocabulary=vocabulary,
@@ -80,19 +84,22 @@ execute <- function(buildStcm = FALSE,
   # WORK - SPONTANEOUS REPORT
   ################################################################################
   #AEOLUS
-  translate(connectionDetails = connectionDetails,
-            sourceTable=paste0(cleanSchema,'.',aeolus),
-            targetTable=paste0(translatedSchema,'.',aeolus),
-            id=aeolus,
-            stcmTable=stcmTable,
-            translationSql="aeolus.sql")
+  if (pullSR_AEOLUS) {
+    print("Translation main: AEOLUS...")
+    translate(connectionDetails = connectionDetails,
+              sourceTable = paste0(cleanSchema, '.', aeolus),
+              targetTable = paste0(translatedSchema, '.', aeolus),
+              id = aeolus,
+              stcmTable = stcmTable,
+              translationSql = "aeolus.sql")
+  }
 
   ################################################################################
   # WORK - PUBLICATIONS
   ################################################################################
   #COOCCURRENCE
   if(pullPub_MEDLINE_COOCCURRENCE){
-    #COOCCURRENCE
+    print("Translation main: MEDLINE_COOCCURRENCE...")
     translate(connectionDetails = connectionDetails,
               sourceTable=paste0(cleanSchema,'.',medline_cooccurrence),
               targetTable=paste0(translatedSchema,'.',medline_cooccurrence),
@@ -103,6 +110,7 @@ execute <- function(buildStcm = FALSE,
 
   #AVILLACH
   if(pullPub_MEDLINE_AVILLACH){
+    print("Translation main: MEDLINE_AVILLACH...")
     translate(connectionDetails = connectionDetails,
               sourceTable=paste0(cleanSchema,'.',medline_avillach),
               targetTable=paste0(translatedSchema,'.',medline_avillach),
@@ -113,6 +121,7 @@ execute <- function(buildStcm = FALSE,
 
   #WINNENBURG
   if(pullPub_MEDLINE_WINNENBURG){
+    print("Translation main: Translating MEDLINE_WINNENBURG...")
     translate(connectionDetails = connectionDetails,
               sourceTable=paste0(cleanSchema,'.',medline_winnenburg),
               targetTable=paste0(translatedSchema,'.',medline_winnenburg),
@@ -123,6 +132,7 @@ execute <- function(buildStcm = FALSE,
 
   #PUBMED PULL
   if(pullPub_PUBMED){
+    print("Translation main: PUBMED...")
     translate(connectionDetails = connectionDetails,
               sourceTable=paste0(cleanSchema,'.',pubmed),
               targetTable=paste0(translatedSchema,'.',pubmed),
@@ -134,6 +144,7 @@ execute <- function(buildStcm = FALSE,
 
   #SEMMEDDB
   if(pullPub_SEMMEDDB){
+    print("Translation main: SEMMEDDB...")
     translate(connectionDetails = connectionDetails,
               sourceTable=paste0(cleanSchema,'.',semmeddb),
               targetTable=paste0(translatedSchema,'.',semmeddb),
@@ -146,6 +157,7 @@ execute <- function(buildStcm = FALSE,
   ################################################################################
   #SPLICER
   if(pullPL_SPLICER){
+    print("Translation main: SPLICER...")
     translate(connectionDetails = connectionDetails,
               sourceTable=paste0(cleanSchema,'.',splicer),
               targetTable=paste0(translatedSchema,'.',splicer),
@@ -156,6 +168,7 @@ execute <- function(buildStcm = FALSE,
 
   #EUPLADR
   if(pullPL_EUPLADR){
+    print("Translation main: EU PL ADR...")
     translate(connectionDetails = connectionDetails,
               sourceTable=paste0(cleanSchema,'.',euPlAdr),
               targetTable=paste0(translatedSchema,'.',euPlAdr),
@@ -169,6 +182,7 @@ execute <- function(buildStcm = FALSE,
   ################################################################################
   #SHERLOCK
   if(pullCT_SHERLOCK){
+    print("Translation main: SHERLOCK...")
     translate(connectionDetails = connectionDetails,
               sourceTable=paste0(cleanSchema,'.',sherlock),
               targetTable=paste0(translatedSchema,'.',sherlock),

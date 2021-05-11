@@ -59,3 +59,13 @@ postProcessingNegativeControls/NEGATIVE_CONTROLS_*.xlsx
 postProcessingNegativeControls/test.sql
 postProcessing/extras/config.csv
 postProcessing/extras/errorReport.txt
+
+#External apps
+informationPrep/jobs/MEDLINE/MedlineXmlToDatabase.jar
+informationPrep/jobs/MEDLINE/MedlineXmlToDatabase_lib
+
+#IntelliJ
+.idea
+
+#Mac
+.DS_Store

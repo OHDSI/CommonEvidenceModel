@@ -37,7 +37,7 @@ buildStcm <- function(connectionDetails,vocabulary,stcmTable,umlsSchema,faers,sh
   # WORK
   ################################################################################
   #Create Table & Load Data
-  sql <- SqlRender::readSql("./inst/sql/sql_server/CEM_SOURCE_TO_CONCEPT_MAP.sql")
+  sql <- SqlRender::readSql("./inst/sql/sql_server/cem_source_to_concept_map.sql")
 
   renderedSql <- SqlRender::render(sql=sql,
                                       stcmTable=stcmTable,
@@ -53,7 +53,7 @@ buildStcm <- function(connectionDetails,vocabulary,stcmTable,umlsSchema,faers,sh
   ###########
   # SHERLOCK 1 = Split ;
   ###########
-  #grab concepts to split ;
+  print("Build Source to Concept Map: Sherlock 1/2 - Select concepts to split (source_code_2)")
   sql <- paste0("
                 SELECT DISTINCT
                 	SOURCE_CODE_2 AS SOURCE_CODE,
@@ -65,26 +65,34 @@ buildStcm <- function(connectionDetails,vocabulary,stcmTable,umlsSchema,faers,sh
                 	CAST('1970-01-01' AS DATE) AS VALID_START_DATE,
                   CAST('2099-12-31' AS DATE) AS VALID_END_DATE,
                   NULL AS INVALID_REASON
-                FROM ",sherlock," WHERE SOURCE_CODE_2 LIKE '%;%'
+                FROM ",sherlock," WHERE SOURCE_CODE_2 LIKE '%,%'
                 ")
   renderedSql <- SqlRender::render(sql=sql)
   translatedSql <- SqlRender::translate(renderedSql,
                                         targetDialect=Sys.getenv("dbms"))
   df <- DatabaseConnector::querySql(conn=conn,translatedSql)
 
-  #split concept
-  df <- tidyr::separate_rows(df,TARGET_CONCEPT_ID,sep=";\\s+")
-  df$TARGET_CONCEPT_ID <- as.numeric(df$TARGET_CONCEPT_ID)
+  print("Build Source to Concept Map: Sherlock 1/2 - Insert concepts")
+  df <- tidyr::separate_rows(df,TARGET_CONCEPT_ID,sep=",\\s+")
+  df$TARGET_CONCEPT_ID <- as.integer(df$TARGET_CONCEPT_ID)
+  df$TARGET_CONCEPT_ID[is.na(df$TARGET_CONCEPT_ID)] <- as.integer(0)
 
-  DatabaseConnector::insertTable(conn,stcmTable,df,
-                                 dropTableIfExists = FALSE, createTable = FALSE)
+  # tidyr returns a tibble, which DatabaseConnector can not deal with, so converting it back to a 'classic' data frame.
+  frame <- as.data.frame(df)
+
+  DatabaseConnector::insertTable(conn = conn,
+                                 tableName = stcmTable,
+                                 data = frame,
+                                 dropTableIfExists = FALSE,
+                                 createTable = FALSE)
 
   rm(df)
+  rm(frame)
 
   ###########
   # SHERLOCK 2 = Split ,
   ###########
-  #grab concepts to split ,
+  print("Build Source to Concept Map: Sherlock 2/2 - Select concepts to split (source_code_1)")
   sql <- paste0("
                 SELECT DISTINCT
                 	SOURCE_CODE_1 AS SOURCE_CODE,
@@ -103,19 +111,27 @@ buildStcm <- function(connectionDetails,vocabulary,stcmTable,umlsSchema,faers,sh
                                         targetDialect=Sys.getenv("dbms"))
   df <- DatabaseConnector::querySql(conn=conn,translatedSql)
 
-  #split concept
+  print("Build Source to Concept Map: Sherlock 2/2 - insert concepts")
   df <- tidyr::separate_rows(df,TARGET_CONCEPT_ID,sep=",\\s+")
-  df$TARGET_CONCEPT_ID <- as.numeric(df$TARGET_CONCEPT_ID)
+  df$TARGET_CONCEPT_ID <- as.integer(df$TARGET_CONCEPT_ID)
+  df$TARGET_CONCEPT_ID[is.na(df$TARGET_CONCEPT_ID)] <- as.integer(0)
 
-  DatabaseConnector::insertTable(conn,stcmTable,df,
-                                 dropTableIfExists = FALSE, createTable = FALSE)
+  # tidyr returns a tibble, which DatabaseConnector can not deal with, so converting it back to a 'classic' data frame.
+  frame <- as.data.frame(df)
+
+  DatabaseConnector::insertTable(conn = conn,
+                                 tableName = stcmTable,
+                                 data = frame,
+                                 dropTableIfExists = FALSE,
+                                 createTable = FALSE,)
 
   rm(df)
+  rm(frame)
 
   ###########
   # MANUAL WORK
   ###########
-  #Load Manual Maps #1
+  print("Build Source to Concept Map: Load Manual Maps 1/2 - EU PL ADR")
   df <- read.csv("inst/csv/EU_PL_ADR_SUBSTANCES_TO_STANDARD.csv",
                  sep=",",header=TRUE)
   df$valid_start_date <- as.Date(df$valid_start_date)
@@ -124,7 +140,7 @@ buildStcm <- function(connectionDetails,vocabulary,stcmTable,umlsSchema,faers,sh
                                  dropTableIfExists = FALSE, createTable = FALSE)
   rm(df)
 
-  #Load Manual Maps #2
+  print("Build Source to Concept Map: Load Manual Maps 2/2 - Trifiro Conditions" )
   df <- read.csv("inst/csv/TRIFIRO_23_CONDITIONS_STCM.csv",
                  sep=",",header=TRUE)
   df$valid_start_date <- as.Date(df$valid_start_date)

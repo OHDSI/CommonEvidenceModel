@@ -15,8 +15,12 @@ staging_eu_pl_adr.eu_product_labels
 
 Instructions
 ------------
-1. Load the Pentaho job in the Pentaho Spoon client.
-2. Update the file name in the URL variable within the "set job variables" step.
-3. Save the job.
-4. Run the job.
+
+1. Update the DOWNLOAD_URL variable in the load script
+2. Run the `load_eu_pl_adr.sh` script.
+
+Notes
+-----------
+The source data file is known to change format, if the conversion from xls to csv fails please modify the XlsToCsvConverter
+to handle the file appropriately.
 

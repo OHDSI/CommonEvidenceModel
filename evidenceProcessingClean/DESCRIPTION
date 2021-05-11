@@ -8,4 +8,6 @@ Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: What license is it under?
 Encoding: UTF-8
+Imports: DatabaseConnector, RISmed
+Depends: R (>= 3.6.0)
 LazyData: true

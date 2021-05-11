@@ -56,7 +56,7 @@ medlineCoOccurrenceWinnenburg <- function(connectionDetails,targetDbSchema,targe
   for(i in 1:iteraterNum){
     print(paste0(i,":",iteraterNum,"- Start: ",iterater$start[i]," End: ",iterater$end[i]," of ",iterateToPMID," (",maxPMID,")"))
 
-    sql <- SqlRender::readSql("./inst/sql/sql_server/MEDLINE_COOCURRENCE_WINNENBURG.sql")
+    sql <- SqlRender::readSql("./inst/sql/sql_server/medline_coocurrence_winnenburg.sql")
     renderedSql <- SqlRender::render(sql=sql,
                                      targetTable=paste0(targetDbSchema,'.',targetTable),
                                      i=i,
