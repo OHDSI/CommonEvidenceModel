@@ -23,4 +23,6 @@ WHERE c.CONCEPT_ID IN (
   314099	/*Abnormal fetal heart rate*/
 );
 
+{@ohdsiPostgres == 1}?{
 ALTER TABLE @storeData OWNER TO RW_GRP;
+}

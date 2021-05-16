@@ -162,4 +162,6 @@ FROM (
 	OR UPPER(c1.CONCEPT_NAME) LIKE '%ABNORMAL%'
 ) z;
 
+{@ohdsiPostgres == 1}?{
 ALTER TABLE @storeData OWNER TO RW_GRP;
+}

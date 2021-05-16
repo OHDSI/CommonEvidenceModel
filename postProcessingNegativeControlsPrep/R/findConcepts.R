@@ -33,6 +33,7 @@
 #' @export
 findConcepts <- function(conn,storeData,
                          conceptUniverseData='',
+                         ohdsiPostgres = 0,
                          sqlFile='',
                          vocabulary='',
                          concepts='',
@@ -42,6 +43,7 @@ findConcepts <- function(conn,storeData,
                                              packageName = "postProcessingNegativeControlsPrep",
                                              dbms = attr(conn, "dbms"),
                                              oracleTempSchema = NULL,
+                                             ohdsiPostgres = ohdsiPostgres,
                                              storeData=storeData,
                                              vocabulary=vocabulary,
                                              conceptUniverseData=conceptUniverseData)

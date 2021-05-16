@@ -19,7 +19,7 @@ WITH CTE_RC AS (
 				on de1.person_id = ce1.person_id
 				and de1.index_date < ce1.condition_date
 		group by de1.drug_concept_id, ce1.condition_concept_id
-		UNION ALL
+		/*UNION ALL
 		select de1.drug_concept_id, ce1.condition_concept_id, count(de1.person_id) as num_persons
 		from (
 			select person_id, drug_concept_id, min(drug_era_start_date) as index_date
@@ -48,7 +48,7 @@ WITH CTE_RC AS (
 			) ce1
 				on de1.person_id = ce1.person_id
 				and de1.index_date < ce1.condition_date
-		group by de1.drug_concept_id, ce1.condition_concept_id
+		group by de1.drug_concept_id, ce1.condition_concept_id*/
 	) t1
 	group by t1.drug_concept_id, t1.condition_concept_id
 )
